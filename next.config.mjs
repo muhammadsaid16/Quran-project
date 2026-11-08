@@ -3,6 +3,7 @@ const nextConfig = {
   output: 'export',
   reactStrictMode: true,
   swcMinify: true,
+  transpilePackages: ['ts-fsrs'],
   // Support WebAssembly and AudioWorklet for on-device inference
   webpack: (config, { isServer }) => {
     config.experiments = {

@@ -11,6 +11,7 @@ import { useSessionStore } from '@/stores/session-store';
 import { VoiceRecognitionEngine, StreamingTokenEvent } from '@/audio';
 import { PhonemeAlignmentEngine } from '@/alignment';
 import { VisualReviewPanel } from './VisualReviewPanel';
+import { MEDINA_PAGES } from '@/data/medina-pages';
 import {
   Mic,
   MicOff,
@@ -24,6 +25,8 @@ import {
   Activity,
   Layers,
   HelpCircle,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 
 export const RecitationHUD: React.FC = () => {
@@ -64,7 +67,23 @@ export const RecitationHUD: React.FC = () => {
     recordAcquisitionResult,
   } = useActiveRecallStore();
 
-  const { incrementRecitedCount } = useSessionStore();
+  const { activeView, currentPage, incrementRecitedCount } = useSessionStore();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+
+  // Derive target Surah & Ayah dynamically from current page if not set by an active card
+  const pageData = MEDINA_PAGES[currentPage] || MEDINA_PAGES[1];
+  const targetSurahNum =
+    currentAyah && currentAyah.pageNumber === currentPage
+      ? currentAyah.surahNumber
+      : currentAyah?.surahNumber || pageData.startSurah;
+  const targetAyahNum =
+    currentAyah && currentAyah.pageNumber === currentPage
+      ? currentAyah.ayahNumber
+      : currentAyah?.ayahNumber || pageData.startAyah;
+  const targetSurahName =
+    currentAyah && currentAyah.pageNumber === currentPage
+      ? currentAyah.surahNameArabic
+      : currentAyah?.surahNameArabic || pageData.surahHeaderName.replace(/^(سُورَةُ\s*|سورة\s*)/, '');
 
   const engineRef = useRef<VoiceRecognitionEngine | null>(null);
   const alignmentEngineRef = useRef<PhonemeAlignmentEngine | null>(null);
@@ -168,10 +187,11 @@ export const RecitationHUD: React.FC = () => {
 
         await engineRef.current.startRecording();
       } catch (err: unknown) {
-        // Fallback for environments without microphone (e.g. simulated verification / headless)
-        console.warn('Microphone capture not available, running simulated audio pipeline:', err);
-        setMicActive(true);
-        setStatus('listening');
+        console.error('Microphone capture error:', err);
+        const errMsg = err instanceof Error ? err.message : String(err);
+        setErrorMessage(`تعذر الوصول إلى الميكروفون: ${errMsg}`);
+        setStatus('error');
+        setMicActive(false);
       }
     } else {
       // Stopping recitation -> entering processing and evaluation
@@ -187,9 +207,7 @@ export const RecitationHUD: React.FC = () => {
 
         // Run Phoneme Alignment & Error Detection
         if (alignmentEngineRef.current) {
-          const targetSurah = currentAyah?.surahNumber || 1;
-          const targetAyahNum = currentAyah?.ayahNumber || 1;
-          const verseKey = `${targetSurah}:${targetAyahNum}`;
+          const verseKey = `${targetSurahNum}:${targetAyahNum}`;
 
           const meanConfidence =
             finalConfidences.length > 0
@@ -205,7 +223,7 @@ export const RecitationHUD: React.FC = () => {
           setConfidenceScore(Math.round(alignResult.accuracy * 100));
 
           // Set evaluated words into store for word-level error highlighting in GhostAyah and VisualReviewPanel
-          setEvaluatedWords(alignResult.words, targetSurah, targetAyahNum);
+          setEvaluatedWords(alignResult.words, targetSurahNum, targetAyahNum);
 
           // Record errors
           for (const word of alignResult.words) {
@@ -245,6 +263,44 @@ export const RecitationHUD: React.FC = () => {
   const ghostTier = getGhostTierNumber(ghostTextLevel);
   const ghostLabel = getGhostTierLabel(ghostTextLevel);
 
+  // Recitation HUD belongs strictly to the Mushaf view (never Dashboard or Heatmap)
+  if (activeView !== 'mushaf') {
+    return null;
+  }
+
+  // Collapsed Minimalist Pill Mode
+  if (isCollapsed) {
+    return (
+      <>
+        {isReviewOpen && <VisualReviewPanel />}
+        <div
+          data-testid="recitation-hud-collapsed"
+          className="fixed bottom-4 inset-x-0 mx-auto max-w-sm px-3 z-40 transition-all duration-300"
+          dir="rtl"
+        >
+          <button
+            onClick={() => setIsCollapsed(false)}
+            className="w-full bg-mushaf-surface/95 dark:bg-darkMushaf-card/95 backdrop-blur-md border-2 border-mushaf-gold/70 dark:border-darkMushaf-gold/60 rounded-full shadow-hud py-2 px-4 flex items-center justify-between font-arabic text-xs font-bold text-mushaf-ink dark:text-darkMushaf-ink hover:scale-[1.02] active:scale-95 transition-all"
+          >
+            <div className="flex items-center gap-2">
+              <span className={`w-2.5 h-2.5 rounded-full ${micActive ? 'bg-red-500 animate-ping' : 'bg-mushaf-emerald'}`} />
+              <Mic className={`w-3.5 h-3.5 ${micActive ? 'text-red-500' : 'text-mushaf-emerald'}`} />
+              <span>
+                {mode === 'transition' && transitionTarget
+                  ? `وصل ${transitionTarget.fromAyah.surahNumber}:${transitionTarget.fromAyah.ayahNumber} ← ${transitionTarget.toAyah.surahNumber}:${transitionTarget.toAyah.ayahNumber}`
+                  : `سورة ${targetSurahName} • آية ${targetAyahNum}`}
+              </span>
+            </div>
+            <span className="text-mushaf-gold dark:text-darkMushaf-gold flex items-center gap-1 text-[11px]">
+              <span>فتح شريط التسميع</span>
+              <ChevronUp className="w-3.5 h-3.5" />
+            </span>
+          </button>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       {/* Visual Review Panel Modal */}
@@ -275,38 +331,50 @@ export const RecitationHUD: React.FC = () => {
                 <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted text-xs">
                   وصل {transitionTarget.fromAyah.surahNumber}:{transitionTarget.fromAyah.ayahNumber} ← {transitionTarget.toAyah.surahNumber}:{transitionTarget.toAyah.ayahNumber}
                 </span>
-              ) : currentAyah ? (
-                <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted text-xs">
-                  سورة {currentAyah.surahNameArabic} • آية {currentAyah.ayahNumber}
+              ) : (
+                <span className="text-mushaf-ink dark:text-darkMushaf-ink text-xs font-bold">
+                  سورة {targetSurahName} • آية {targetAyahNum}
                 </span>
-              ) : null}
+              )}
             </div>
 
-            {/* Recitation Status Badge */}
-            <div data-testid="recitation-status-badge" className="flex items-center gap-1.5 text-xs">
-              {status === 'listening' && (
-                <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold animate-pulse">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                  جاري الاستماع والتسميع الصوتي...
-                </span>
-              )}
-              {status === 'processing' && (
-                <span className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-bold">
-                  <Activity className="w-4 h-4 animate-spin" />
-                  معالجة الإشارات الصوتية (WASM)...
-                </span>
-              )}
-              {status === 'completed' && (
-                <span className="flex items-center gap-1.5 text-mushaf-emerald dark:text-darkMushaf-emerald font-bold">
-                  <CheckCircle2 className="w-4 h-4" />
-                  اكتمل التسميع • انظر الفحص البصري
-                </span>
-              )}
-              {status === 'idle' && (
-                <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted">
-                  جاهز للتسميع • اضغط الميكروفون
-                </span>
-              )}
+            {/* Recitation Status Badge & Minimize Button */}
+            <div className="flex items-center gap-2">
+              <div data-testid="recitation-status-badge" className="flex items-center gap-1.5 text-xs">
+                {status === 'listening' && (
+                  <span className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-bold animate-pulse">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                    جاري الاستماع والتسميع الصوتي...
+                  </span>
+                )}
+                {status === 'processing' && (
+                  <span className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-bold">
+                    <Activity className="w-4 h-4 animate-spin" />
+                    معالجة الإشارات الصوتية (WASM)...
+                  </span>
+                )}
+                {status === 'completed' && (
+                  <span className="flex items-center gap-1.5 text-mushaf-emerald dark:text-darkMushaf-emerald font-bold">
+                    <CheckCircle2 className="w-4 h-4" />
+                    اكتمل التسميع • انظر الفحص البصري
+                  </span>
+                )}
+                {status === 'idle' && (
+                  <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted">
+                    جاهز للتسميع • اضغط الميكروفون
+                  </span>
+                )}
+              </div>
+
+              {/* Minimize HUD Button */}
+              <button
+                onClick={() => setIsCollapsed(true)}
+                className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-gold/15 text-mushaf-ink-muted hover:text-mushaf-ink text-xs transition-colors border border-mushaf-border dark:border-darkMushaf-border mr-1"
+                title="تصغير شريط التسميع لتصفح المصحف بحرية"
+              >
+                <span className="hidden sm:inline">تصغير</span>
+                <ChevronDown className="w-3.5 h-3.5" />
+              </button>
             </div>
 
           </div>

@@ -42,13 +42,15 @@ export function formatHizbQuarter(raw: string | number | undefined): string {
   }
 }
 
+export const WAQF_MARKS = new Set(['ۚ', 'ۖ', 'ۗ', 'ۘ', 'ۙ', 'ۜ', 'ۛ']);
+
 /**
  * Normalizes raw page lines to faithfully adhere to the King Fahd Medina Mushaf:
  * - Page 1 (Al-Fatiha): Injects ornate Surah Header, centers Basmalah on its own line,
  *   and lays out the remaining 6 verses symmetrically.
  * - Pages 2-604: Injects ornate Surah Headers whenever a Surah begins, renders centered
- *   Basmalah lines (except Surah 9 At-Tawbah), and cleanly strips inline prepended Basmalah
- *   words from verse lines.
+ *   Basmalah lines (except Surah 9 At-Tawbah), cleanly merges waqf pause marks into the
+ *   preceding words, and strips inline prepended Basmalah words.
  */
 export function normalizePageLines(pageData: MedinaPageData): MushafLine[] {
   const pageNum = pageData.pageNumber;
@@ -111,6 +113,31 @@ export function normalizePageLines(pageData: MedinaPageData): MushafLine[] {
     for (let wi = 0; wi < words.length; wi++) {
       const w = words[wi];
       const sNum = w.surahNumber;
+
+      // Handle Waqf Marks (علامات الوقف): Merge into preceding word rather than creating orphan lines
+      if (WAQF_MARKS.has(w.text)) {
+        if (currentLineWords.length > 0) {
+          let tIdx = currentLineWords.length - 1;
+          while (tIdx >= 0 && currentLineWords[tIdx].isAyahMarker) tIdx--;
+          if (tIdx >= 0) {
+            currentLineWords[tIdx] = { ...currentLineWords[tIdx], waqfMark: w.text };
+          }
+        } else {
+          // Waqf mark at line start belongs to the end of the previous text line
+          for (let ri = result.length - 1; ri >= 0; ri--) {
+            const prevLine = result[ri];
+            if (prevLine.type === 'text' && prevLine.words.length > 0) {
+              let tIdx = prevLine.words.length - 1;
+              while (tIdx >= 0 && prevLine.words[tIdx].isAyahMarker) tIdx--;
+              if (tIdx >= 0) {
+                prevLine.words[tIdx] = { ...prevLine.words[tIdx], waqfMark: w.text };
+              }
+              break;
+            }
+          }
+        }
+        continue;
+      }
 
       // If this word is the start of a new surah that hasn't been headed yet
       if (w.ayahNumber === 1 && !surahsHeaded.has(sNum)) {
@@ -209,14 +236,14 @@ export const MedinaPage: React.FC<MedinaPageProps> = ({
       data-testid="medina-page"
       data-page-number={pageData.pageNumber}
       data-15-lines="true"
-      className={`w-full max-w-2xl mx-auto my-4 transition-all duration-300 ${turningClass}`}
+      className={`w-full max-w-3xl lg:max-w-4xl mx-auto my-4 transition-all duration-300 ${turningClass}`}
       dir="rtl"
     >
       {/* Outer Mushaf Page Container */}
-      <div className="relative bg-mushaf-parchment dark:bg-darkMushaf-bg border border-mushaf-border dark:border-darkMushaf-border rounded-xl shadow-mushaf p-4 sm:p-6 md:p-8 select-none">
+      <div className="relative bg-mushaf-parchment dark:bg-darkMushaf-bg border border-mushaf-border dark:border-darkMushaf-border rounded-2xl shadow-mushaf p-3 sm:p-5 md:p-6 select-none">
         {/* Double Ornate Medina Frame */}
-        <div className="border-2 border-mushaf-gold/60 dark:border-darkMushaf-gold/40 rounded-lg p-2.5 sm:p-4">
-          <div className="border border-mushaf-gold/30 dark:border-darkMushaf-gold/20 rounded p-2 sm:p-3 relative">
+        <div className="border-2 border-mushaf-gold/60 dark:border-darkMushaf-gold/40 rounded-xl p-2 sm:p-3.5">
+          <div className="border border-mushaf-gold/30 dark:border-darkMushaf-gold/20 rounded-lg p-2 sm:p-3 relative">
             
             {/* Top Page Margin: Juz and Surah Indicators */}
             <div className="flex items-center justify-between pb-3 mb-2 border-b border-mushaf-border/60 dark:border-darkMushaf-border text-xs sm:text-sm font-arabic font-semibold text-mushaf-ink-muted dark:text-darkMushaf-ink-muted">
@@ -240,8 +267,8 @@ export const MedinaPage: React.FC<MedinaPageProps> = ({
               data-testid="mushaf-15-lines-grid"
               className={
                 isOpeningSpread
-                  ? 'flex flex-col items-center justify-center py-2 sm:py-4 gap-2 sm:gap-3 min-h-[520px] sm:min-h-[600px] md:min-h-[680px]'
-                  : 'flex flex-col justify-between min-h-[640px] sm:min-h-[720px] md:min-h-[800px] gap-1 sm:gap-1.5'
+                  ? 'flex flex-col items-center justify-center py-2 sm:py-4 gap-2 sm:gap-3 min-h-[520px] sm:min-h-[620px] md:min-h-[700px]'
+                  : 'flex flex-col justify-between min-h-[660px] sm:min-h-[740px] md:min-h-[820px] gap-1 sm:gap-1.5'
               }
             >
               {displayLines.map((line) => {
@@ -272,7 +299,7 @@ export const MedinaPage: React.FC<MedinaPageProps> = ({
                 return (
                   <div
                     key={`text-${line.lineNumber}`}
-                    className="flex items-center justify-center w-full py-0.5 sm:py-1 hover:bg-mushaf-gold/5 transition-colors rounded px-1"
+                    className="flex items-center justify-center w-full py-0.5 sm:py-1 hover:bg-mushaf-gold/5 transition-colors rounded px-0.5 sm:px-1 min-h-[40px] sm:min-h-[46px]"
                   >
                     <GhostAyah
                       words={line.words}

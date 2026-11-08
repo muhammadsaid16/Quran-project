@@ -65,7 +65,7 @@ export const MushafViewer: React.FC = () => {
   return (
     <div
       data-testid="mushaf-viewer-container"
-      className="w-full max-w-5xl mx-auto px-2 sm:px-4 py-4"
+      className="w-full max-w-5xl mx-auto px-2 sm:px-4 py-4 pb-36 sm:pb-40"
       dir="rtl"
     >
       {/* Top Mushaf Controls Bar: Navigation & Ghost Text Tier Controls */}

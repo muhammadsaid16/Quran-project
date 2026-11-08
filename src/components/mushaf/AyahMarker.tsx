@@ -26,14 +26,14 @@ export const AyahMarker: React.FC<AyahMarkerProps> = ({
   const arabicNum = toArabicNumerals(ayahNumber);
 
   const sizeClasses = {
-    sm: 'w-6 h-6 text-[10px]',
-    md: 'w-8 h-8 text-[12px]',
-    lg: 'w-10 h-10 text-[14px]',
+    sm: 'w-6 h-6 sm:w-7 sm:h-7 text-[10px] sm:text-[11px]',
+    md: 'w-7 h-7 sm:w-8 sm:h-8 text-[11px] sm:text-[12px]',
+    lg: 'w-9 h-9 sm:w-10 sm:h-10 text-[13px] sm:text-[14px]',
   };
 
   return (
     <span
-      className={`inline-flex items-center justify-center align-middle select-none mx-1.5 font-bold relative text-mushaf-gold dark:text-darkMushaf-gold ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center justify-center align-middle select-none mx-0.5 sm:mx-1 font-bold relative text-mushaf-gold dark:text-darkMushaf-gold flex-shrink-0 ${sizeClasses[size]} ${className}`}
       title={`آية رقم ${ayahNumber}`}
     >
       {/* Authentic Ornate Quranic Ayah Rosette SVG */}

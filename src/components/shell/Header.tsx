@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSessionStore, ThemeMode, ViewMode } from '@/stores/session-store';
 import { useHeatmapStore } from '@/stores/heatmap-store';
 import { usePWAStore } from '@/stores/pwa-store';
@@ -38,7 +38,7 @@ export const Header: React.FC = () => {
     promptInstall,
   } = usePWAStore();
 
-  const [isMounted, setIsMounted] = React.useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -51,52 +51,65 @@ export const Header: React.FC = () => {
     { id: 'heatmap', label: 'خريطة الذاكرة', icon: <Activity className="w-4 h-4" /> },
   ];
 
-  const themes: { id: ThemeMode; label: string; icon: React.ReactNode }[] = [
-    { id: 'light', label: 'نهاري', icon: <Sun className="w-3.5 h-3.5" /> },
-    { id: 'dark', label: 'ليلي', icon: <Moon className="w-3.5 h-3.5" /> },
-    { id: 'high-contrast', label: 'عالي التباين', icon: <Eye className="w-3.5 h-3.5" /> },
-  ];
+  const handleCycleTheme = () => {
+    const order: ThemeMode[] = ['light', 'dark', 'high-contrast'];
+    const nextIndex = (order.indexOf(theme) + 1) % order.length;
+    setTheme(order[nextIndex]);
+  };
+
+  const getThemeIcon = () => {
+    if (theme === 'dark') return <Moon className="w-4 h-4 text-mushaf-gold" />;
+    if (theme === 'high-contrast') return <Eye className="w-4 h-4 text-emerald-400" />;
+    return <Sun className="w-4 h-4 text-amber-500" />;
+  };
+
+  const getThemeTitle = () => {
+    if (theme === 'dark') return 'الوضع الحالي: ليلي (اضغط للتبديل)';
+    if (theme === 'high-contrast') return 'الوضع الحالي: عالي التباين (اضغط للتبديل)';
+    return 'الوضع الحالي: نهاري (اضغط للتبديل)';
+  };
 
   return (
     <header className="sticky top-0 z-40 w-full backdrop-blur-md bg-mushaf-surface/90 dark:bg-darkMushaf-bg/90 border-b border-mushaf-border dark:border-darkMushaf-border transition-colors shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between" dir="rtl">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 h-16 flex items-center justify-between gap-2 sm:gap-4" dir="rtl">
         
         {/* Brand & Title */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-mushaf-emerald to-emerald-800 flex items-center justify-center text-mushaf-gold shadow-md">
-            <span className="font-uthmani text-2xl font-bold leading-none">ق</span>
+        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-mushaf-emerald to-emerald-800 flex items-center justify-center text-mushaf-gold shadow-md flex-shrink-0">
+            <span className="font-uthmani text-xl sm:text-2xl font-bold leading-none">ق</span>
           </div>
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-arabic font-bold text-lg sm:text-xl text-mushaf-ink dark:text-darkMushaf-ink leading-tight">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <h1 className="font-arabic font-bold text-base sm:text-lg text-mushaf-ink dark:text-darkMushaf-ink leading-tight whitespace-nowrap">
                 Quran Cognitive OS
               </h1>
-              <span className="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-mushaf-gold/20 text-mushaf-gold dark:text-darkMushaf-gold border border-mushaf-gold/30">
+              <span className="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-mushaf-gold/20 text-mushaf-gold dark:text-darkMushaf-gold border border-mushaf-gold/30 whitespace-nowrap">
                 PWA v2.0
               </span>
             </div>
-            <p className="text-xs text-mushaf-ink-muted dark:text-darkMushaf-ink-muted hidden sm:block">
+            <p className="text-[11px] text-mushaf-ink-muted dark:text-darkMushaf-ink-muted hidden xl:block leading-tight">
               الاسترجاع النشط • التسميع الصوتي المباشر • خوارزمية FSRS
             </p>
           </div>
         </div>
 
         {/* Center Nav Tabs */}
-        <nav className="flex items-center gap-1 sm:gap-2 bg-mushaf-parchment dark:bg-darkMushaf-surface p-1 rounded-xl border border-mushaf-border dark:border-darkMushaf-border">
+        <nav className="flex items-center gap-1 bg-mushaf-parchment dark:bg-darkMushaf-surface p-1 rounded-xl border border-mushaf-border dark:border-darkMushaf-border flex-shrink-0">
           {navItems.map((item) => {
             const isActive = activeView === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => setActiveView(item.id)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-arabic font-medium transition-all ${
+                className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-arabic font-medium transition-all whitespace-nowrap ${
                   isActive
                     ? 'bg-mushaf-surface dark:bg-darkMushaf-card text-mushaf-emerald dark:text-darkMushaf-emerald shadow-sm font-bold border border-mushaf-border/60 dark:border-darkMushaf-border'
                     : 'text-mushaf-ink-muted dark:text-darkMushaf-ink-muted hover:text-mushaf-ink dark:hover:text-darkMushaf-ink'
                 }`}
               >
                 {item.icon}
-                <span>{item.label}</span>
+                <span className="hidden sm:inline">{item.label}</span>
+                <span className="sm:hidden">{item.label.split(' ')[0]}</span>
                 {item.id === 'heatmap' && reviewDuePagesCount > 0 && (
                   <span className="w-4 h-4 rounded-full bg-recall-warning text-white text-[10px] flex items-center justify-center font-bold">
                     {reviewDuePagesCount}
@@ -108,60 +121,52 @@ export const Header: React.FC = () => {
         </nav>
 
         {/* Left Utilities: Streak, Due, Theme & PWA Status */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
           
           {/* Streak Badge */}
           <div
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 text-xs font-semibold"
+            className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 text-xs font-semibold whitespace-nowrap"
             title={`تتابع الإنجاز اليومي: ${streakDays} يومًا`}
           >
-            <Flame className="w-4 h-4 fill-orange-500 text-orange-500" />
+            <Flame className="w-3.5 h-3.5 fill-orange-500 text-orange-500" />
             <span className="font-arabic">{streakDays} يومًا</span>
           </div>
 
           {/* Daily Goal Progress */}
-          <div className="hidden md:flex items-center gap-2 text-xs text-mushaf-ink-muted dark:text-darkMushaf-ink-muted border-l border-r border-mushaf-border dark:border-darkMushaf-border px-3">
-            <span>الهدف اليومي:</span>
+          <div className="hidden lg:flex items-center gap-1.5 text-xs text-mushaf-ink-muted dark:text-darkMushaf-ink-muted border-l border-r border-mushaf-border/60 dark:border-darkMushaf-border px-2.5 whitespace-nowrap">
+            <span>الهدف:</span>
             <span className="font-bold text-mushaf-ink dark:text-darkMushaf-ink">
               {todayRecitedCount}/{dailyGoal} آية
             </span>
           </div>
 
-          {/* Theme Selector */}
-          <div className="flex items-center gap-1 bg-mushaf-parchment dark:bg-darkMushaf-surface p-1 rounded-lg border border-mushaf-border dark:border-darkMushaf-border">
-            {themes.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setTheme(t.id)}
-                className={`p-1.5 rounded-md transition-colors ${
-                  theme === t.id
-                    ? 'bg-mushaf-surface dark:bg-darkMushaf-card text-mushaf-gold dark:text-darkMushaf-gold shadow-xs'
-                    : 'text-mushaf-ink-muted hover:text-mushaf-ink dark:hover:text-darkMushaf-ink'
-                }`}
-                title={t.label}
-              >
-                {t.icon}
-              </button>
-            ))}
-          </div>
+          {/* Compact Single Cycle Theme Button */}
+          <button
+            onClick={handleCycleTheme}
+            className="p-1.5 rounded-lg bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-gold/15 text-mushaf-ink dark:text-darkMushaf-ink border border-mushaf-border dark:border-darkMushaf-border transition-colors flex items-center justify-center"
+            title={getThemeTitle()}
+            aria-label="تبديل المظهر"
+          >
+            {getThemeIcon()}
+          </button>
 
           {/* PWA Install Button (shown when installable) */}
           {isMounted && isInstallable && (
             <button
               onClick={promptInstall}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-mushaf-emerald text-white text-xs font-semibold shadow hover:bg-emerald-700 transition-colors animate-pulse"
+              className="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-lg bg-mushaf-emerald text-white text-xs font-semibold shadow hover:bg-emerald-700 transition-colors animate-pulse whitespace-nowrap"
               title="تثبيت التطبيق على جهازك للعمل بدون إنترنت"
             >
               <Download className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">تثبيت التطبيق</span>
+              <span className="hidden md:inline">تثبيت</span>
             </button>
           )}
 
           {/* Persistent Storage Status */}
           {isMounted && isStoragePersisted && (
             <div
-              className="hidden lg:flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[11px]"
-              title="تخزين محلي دائم مفعل (لا يمكن حذفه تلقائياً من المتصفح)"
+              className="hidden xl:flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[11px] whitespace-nowrap"
+              title="تخزين محلي دائم مفعل"
             >
               <HardDrive className="w-3 h-3" />
               <span>مساحة دائمة</span>
@@ -170,7 +175,7 @@ export const Header: React.FC = () => {
 
           {/* PWA Offline Readiness Indicator */}
           <div
-            className="p-1.5 rounded-lg text-xs flex items-center text-mushaf-emerald dark:text-darkMushaf-emerald bg-mushaf-emerald/10 border border-mushaf-emerald/20"
+            className="p-1.5 rounded-lg text-xs flex items-center text-mushaf-emerald dark:text-darkMushaf-emerald bg-mushaf-emerald/10 border border-mushaf-emerald/20 flex-shrink-0"
             title={(!isMounted || isOnline) ? 'PWA جاهز للعمل بدون إنترنت (Local-First)' : 'أنت غير متصل (يعمل محليًا بالكامل)'}
           >
             {(!isMounted || isOnline) ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5 text-amber-500" />}

@@ -29,16 +29,22 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
 
   const ghostTier = getGhostTierNumber(ghostTextLevel);
 
+  const isShortLine = words.length <= 5;
+
   return (
-    <div className="flex flex-wrap items-center justify-center gap-x-1.5 sm:gap-x-2 md:gap-x-2.5 gap-y-1 w-full leading-[2.8rem] sm:leading-[3.4rem] md:leading-[3.8rem] text-center">
+    <div
+      className={`w-full flex items-center flex-nowrap ${
+        isShortLine ? 'justify-center gap-3 sm:gap-5 md:gap-6' : 'justify-between'
+      }`}
+    >
       {words.map((word) => {
         if (word.isAyahMarker) {
           return (
             <AyahMarker
               key={word.id}
               ayahNumber={word.ayahNumber}
-              size="md"
-              className="cursor-pointer hover:scale-110 transition-transform"
+              size="sm"
+              className="cursor-pointer hover:scale-110 transition-transform flex-shrink-0"
             />
           );
         }
@@ -128,14 +134,14 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
                 revealWordHint(word.ayahNumber, word.wordIndex);
               }
             }}
-            className={`font-uthmani text-xl sm:text-2xl md:text-[28px] transition-all duration-200 select-none px-1 rounded cursor-pointer ${
+            className={`font-uthmani text-[16px] sm:text-[19px] md:text-[22px] lg:text-[24px] transition-all duration-200 select-none cursor-pointer whitespace-nowrap leading-none inline-flex items-center ${
               statusStyles
                 ? statusStyles
                 : isVisible
                 ? wordRevealed
-                  ? 'text-mushaf-ink dark:text-darkMushaf-ink bg-mushaf-gold/15 ring-1 ring-mushaf-gold/40'
+                  ? 'text-mushaf-ink dark:text-darkMushaf-ink bg-mushaf-gold/15 ring-1 ring-mushaf-gold/40 rounded px-1'
                   : 'text-mushaf-ink dark:text-darkMushaf-ink'
-                : 'text-transparent bg-mushaf-ink/10 dark:bg-darkMushaf-ink/10 blur-[5px] hover:blur-none hover:bg-mushaf-gold/20'
+                : 'text-transparent bg-mushaf-ink/10 dark:bg-darkMushaf-ink/10 blur-[5px] hover:blur-none hover:bg-mushaf-gold/20 rounded px-1'
             }`}
             title={
               statusBadge
@@ -145,7 +151,12 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
                 : undefined
             }
           >
-            {word.text}
+            <span>{word.text}</span>
+            {word.waqfMark && (
+              <span className="text-[10px] sm:text-[12px] text-mushaf-gold dark:text-darkMushaf-gold align-super mx-0.5 select-none font-uthmani font-normal">
+                {word.waqfMark}
+              </span>
+            )}
           </span>
         );
       })}

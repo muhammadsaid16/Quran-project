@@ -15,6 +15,7 @@ export interface QuranWord {
   wordIndex: number;
   text: string;
   phoneme?: string;
+  waqfMark?: string;
 }
 
 export interface QuranAyah {

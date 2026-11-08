@@ -21,7 +21,6 @@ import {
 } from './types';
 import { KaldiFbankExtractor } from './kaldi-fbank';
 import { AUDIO_CAPTURE_WORKLET_CODE } from './audio-worklet-processor';
-import { RECOGNITION_WORKER_CODE } from './recognition-worker';
 
 export class VoiceRecognitionEngine {
   private config: Required<VoiceRecognitionEngineConfig>;
@@ -32,9 +31,8 @@ export class VoiceRecognitionEngine {
   private audioContext: AudioContext | null = null;
   private mediaStream: MediaStream | null = null;
   private workletNode: AudioWorkletNode | null = null;
-  private worker: Worker | null = null;
 
-  // Direct In-Process Engine (Node.js & Unit Tests)
+  // Direct In-Process Engine (Node.js & Browser WASM)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private nativeSherpa: any = null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -104,8 +102,8 @@ export class VoiceRecognitionEngine {
         // Node / Headless Environment
         await this.initDirectEngine();
       } else {
-        // Browser Environment: Spawn Web Worker
-        await this.initBrowserWorker();
+        // Browser Environment: Direct WebAssembly Engine
+        await this.initBrowserWasm();
       }
 
       this.setStatus('ready');
@@ -155,51 +153,59 @@ export class VoiceRecognitionEngine {
   }
 
   /**
-   * Initialize off-main-thread Web Worker for browser execution
+   * Initialize in-process WebAssembly sherpa-onnx for browser execution
    */
-  private async initBrowserWorker(): Promise<void> {
-    const workerBlob = new Blob([RECOGNITION_WORKER_CODE], {
-      type: 'application/javascript',
-    });
-    const workerUrl = URL.createObjectURL(workerBlob);
-    this.worker = new Worker(workerUrl);
+  private async initBrowserWasm(): Promise<void> {
+    if (this.nativeRecognizer) {
+      return;
+    }
 
-    await new Promise<void>((resolve, reject) => {
-      if (!this.worker) return reject(new Error('Worker creation failed'));
+    const dynamicImport = new Function('url', 'return import(url)');
+    const { initASRModule, createOnlineRecognizer, OnlineRecognizerTypes } =
+      await dynamicImport('/sherpa-wasm/index.js');
+    const mod = await initASRModule();
 
-      const timeout = setTimeout(() => {
-        reject(new Error('Recognition worker initialization timed out (5000ms)'));
-      }, 5000);
+    const modelUrl = this.config.modelPath.startsWith('/')
+      ? this.config.modelPath
+      : `/${this.config.modelPath}`;
+    const tokensUrl = this.config.tokensPath.startsWith('/')
+      ? this.config.tokensPath
+      : `/${this.config.tokensPath}`;
 
-      this.worker.onmessage = (event) => {
-        const { type, payload } = event.data;
-        if (type === 'ready') {
-          clearTimeout(timeout);
-          resolve();
-        } else if (type === 'token') {
-          this.callbacks.onToken?.(payload);
-        } else if (type === 'partial_result') {
-          this.callbacks.onPartial?.(payload);
-        } else if (type === 'final_result') {
-          this.callbacks.onFinal?.(payload);
-        } else if (type === 'error') {
-          this.callbacks.onError?.(new Error(payload.message));
-        }
-      };
+    const [modelBuf, tokensTxt] = await Promise.all([
+      fetch(modelUrl).then((r) => {
+        if (!r.ok) throw new Error(`Model fetch failed: ${modelUrl} (${r.status})`);
+        return r.arrayBuffer();
+      }),
+      fetch(tokensUrl).then((r) => {
+        if (!r.ok) throw new Error(`Tokens fetch failed: ${tokensUrl} (${r.status})`);
+        return r.text();
+      }),
+    ]);
 
-      this.worker.onerror = (err) => {
-        clearTimeout(timeout);
-        reject(new Error(`Worker error: ${err.message}`));
-      };
+    try { mod.FS_unlink('/zipformer.onnx'); } catch {}
+    try { mod.FS_unlink('/tokens.txt'); } catch {}
 
-      this.worker.postMessage({
-        type: 'init',
-        payload: {
-          modelPath: this.config.modelPath,
-          tokensPath: this.config.tokensPath,
-          config: this.config,
+    mod.FS_createDataFile('/', 'zipformer.onnx', new Uint8Array(modelBuf), true, true, true);
+    mod.FS_createDataFile('/', 'tokens.txt', new TextEncoder().encode(tokensTxt), true, true, true);
+
+    this.nativeRecognizer = createOnlineRecognizer(mod, {
+      type: OnlineRecognizerTypes.Zipformer2CTC,
+      featConfig: {
+        sampleRate: this.config.sampleRate,
+        featureDim: this.config.featureDim,
+      },
+      modelConfig: {
+        zipformer2Ctc: {
+          model: '/zipformer.onnx',
         },
-      });
+        tokens: '/tokens.txt',
+        numThreads: this.config.numThreads,
+        provider: 'cpu',
+        debug: 0,
+      },
+      decodingMethod: this.config.decodingMethod,
+      enableEndpoint: 0,
     });
   }
 
@@ -232,7 +238,9 @@ export class VoiceRecognitionEngine {
       });
 
       // 2. Initialize AudioContext
-      const AudioCtxClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AudioCtxClass =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       this.audioContext = new AudioCtxClass();
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
@@ -244,6 +252,7 @@ export class VoiceRecognitionEngine {
       });
       const workletUrl = URL.createObjectURL(workletBlob);
       await this.audioContext.audioWorklet.addModule(workletUrl);
+      URL.revokeObjectURL(workletUrl);
 
       // 4. Connect Audio graph
       const source = this.audioContext.createMediaStreamSource(this.mediaStream);
@@ -254,15 +263,19 @@ export class VoiceRecognitionEngine {
       });
 
       // 5. Start recognition stream
-      if (this.worker) {
-        this.worker.postMessage({ type: 'start_stream' });
+      if (this.nativeActiveStream) {
+        this.nativeActiveStream.free();
       }
+      if (!this.nativeRecognizer) {
+        throw new Error('Recognition model is not initialized');
+      }
+      this.nativeActiveStream = this.nativeRecognizer.createStream();
 
       // 6. Handle chunks from worklet
       this.workletNode.port.onmessage = (event) => {
-        const { type, pcm, rms, peak, sampleCount, isFinal } = event.data;
-        if (type === 'audio_chunk') {
-          this.totalSamplesStreamed += sampleCount;
+        const { type, pcm, rms, peak, sampleCount } = event.data;
+        if (type === 'audio_chunk' && pcm) {
+          this.totalSamplesStreamed += sampleCount || pcm.length;
 
           // Emit Audio Level & VAD Status
           const isSpeaking = rms > this.config.vadSilenceThreshold;
@@ -272,19 +285,39 @@ export class VoiceRecognitionEngine {
             isSpeaking,
           });
 
-          // Forward chunk to Recognition Worker
-          if (this.worker) {
-            this.worker.postMessage(
-              {
-                type: 'audio_chunk',
-                payload: {
-                  pcm,
-                  sampleRate: this.config.sampleRate,
-                  isFinal,
-                },
-              },
-              [pcm.buffer]
-            );
+          // Feed waveform directly to active stream
+          if (this.nativeRecognizer && this.nativeActiveStream) {
+            this.nativeActiveStream.acceptWaveform(this.config.sampleRate, pcm);
+            while (this.nativeRecognizer.isReady(this.nativeActiveStream)) {
+              this.nativeRecognizer.decode(this.nativeActiveStream);
+            }
+
+            const interim = this.nativeRecognizer.getResult(this.nativeActiveStream);
+
+            // Emit incremental tokens
+            if (interim.tokens && interim.tokens.length > this.lastTokenCount) {
+              for (let i = this.lastTokenCount; i < interim.tokens.length; i++) {
+                const token = interim.tokens[i];
+                const timestamp = (interim.timestamps && interim.timestamps[i]) ?? 0;
+                const confidence = (interim.ys_probs && interim.ys_probs[i]) ?? 1.0;
+
+                this.callbacks.onToken?.({
+                  token,
+                  timestampMs: Math.round(timestamp * 1000),
+                  confidence: Number(confidence.toFixed(4)),
+                  index: i,
+                  isFinal: false,
+                });
+              }
+              this.lastTokenCount = interim.tokens.length;
+            }
+
+            this.callbacks.onPartial?.({
+              text: interim.text || '',
+              tokens: interim.tokens || [],
+              timestamps: interim.timestamps || [],
+              confidences: interim.ys_probs || [],
+            });
           }
         }
       };
@@ -327,24 +360,10 @@ export class VoiceRecognitionEngine {
       this.audioContext = null;
     }
 
-    return new Promise<RecognitionFinalResult>((resolve) => {
-      const originalFinalCallback = this.callbacks.onFinal;
-      this.callbacks.onFinal = (res) => {
-        this.setStatus('stopped');
-        originalFinalCallback?.(res);
-        this.callbacks.onFinal = originalFinalCallback;
-        resolve(res);
-      };
-
-      if (this.worker) {
-        this.worker.postMessage({ type: 'stop_stream' });
-      } else {
-        const result = this.finishNativeStream();
-        this.setStatus('stopped');
-        originalFinalCallback?.(result);
-        resolve(result);
-      }
-    });
+    const finalResult = this.finishNativeStream();
+    this.setStatus('stopped');
+    this.callbacks.onFinal?.(finalResult);
+    return finalResult;
   }
 
   /**
@@ -371,99 +390,74 @@ export class VoiceRecognitionEngine {
       pcm16k = this.resampleBuffer(samples, sampleRate, 16000);
     }
 
-    if (this.nativeSherpa && this.nativeRecognizer) {
-      // Direct in-process execution (Node)
-      if (this.nativeActiveStream) {
-        this.nativeActiveStream.free();
-      }
-      this.nativeActiveStream = this.nativeRecognizer.createStream();
-
-      // Stream in chunks
-      for (let offset = 0; offset < pcm16k.length; offset += chunkSize) {
-        const chunk = pcm16k.subarray(offset, Math.min(offset + chunkSize, pcm16k.length));
-
-        // Compute RMS
-        let sumSq = 0;
-        let peak = 0;
-        for (let i = 0; i < chunk.length; i++) {
-          const v = chunk[i];
-          sumSq += v * v;
-          const a = Math.abs(v);
-          if (a > peak) peak = a;
-        }
-        const rms = Math.min(100, Math.round(Math.sqrt(sumSq / chunk.length) * 300));
-
-        this.callbacks.onAudioLevel?.({
-          rmsLevel: rms,
-          peak,
-          isSpeaking: rms > this.config.vadSilenceThreshold,
-        });
-
-        this.nativeActiveStream.acceptWaveform(16000, chunk);
-        while (this.nativeRecognizer.isReady(this.nativeActiveStream)) {
-          this.nativeRecognizer.decode(this.nativeActiveStream);
-        }
-
-        const interim = this.nativeRecognizer.getResult(this.nativeActiveStream);
-
-        // Emit incremental tokens
-        if (interim.tokens && interim.tokens.length > this.lastTokenCount) {
-          for (let i = this.lastTokenCount; i < interim.tokens.length; i++) {
-            const token = interim.tokens[i];
-            const timestamp = (interim.timestamps && interim.timestamps[i]) ?? 0;
-            const confidence = (interim.ys_probs && interim.ys_probs[i]) ?? 1.0;
-
-            this.callbacks.onToken?.({
-              token,
-              timestampMs: Math.round(timestamp * 1000),
-              confidence: Number(confidence.toFixed(4)),
-              index: i,
-              isFinal: false,
-            });
-          }
-          this.lastTokenCount = interim.tokens.length;
-        }
-
-        this.callbacks.onPartial?.({
-          text: interim.text || '',
-          tokens: interim.tokens || [],
-          timestamps: interim.timestamps || [],
-          confidences: interim.ys_probs || [],
-        });
-      }
-
-      const finalResult = this.finishNativeStream();
-      this.setStatus('stopped');
-      this.callbacks.onFinal?.(finalResult);
-      return finalResult;
-    } else if (this.worker) {
-      // Browser worker execution
-      this.worker.postMessage({ type: 'start_stream' });
-
-      for (let offset = 0; offset < pcm16k.length; offset += chunkSize) {
-        const chunk = pcm16k.subarray(offset, Math.min(offset + chunkSize, pcm16k.length));
-        this.worker.postMessage({
-          type: 'audio_chunk',
-          payload: {
-            pcm: chunk,
-            sampleRate: 16000,
-            isFinal: offset + chunkSize >= pcm16k.length,
-          },
-        });
-      }
-
-      return new Promise<RecognitionFinalResult>((resolve) => {
-        const originalFinalCallback = this.callbacks.onFinal;
-        this.callbacks.onFinal = (res) => {
-          this.setStatus('stopped');
-          originalFinalCallback?.(res);
-          this.callbacks.onFinal = originalFinalCallback;
-          resolve(res);
-        };
-      });
-    } else {
+    if (!this.nativeRecognizer) {
       throw new Error('Recognition backend is not initialized');
     }
+
+    // Direct in-process execution (Node or Browser)
+    if (this.nativeActiveStream) {
+      this.nativeActiveStream.free();
+    }
+    this.nativeActiveStream = this.nativeRecognizer.createStream();
+
+    // Stream in chunks
+    for (let offset = 0; offset < pcm16k.length; offset += chunkSize) {
+      const chunk = pcm16k.subarray(offset, Math.min(offset + chunkSize, pcm16k.length));
+
+      // Compute RMS
+      let sumSq = 0;
+      let peak = 0;
+      for (let i = 0; i < chunk.length; i++) {
+        const v = chunk[i];
+        sumSq += v * v;
+        const a = Math.abs(v);
+        if (a > peak) peak = a;
+      }
+      const rms = Math.min(100, Math.round(Math.sqrt(sumSq / chunk.length) * 300));
+
+      this.callbacks.onAudioLevel?.({
+        rmsLevel: rms,
+        peak,
+        isSpeaking: rms > this.config.vadSilenceThreshold,
+      });
+
+      this.nativeActiveStream.acceptWaveform(16000, chunk);
+      while (this.nativeRecognizer.isReady(this.nativeActiveStream)) {
+        this.nativeRecognizer.decode(this.nativeActiveStream);
+      }
+
+      const interim = this.nativeRecognizer.getResult(this.nativeActiveStream);
+
+      // Emit incremental tokens
+      if (interim.tokens && interim.tokens.length > this.lastTokenCount) {
+        for (let i = this.lastTokenCount; i < interim.tokens.length; i++) {
+          const token = interim.tokens[i];
+          const timestamp = (interim.timestamps && interim.timestamps[i]) ?? 0;
+          const confidence = (interim.ys_probs && interim.ys_probs[i]) ?? 1.0;
+
+          this.callbacks.onToken?.({
+            token,
+            timestampMs: Math.round(timestamp * 1000),
+            confidence: Number(confidence.toFixed(4)),
+            index: i,
+            isFinal: false,
+          });
+        }
+        this.lastTokenCount = interim.tokens.length;
+      }
+
+      this.callbacks.onPartial?.({
+        text: interim.text || '',
+        tokens: interim.tokens || [],
+        timestamps: interim.timestamps || [],
+        confidences: interim.ys_probs || [],
+      });
+    }
+
+    const finalResult = this.finishNativeStream();
+    this.setStatus('stopped');
+    this.callbacks.onFinal?.(finalResult);
+    return finalResult;
   }
 
   private finishNativeStream(): RecognitionFinalResult {
@@ -554,11 +548,6 @@ export class VoiceRecognitionEngine {
     if (this.audioContext) {
       this.audioContext.close().catch(() => {});
       this.audioContext = null;
-    }
-    if (this.worker) {
-      this.worker.postMessage({ type: 'free' });
-      this.worker.terminate();
-      this.worker = null;
     }
     if (this.nativeActiveStream) {
       this.nativeActiveStream.free();

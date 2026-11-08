@@ -5,6 +5,7 @@ export interface QuranWord {
   surahNumber: number;
   wordIndex: number;
   isAyahMarker?: boolean;
+  waqfMark?: string;
 }
 
 export type MushafLine =
