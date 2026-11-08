@@ -35,7 +35,14 @@ self.addEventListener('fetch', (event) => {
   // Cache-first for fonts and static assets, Network-first / Stale-while-revalidate for navigation
   const url = new URL(request.url);
 
-  if (url.origin === self.origin && (url.pathname.startsWith('/_next/static/') || url.pathname.startsWith('/fonts/') || url.pathname.startsWith('/icons/'))) {
+  if (
+    url.origin === self.origin &&
+    (url.pathname.startsWith('/_next/static/') ||
+     url.pathname.startsWith('/fonts/') ||
+     url.pathname.startsWith('/icons/') ||
+     url.pathname.startsWith('/sherpa-wasm/') ||
+     url.pathname.startsWith('/models/'))
+  ) {
     event.respondWith(
       caches.match(request).then((cachedResponse) => {
         if (cachedResponse) return cachedResponse;
