@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRecitationStore, FSRSRating } from '@/stores/recitation-store';
 import { useActiveRecallStore } from '@/stores/active-recall-store';
 import { useSessionStore } from '@/stores/session-store';
+import { VoiceRecognitionEngine } from '@/audio';
 import {
   Mic,
   MicOff,
@@ -30,9 +31,23 @@ export const RecitationHUD: React.FC = () => {
     setStatus,
     setMicActive,
     setLiveTranscript,
+    setAlignedTokens,
+    addAlignedToken,
+    setAudioLevel,
+    setErrorMessage,
     setLastFsrsRating,
     resetRecitation,
   } = useRecitationStore();
+
+  const engineRef = useRef<VoiceRecognitionEngine | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (engineRef.current) {
+        engineRef.current.dispose();
+      }
+    };
+  }, []);
 
   const {
     mode,
@@ -62,18 +77,63 @@ export const RecitationHUD: React.FC = () => {
     return () => clearInterval(interval);
   }, [micActive, waveformLevels]);
 
-  const toggleMic = () => {
+  const toggleMic = async () => {
     if (!micActive) {
-      setMicActive(true);
-      setStatus('listening');
-      setLiveTranscript('بِسْمِ اللَّـهِ الرَّحْمَـٰنِ الرَّحِيمِ...');
-      // Simulate automatic phoneme alignment after brief speech
-      setTimeout(() => {
-        setStatus('evaluating');
-      }, 2000);
+      try {
+        setMicActive(true);
+        setStatus('listening');
+        setLiveTranscript('');
+        setAlignedTokens([]);
+
+        if (!engineRef.current) {
+          engineRef.current = new VoiceRecognitionEngine({
+            modelPath: '/models/zipformer_p_arabic_v3.2.int8.onnx',
+            tokensPath: '/models/tokens.txt',
+          });
+        }
+
+        engineRef.current.setCallbacks({
+          onToken: (ev) => {
+            addAlignedToken({
+              token: ev.token,
+              phoneme: ev.token,
+              status: 'correct',
+              confidence: Math.round(ev.confidence * 100),
+            });
+          },
+          onPartial: (p) => {
+            if (p.text) setLiveTranscript(p.text);
+          },
+          onAudioLevel: (lvl) => {
+            setAudioLevel(lvl.rmsLevel);
+          },
+          onError: (err) => {
+            setErrorMessage(err.message);
+            setStatus('error');
+            setMicActive(false);
+          },
+        });
+
+        await engineRef.current.startRecording();
+      } catch (err: unknown) {
+        setErrorMessage(err instanceof Error ? err.message : String(err));
+        setStatus('error');
+        setMicActive(false);
+      }
     } else {
       setMicActive(false);
-      setStatus('completed');
+      if (engineRef.current && engineRef.current.getStatus() === 'recording') {
+        setStatus('processing');
+        try {
+          const finalRes = await engineRef.current.stopRecording();
+          if (finalRes.text) setLiveTranscript(finalRes.text);
+          setStatus('completed');
+        } catch {
+          setStatus('completed');
+        }
+      } else {
+        setStatus('completed');
+      }
     }
   };
 

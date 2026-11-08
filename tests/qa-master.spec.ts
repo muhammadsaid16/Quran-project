@@ -14,11 +14,12 @@ describe('QA Deliverable 1: Quran Text Integrity & Medina Boundary Suite', () =>
     expect(report.findings.filter((f) => f.includes('missing canonical Ayah'))).toHaveLength(0);
   });
 
-  it('flags incomplete in-tree frontend data (surahs.ts and medina-pages.ts)', () => {
+  it('verifies in-tree frontend data completeness (surahs.ts covers 114 surahs and medina-pages.ts covers 604 pages)', () => {
     const incompleteSurahs = report.findings.some((f) => f.includes('src/data/surahs.ts'));
     const incompletePages = report.findings.some((f) => f.includes('src/data/medina-pages.ts'));
-    expect(incompleteSurahs).toBe(true);
-    expect(incompletePages).toBe(true);
+    expect(incompleteSurahs).toBe(false);
+    expect(incompletePages).toBe(false);
+    expect(report.failedChecks).toBe(0);
   });
 });
 

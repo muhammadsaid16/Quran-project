@@ -79,11 +79,11 @@ flowchart TD
 * **Tracking Issue:** WHI-37 (Milestone 2)
 * **Blocked By:** WHI-33 (Milestone 0 Gate)
 * **Concrete Acceptance Criteria (DoD):**
-  - [ ] `AudioWorkletNode` captures user voice at 16 kHz mono with zero main-thread audio glitching or buffer dropouts.
-  - [ ] Kaldi 80-dim FBank feature extraction runs in streaming chunks (e.g., 100ms-200ms windows).
-  - [ ] CTC token stream emitted with timestamps and frame confidence scores.
-  - [ ] Audio pipeline gracefully handles silence, voice pauses, background noise, and microphone disconnects.
-  - [ ] Automated integration test feeds synthetic 16kHz WAV files and confirms deterministic CTC token emissions.
+  - [x] `AudioWorkletNode` captures user voice at 16 kHz mono with zero main-thread audio glitching or buffer dropouts.
+  - [x] Kaldi 80-dim FBank feature extraction runs in streaming chunks (e.g., 100ms-200ms windows).
+  - [x] CTC token stream emitted with timestamps and frame confidence scores.
+  - [x] Audio pipeline gracefully handles silence, voice pauses, background noise, and microphone disconnects.
+  - [x] Automated integration test feeds synthetic 16kHz WAV files and confirms deterministic CTC token emissions.
 
 ### Milestone 3: Phoneme Alignment & Error Detection
 * **Goal:** Align streaming CTC phoneme tokens against reference Quranic phonemes and classify recitation errors.

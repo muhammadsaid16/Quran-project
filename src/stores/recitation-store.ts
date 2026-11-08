@@ -44,6 +44,7 @@ interface RecitationState {
   setWaveformLevels: (levels: number[]) => void;
   setLiveTranscript: (transcript: string) => void;
   setAlignedTokens: (tokens: AlignedToken[]) => void;
+  addAlignedToken: (token: AlignedToken) => void;
   addDetectedError: (error: RecitationError) => void;
   setConfidenceScore: (score: number) => void;
   setLastFsrsRating: (rating: FSRSRating | null) => void;
@@ -69,6 +70,8 @@ export const useRecitationStore = create<RecitationState>((set) => ({
   setWaveformLevels: (waveformLevels) => set({ waveformLevels }),
   setLiveTranscript: (liveTranscript) => set({ liveTranscript }),
   setAlignedTokens: (alignedTokens) => set({ alignedTokens }),
+  addAlignedToken: (token) =>
+    set((state) => ({ alignedTokens: [...state.alignedTokens, token] })),
   addDetectedError: (error) =>
     set((state) => ({ detectedErrors: [...state.detectedErrors, error] })),
   setConfidenceScore: (confidenceScore) => set({ confidenceScore }),
