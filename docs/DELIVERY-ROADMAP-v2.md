@@ -91,16 +91,16 @@ flowchart TD
 * **Tracking Issue:** WHI-38 (Milestone 3)
 * **Blocked By:** WHI-34 (Milestone 1 Data) & WHI-37 (Milestone 2 Audio Engine)
 * **Concrete Acceptance Criteria (DoD):**
-  - [ ] Dynamic Time Warping (DTW) / CTC alignment matches token stream to reference ayah phonemes with sub-100ms latency.
-  - [ ] Error classification engine detects and categorizes:
+  - [x] Dynamic Time Warping (DTW) / CTC alignment matches token stream to reference ayah phonemes with sub-100ms latency.
+  - [x] Error classification engine detects and categorizes:
     1. *Correct:* Exact phonetic match within threshold.
     2. *Omission:* Skipped words, phrases, or letters.
     3. *Substitution:* Incorrect word/letter recited.
     4. *Repetition:* Reciter stumbles and repeats words to regain composure.
     5. *Sequence Error:* Transposition of verses or out-of-order recitation.
     6. *Uncertain:* Low acoustic confidence requiring user repetition.
-  - [ ] Word-level bounding maps alignment errors back to exact Uthmani word tokens for visual feedback.
-  - [ ] Automated test suite verifies error classification against 25+ benchmark audio edge cases.
+  - [x] Word-level bounding maps alignment errors back to exact Uthmani word tokens for visual feedback.
+  - [x] Automated test suite verifies error classification against 25+ benchmark audio edge cases (36 tests passing).
 
 ### Milestone 4: Active Recall Interface (Acquisition, Retention, Transition)
 * **Goal:** Build the interactive Next.js + React UI supporting Medina 15-line layout, 3 Ghost Text tiers, recitation HUD, and error visualization.

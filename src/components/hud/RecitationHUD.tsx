@@ -4,7 +4,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useRecitationStore, FSRSRating } from '@/stores/recitation-store';
 import { useActiveRecallStore } from '@/stores/active-recall-store';
 import { useSessionStore } from '@/stores/session-store';
-import { VoiceRecognitionEngine } from '@/audio';
+import { VoiceRecognitionEngine, StreamingTokenEvent } from '@/audio';
+import { PhonemeAlignmentEngine } from '@/alignment';
 import {
   Mic,
   MicOff,
@@ -35,13 +36,19 @@ export const RecitationHUD: React.FC = () => {
     addAlignedToken,
     setAudioLevel,
     setErrorMessage,
+    setConfidenceScore,
     setLastFsrsRating,
     resetRecitation,
   } = useRecitationStore();
 
   const engineRef = useRef<VoiceRecognitionEngine | null>(null);
+  const alignmentEngineRef = useRef<PhonemeAlignmentEngine | null>(null);
+  const accumulatedTokensRef = useRef<StreamingTokenEvent[]>([]);
 
   useEffect(() => {
+    alignmentEngineRef.current = new PhonemeAlignmentEngine();
+    alignmentEngineRef.current.initialize().catch(() => {});
+
     return () => {
       if (engineRef.current) {
         engineRef.current.dispose();
@@ -84,6 +91,7 @@ export const RecitationHUD: React.FC = () => {
         setStatus('listening');
         setLiveTranscript('');
         setAlignedTokens([]);
+        accumulatedTokensRef.current = [];
 
         if (!engineRef.current) {
           engineRef.current = new VoiceRecognitionEngine({
@@ -94,6 +102,7 @@ export const RecitationHUD: React.FC = () => {
 
         engineRef.current.setCallbacks({
           onToken: (ev) => {
+            accumulatedTokensRef.current.push(ev);
             addAlignedToken({
               token: ev.token,
               phoneme: ev.token,
@@ -127,6 +136,54 @@ export const RecitationHUD: React.FC = () => {
         try {
           const finalRes = await engineRef.current.stopRecording();
           if (finalRes.text) setLiveTranscript(finalRes.text);
+
+          // Run Phoneme Alignment & Error Detection
+          if (alignmentEngineRef.current && currentAyah) {
+            const verseKey = `${currentAyah.surahNumber}:${currentAyah.ayahNumber}`;
+            const meanConfidence =
+              finalRes.confidences.length > 0
+                ? finalRes.confidences.reduce((a, b) => a + b, 0) / finalRes.confidences.length
+                : 0.95;
+
+            try {
+              const alignResult = alignmentEngineRef.current.alignAyah(
+                verseKey,
+                accumulatedTokensRef.current,
+                { acousticConfidence: meanConfidence }
+              );
+
+              setConfidenceScore(Math.round(alignResult.accuracy * 100));
+
+              // Map word statuses and errors
+              const uiTokens = alignResult.alignmentSteps.map((step) => ({
+                token: step.hypToken || step.refToken || '',
+                phoneme: step.refToken || step.hypToken || '',
+                status: (step.op === 'match'
+                  ? 'correct'
+                  : step.op === 'deletion'
+                  ? 'omission'
+                  : 'substitution') as 'correct' | 'omission' | 'substitution' | 'uncertain',
+                confidence: Math.round((step.confidence ?? meanConfidence) * 100),
+              }));
+              setAlignedTokens(uiTokens);
+
+              // Update detected errors
+              for (const word of alignResult.words) {
+                if (word.status !== 'correct') {
+                  useRecitationStore.getState().addDetectedError({
+                    type: word.status,
+                    descriptionAr: word.errorDetails || 'خطأ في التلاوة',
+                    wordExpected: word.uthmaniText,
+                    wordDetected: word.detectedPhonemes,
+                    index: word.wordIndex,
+                  });
+                }
+              }
+            } catch (alignErr) {
+              console.error('Alignment failed:', alignErr);
+            }
+          }
+
           setStatus('completed');
         } catch {
           setStatus('completed');

@@ -16,7 +16,7 @@ export interface AlignedToken {
 }
 
 export interface RecitationError {
-  type: 'omission' | 'substitution' | 'repetition' | 'sequence_error';
+  type: 'omission' | 'substitution' | 'repetition' | 'sequence_error' | 'uncertain';
   descriptionAr: string;
   wordExpected: string;
   wordDetected?: string;
