@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#11654C"/>
+      <stop offset="100%" stop-color="#08382B"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5E3A9"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#AA820A"/>
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="40" fill="url(#bgGrad)"/>
+  <!-- Islamic geometric frame -->
+  <rect x="18" y="18" width="156" height="156" rx="28" fill="none" stroke="url(#goldGrad)" stroke-width="2.5" opacity="0.6"/>
+  <rect x="26" y="26" width="140" height="140" rx="20" fill="none" stroke="url(#goldGrad)" stroke-width="1.2" opacity="0.4"/>
+  <!-- Open Quran Symbol -->
+  <path d="M96 60 C80 50 48 54 44 86 C44 116 78 122 96 134 C114 122 148 116 148 86 C144 54 112 50 96 60 Z" fill="none" stroke="url(#goldGrad)" stroke-width="4.5" stroke-linejoin="round"/>
+  <!-- Book spine & pages -->
+  <path d="M96 63 L96 132" stroke="url(#goldGrad)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M60 84 C72 80 84 82 92 86" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+  <path d="M60 96 C72 92 84 94 92 98" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+  <path d="M132 84 C120 80 108 82 100 86" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+  <path d="M132 96 C120 92 108 94 100 98" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+  <!-- Star emblem on top -->
+  <circle cx="96" cy="46" r="4" fill="url(#goldGrad)"/>
+</svg>

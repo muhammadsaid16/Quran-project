@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-uthmani: 'Amiri Quran', 'Scheherazade New', 'Traditional Arabic', serif;
+  --font-arabic: 'IBM Plex Sans Arabic', 'Cairo', system-ui, sans-serif;
+}
+
+/* High Contrast Mode Tokens */
+[data-theme="high-contrast"] {
+  --bg-color: #000000;
+  --text-color: #FFFFFF;
+  --border-color: #FFFF00;
+  --gold-color: #FFFF00;
+  --emerald-color: #00FF66;
+}
+
+/* Sepia Mode Tokens */
+[data-theme="sepia"] {
+  --bg-color: #F4ECD8;
+  --text-color: #433422;
+  --border-color: #D3C4A5;
+}
+
+body {
+  font-family: var(--font-arabic);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #FAF8F2;
+  color: #15191E;
+}
+
+.dark body {
+  background-color: #0B0F17;
+  color: #F1F5F9;
+}
+
+/* Medina Mushaf typography rules */
+.font-uthmani {
+  font-family: var(--font-uthmani);
+  font-feature-settings: "cv01" on, "cv02" on;
+  word-spacing: 0.1em;
+}
+
+/* Custom scrollbars for clean UI */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(194, 155, 56, 0.3);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(194, 155, 56, 0.6);
+}

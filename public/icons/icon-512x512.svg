@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#11654C"/>
+      <stop offset="100%" stop-color="#08382B"/>
+    </linearGradient>
+    <linearGradient id="goldGrad512" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F5E3A9"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#AA820A"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="100" fill="url(#bgGrad512)"/>
+  <rect x="48" y="48" width="416" height="416" rx="72" fill="none" stroke="url(#goldGrad512)" stroke-width="6" opacity="0.6"/>
+  <rect x="68" y="68" width="376" height="376" rx="54" fill="none" stroke="url(#goldGrad512)" stroke-width="3" opacity="0.4"/>
+  <path d="M256 160 C214 134 128 144 116 230 C116 310 208 326 256 358 C304 326 396 310 396 230 C384 144 298 134 256 160 Z" fill="none" stroke="url(#goldGrad512)" stroke-width="12" stroke-linejoin="round"/>
+  <path d="M256 168 L256 352" stroke="url(#goldGrad512)" stroke-width="8" stroke-linecap="round"/>
+  <path d="M160 224 C192 214 224 218 246 230" stroke="url(#goldGrad512)" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+  <path d="M160 256 C192 246 224 250 246 262" stroke="url(#goldGrad512)" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+  <path d="M352 224 C320 214 288 218 266 230" stroke="url(#goldGrad512)" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+  <path d="M352 256 C320 246 288 250 266 262" stroke="url(#goldGrad512)" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+  <circle cx="256" cy="122" r="10" fill="url(#goldGrad512)"/>
+</svg>
