@@ -38,7 +38,10 @@ export const Header: React.FC = () => {
     promptInstall,
   } = usePWAStore();
 
+  const [isMounted, setIsMounted] = React.useState(false);
+
   useEffect(() => {
+    setIsMounted(true);
     initPWA();
   }, [initPWA]);
 
@@ -143,7 +146,7 @@ export const Header: React.FC = () => {
           </div>
 
           {/* PWA Install Button (shown when installable) */}
-          {isInstallable && (
+          {isMounted && isInstallable && (
             <button
               onClick={promptInstall}
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-mushaf-emerald text-white text-xs font-semibold shadow hover:bg-emerald-700 transition-colors animate-pulse"
@@ -155,7 +158,7 @@ export const Header: React.FC = () => {
           )}
 
           {/* Persistent Storage Status */}
-          {isStoragePersisted && (
+          {isMounted && isStoragePersisted && (
             <div
               className="hidden lg:flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[11px]"
               title="تخزين محلي دائم مفعل (لا يمكن حذفه تلقائياً من المتصفح)"
@@ -168,9 +171,9 @@ export const Header: React.FC = () => {
           {/* PWA Offline Readiness Indicator */}
           <div
             className="p-1.5 rounded-lg text-xs flex items-center text-mushaf-emerald dark:text-darkMushaf-emerald bg-mushaf-emerald/10 border border-mushaf-emerald/20"
-            title={isOnline ? 'PWA جاهز للعمل بدون إنترنت (Local-First)' : 'أنت غير متصل (يعمل محليًا بالكامل)'}
+            title={(!isMounted || isOnline) ? 'PWA جاهز للعمل بدون إنترنت (Local-First)' : 'أنت غير متصل (يعمل محليًا بالكامل)'}
           >
-            {isOnline ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5 text-amber-500" />}
+            {(!isMounted || isOnline) ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5 text-amber-500" />}
           </div>
 
         </div>

@@ -43,6 +43,12 @@ export const DashboardView: React.FC = () => {
     requestPersistentStorage,
   } = usePWAStore();
 
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const handleStartMode = (mode: RecallMode) => {
     startRecallSession(mode);
     setActiveView('mushaf');
@@ -276,7 +282,7 @@ export const DashboardView: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            {isInstallable && (
+            {isMounted && isInstallable && (
               <button
                 onClick={promptInstall}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-mushaf-emerald hover:bg-emerald-700 text-white text-xs font-arabic font-bold transition-all shadow-xs"
@@ -286,7 +292,7 @@ export const DashboardView: React.FC = () => {
               </button>
             )}
 
-            {!isStoragePersisted && (
+            {isMounted && !isStoragePersisted && (
               <button
                 onClick={requestPersistentStorage}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-border text-mushaf-ink dark:text-darkMushaf-ink border border-mushaf-border dark:border-darkMushaf-border text-xs font-arabic font-semibold transition-all"
@@ -312,14 +318,14 @@ export const DashboardView: React.FC = () => {
             <div>
               <span className="font-bold">حالة التخزين:</span>
               <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">
-                {isStoragePersisted ? 'تخزين دائم معتمد (Persistent Grant)' : 'تخزين قياسي (Standard Storage)'}
-                {storageEstimate ? ` (~${storageEstimate.usageMB}MB مستخدم)` : ''}
+                {isMounted && isStoragePersisted ? 'تخزين دائم معتمد (Persistent Grant)' : 'تخزين قياسي (Standard Storage)'}
+                {isMounted && storageEstimate ? ` (~${storageEstimate.usageMB}MB مستخدم)` : ''}
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-mushaf-ink dark:text-darkMushaf-ink bg-mushaf-parchment/60 dark:bg-darkMushaf-surface/60 p-2.5 rounded-lg border border-mushaf-border/40 dark:border-darkMushaf-border/40">
-            {isOnline ? (
+            {(!isMounted || isOnline) ? (
               <Wifi className="w-4 h-4 text-blue-500 flex-shrink-0" />
             ) : (
               <WifiOff className="w-4 h-4 text-amber-500 flex-shrink-0" />
@@ -327,7 +333,7 @@ export const DashboardView: React.FC = () => {
             <div>
               <span className="font-bold">الاتصال بالشبكة:</span>
               <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">
-                {isOnline ? 'متصل (يمكن التسميع بدون نت)' : 'غير متصل (يعمل 100% بكفاءة كاملة)'}
+                {(!isMounted || isOnline) ? 'متصل (يمكن التسميع بدون نت)' : 'غير متصل (يعمل 100% بكفاءة كاملة)'}
               </span>
             </div>
           </div>

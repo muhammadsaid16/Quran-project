@@ -25,7 +25,7 @@ export interface PWAState {
 }
 
 export const usePWAStore = create<PWAState>((set, get) => ({
-  isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
+  isOnline: true,
   isInstallable: false,
   isInstalled: false,
   isStoragePersisted: false,
@@ -36,6 +36,11 @@ export const usePWAStore = create<PWAState>((set, get) => ({
 
   initPWA: () => {
     if (typeof window === 'undefined') return;
+
+    // Initialize actual client online status after mount
+    if (typeof navigator !== 'undefined') {
+      set({ isOnline: navigator.onLine });
+    }
 
     // 1. Online / Offline listeners
     const handleOnline = () => set({ isOnline: true });
