@@ -30,6 +30,11 @@ yarn-error.log*
 *.pem
 .directory
 
+# Models & Large Binaries
+*.onnx
+fixtures/*.mp3
+/public/models/*.onnx
+
 # TypeScript cache
 *.tsbuildinfo
 next-env.d.ts
