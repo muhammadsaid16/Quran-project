@@ -33,6 +33,10 @@ export interface MedinaPageData {
   hizbQuarter: string;
   isRightPage: boolean;
   surahHeaderName: string;
+  startSurah: number;
+  startAyah: number;
+  endSurah: number;
+  endAyah: number;
   lines: MushafLine[];
 }
 
@@ -43,6 +47,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 1",
   "isRightPage": true,
   "surahHeaderName": "سورة الفاتحة",
+  "startSurah": 1,
+  "startAyah": 1,
+  "endSurah": 1,
+  "endAyah": 7,
   "lines": [
     {
       "lineNumber": 1,
@@ -352,6 +360,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 1",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 1,
+  "endSurah": 2,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -744,6 +756,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 1",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 6,
+  "endSurah": 2,
+  "endAyah": 16,
   "lines": [
     {
       "lineNumber": 1,
@@ -1848,6 +1864,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 1",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 17,
+  "endSurah": 2,
+  "endAyah": 24,
   "lines": [
     {
       "lineNumber": 1,
@@ -2991,6 +3011,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 1",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 25,
+  "endSurah": 2,
+  "endAyah": 29,
   "lines": [
     {
       "lineNumber": 1,
@@ -4096,6 +4120,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 2",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 30,
+  "endSurah": 2,
+  "endAyah": 37,
   "lines": [
     {
       "lineNumber": 1,
@@ -5273,6 +5301,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 2",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 38,
+  "endSurah": 2,
+  "endAyah": 48,
   "lines": [
     {
       "lineNumber": 1,
@@ -6405,6 +6437,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 3",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 49,
+  "endSurah": 2,
+  "endAyah": 57,
   "lines": [
     {
       "lineNumber": 1,
@@ -7444,6 +7480,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 3",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 58,
+  "endSurah": 2,
+  "endAyah": 61,
   "lines": [
     {
       "lineNumber": 1,
@@ -8519,6 +8559,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 4",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 62,
+  "endSurah": 2,
+  "endAyah": 69,
   "lines": [
     {
       "lineNumber": 1,
@@ -9662,6 +9706,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 4",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 70,
+  "endSurah": 2,
+  "endAyah": 76,
   "lines": [
     {
       "lineNumber": 1,
@@ -10874,6 +10922,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 5",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 77,
+  "endSurah": 2,
+  "endAyah": 83,
   "lines": [
     {
       "lineNumber": 1,
@@ -11897,6 +11949,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 5",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 84,
+  "endSurah": 2,
+  "endAyah": 88,
   "lines": [
     {
       "lineNumber": 1,
@@ -12897,6 +12953,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 5",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 89,
+  "endSurah": 2,
+  "endAyah": 93,
   "lines": [
     {
       "lineNumber": 1,
@@ -13932,6 +13992,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 6",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 94,
+  "endSurah": 2,
+  "endAyah": 101,
   "lines": [
     {
       "lineNumber": 1,
@@ -14990,6 +15054,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 6",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 102,
+  "endSurah": 2,
+  "endAyah": 105,
   "lines": [
     {
       "lineNumber": 1,
@@ -16065,6 +16133,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 7",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 106,
+  "endSurah": 2,
+  "endAyah": 112,
   "lines": [
     {
       "lineNumber": 1,
@@ -17263,6 +17335,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 7",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 113,
+  "endSurah": 2,
+  "endAyah": 119,
   "lines": [
     {
       "lineNumber": 1,
@@ -18439,6 +18515,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 7",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 120,
+  "endSurah": 2,
+  "endAyah": 126,
   "lines": [
     {
       "lineNumber": 1,
@@ -19693,6 +19773,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 8",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 127,
+  "endSurah": 2,
+  "endAyah": 134,
   "lines": [
     {
       "lineNumber": 1,
@@ -20836,6 +20920,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 8",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 135,
+  "endSurah": 2,
+  "endAyah": 141,
   "lines": [
     {
       "lineNumber": 1,
@@ -22012,6 +22100,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 9",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 142,
+  "endSurah": 2,
+  "endAyah": 145,
   "lines": [
     {
       "lineNumber": 1,
@@ -23178,6 +23270,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 9",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 146,
+  "endSurah": 2,
+  "endAyah": 153,
   "lines": [
     {
       "lineNumber": 1,
@@ -24250,6 +24346,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 9",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 154,
+  "endSurah": 2,
+  "endAyah": 163,
   "lines": [
     {
       "lineNumber": 1,
@@ -25409,6 +25509,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 10",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 164,
+  "endSurah": 2,
+  "endAyah": 169,
   "lines": [
     {
       "lineNumber": 1,
@@ -26543,6 +26647,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 10",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 170,
+  "endSurah": 2,
+  "endAyah": 176,
   "lines": [
     {
       "lineNumber": 1,
@@ -27678,6 +27786,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 11",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 177,
+  "endSurah": 2,
+  "endAyah": 181,
   "lines": [
     {
       "lineNumber": 1,
@@ -28761,6 +28873,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 11",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 182,
+  "endSurah": 2,
+  "endAyah": 186,
   "lines": [
     {
       "lineNumber": 1,
@@ -29837,6 +29953,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 11",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 187,
+  "endSurah": 2,
+  "endAyah": 190,
   "lines": [
     {
       "lineNumber": 1,
@@ -30919,6 +31039,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 12",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 191,
+  "endSurah": 2,
+  "endAyah": 196,
   "lines": [
     {
       "lineNumber": 1,
@@ -32270,6 +32394,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 12",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 197,
+  "endSurah": 2,
+  "endAyah": 202,
   "lines": [
     {
       "lineNumber": 1,
@@ -33271,6 +33399,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 13",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 203,
+  "endSurah": 2,
+  "endAyah": 210,
   "lines": [
     {
       "lineNumber": 1,
@@ -34365,6 +34497,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 13",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 211,
+  "endSurah": 2,
+  "endAyah": 215,
   "lines": [
     {
       "lineNumber": 1,
@@ -35561,6 +35697,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 13",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 216,
+  "endSurah": 2,
+  "endAyah": 219,
   "lines": [
     {
       "lineNumber": 1,
@@ -36665,6 +36805,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 14",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 220,
+  "endSurah": 2,
+  "endAyah": 224,
   "lines": [
     {
       "lineNumber": 1,
@@ -37798,6 +37942,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 14",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 225,
+  "endSurah": 2,
+  "endAyah": 230,
   "lines": [
     {
       "lineNumber": 1,
@@ -39093,6 +39241,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 14",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 231,
+  "endSurah": 2,
+  "endAyah": 233,
   "lines": [
     {
       "lineNumber": 1,
@@ -40329,6 +40481,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 15",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 234,
+  "endSurah": 2,
+  "endAyah": 237,
   "lines": [
     {
       "lineNumber": 1,
@@ -41461,6 +41617,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 15",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 238,
+  "endSurah": 2,
+  "endAyah": 245,
   "lines": [
     {
       "lineNumber": 1,
@@ -42485,6 +42645,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 16",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 246,
+  "endSurah": 2,
+  "endAyah": 248,
   "lines": [
     {
       "lineNumber": 1,
@@ -43559,6 +43723,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 16",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 249,
+  "endSurah": 2,
+  "endAyah": 252,
   "lines": [
     {
       "lineNumber": 1,
@@ -44508,6 +44676,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 17",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 253,
+  "endSurah": 2,
+  "endAyah": 256,
   "lines": [
     {
       "lineNumber": 1,
@@ -45794,6 +45966,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 17",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 257,
+  "endSurah": 2,
+  "endAyah": 259,
   "lines": [
     {
       "lineNumber": 1,
@@ -46939,6 +47115,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 17",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 260,
+  "endSurah": 2,
+  "endAyah": 264,
   "lines": [
     {
       "lineNumber": 1,
@@ -48113,6 +48293,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 18",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 265,
+  "endSurah": 2,
+  "endAyah": 269,
   "lines": [
     {
       "lineNumber": 1,
@@ -49148,6 +49332,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 18",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 270,
+  "endSurah": 2,
+  "endAyah": 274,
   "lines": [
     {
       "lineNumber": 1,
@@ -50119,6 +50307,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 19",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 275,
+  "endSurah": 2,
+  "endAyah": 281,
   "lines": [
     {
       "lineNumber": 1,
@@ -51281,6 +51473,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 19",
   "isRightPage": false,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 282,
+  "endSurah": 2,
+  "endAyah": 282,
   "lines": [
     {
       "lineNumber": 1,
@@ -52396,6 +52592,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 20",
   "isRightPage": true,
   "surahHeaderName": "سورة البقرة",
+  "startSurah": 2,
+  "startAyah": 283,
+  "endSurah": 2,
+  "endAyah": 286,
   "lines": [
     {
       "lineNumber": 1,
@@ -53598,6 +53798,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 20",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 1,
+  "endSurah": 3,
+  "endAyah": 9,
   "lines": [
     {
       "lineNumber": 1,
@@ -54805,6 +55009,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 20",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 10,
+  "endSurah": 3,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -55848,6 +56056,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 21",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 16,
+  "endSurah": 3,
+  "endAyah": 22,
   "lines": [
     {
       "lineNumber": 1,
@@ -56864,6 +57076,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 21",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 23,
+  "endSurah": 3,
+  "endAyah": 29,
   "lines": [
     {
       "lineNumber": 1,
@@ -58104,6 +58320,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 21",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 30,
+  "endSurah": 3,
+  "endAyah": 37,
   "lines": [
     {
       "lineNumber": 1,
@@ -59366,6 +59586,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 22",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 38,
+  "endSurah": 3,
+  "endAyah": 45,
   "lines": [
     {
       "lineNumber": 1,
@@ -60488,6 +60712,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 22",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 46,
+  "endSurah": 3,
+  "endAyah": 52,
   "lines": [
     {
       "lineNumber": 1,
@@ -61602,6 +61830,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 23",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 53,
+  "endSurah": 3,
+  "endAyah": 61,
   "lines": [
     {
       "lineNumber": 1,
@@ -62661,6 +62893,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 23",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 62,
+  "endSurah": 3,
+  "endAyah": 70,
   "lines": [
     {
       "lineNumber": 1,
@@ -63812,6 +64048,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 23",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 71,
+  "endSurah": 3,
+  "endAyah": 77,
   "lines": [
     {
       "lineNumber": 1,
@@ -64974,6 +65214,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 24",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 78,
+  "endSurah": 3,
+  "endAyah": 83,
   "lines": [
     {
       "lineNumber": 1,
@@ -66017,6 +66261,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 24",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 84,
+  "endSurah": 3,
+  "endAyah": 91,
   "lines": [
     {
       "lineNumber": 1,
@@ -67082,6 +67330,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 24",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 92,
+  "endSurah": 3,
+  "endAyah": 100,
   "lines": [
     {
       "lineNumber": 1,
@@ -68296,6 +68548,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 25",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 101,
+  "endSurah": 3,
+  "endAyah": 108,
   "lines": [
     {
       "lineNumber": 1,
@@ -69411,6 +69667,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 25",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 109,
+  "endSurah": 3,
+  "endAyah": 115,
   "lines": [
     {
       "lineNumber": 1,
@@ -70455,6 +70715,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 26",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 116,
+  "endSurah": 3,
+  "endAyah": 121,
   "lines": [
     {
       "lineNumber": 1,
@@ -71582,6 +71846,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 26",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 122,
+  "endSurah": 3,
+  "endAyah": 132,
   "lines": [
     {
       "lineNumber": 1,
@@ -72700,6 +72968,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 27",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 133,
+  "endSurah": 3,
+  "endAyah": 140,
   "lines": [
     {
       "lineNumber": 1,
@@ -73696,6 +73968,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 27",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 141,
+  "endSurah": 3,
+  "endAyah": 148,
   "lines": [
     {
       "lineNumber": 1,
@@ -74832,6 +75108,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 27",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 149,
+  "endSurah": 3,
+  "endAyah": 153,
   "lines": [
     {
       "lineNumber": 1,
@@ -75755,6 +76035,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 28",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 154,
+  "endSurah": 3,
+  "endAyah": 157,
   "lines": [
     {
       "lineNumber": 1,
@@ -76992,6 +77276,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 28",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 158,
+  "endSurah": 3,
+  "endAyah": 165,
   "lines": [
     {
       "lineNumber": 1,
@@ -78233,6 +78521,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 28",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 166,
+  "endSurah": 3,
+  "endAyah": 173,
   "lines": [
     {
       "lineNumber": 1,
@@ -79390,6 +79682,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 29",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 174,
+  "endSurah": 3,
+  "endAyah": 180,
   "lines": [
     {
       "lineNumber": 1,
@@ -80637,6 +80933,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 29",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 181,
+  "endSurah": 3,
+  "endAyah": 186,
   "lines": [
     {
       "lineNumber": 1,
@@ -81659,6 +81959,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 30",
   "isRightPage": true,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 187,
+  "endSurah": 3,
+  "endAyah": 194,
   "lines": [
     {
       "lineNumber": 1,
@@ -82753,6 +83057,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 30",
   "isRightPage": false,
   "surahHeaderName": "سورة آل عمران",
+  "startSurah": 3,
+  "startAyah": 195,
+  "endSurah": 3,
+  "endAyah": 200,
   "lines": [
     {
       "lineNumber": 1,
@@ -83775,6 +84083,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 31",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 1,
+  "endSurah": 4,
+  "endAyah": 6,
   "lines": [
     {
       "lineNumber": 1,
@@ -85014,6 +85326,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 31",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 7,
+  "endSurah": 4,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -86154,6 +86470,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 32",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 12,
+  "endSurah": 4,
+  "endAyah": 14,
   "lines": [
     {
       "lineNumber": 1,
@@ -87201,6 +87521,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 32",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 15,
+  "endSurah": 4,
+  "endAyah": 19,
   "lines": [
     {
       "lineNumber": 1,
@@ -88194,6 +88518,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 32",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 20,
+  "endSurah": 4,
+  "endAyah": 23,
   "lines": [
     {
       "lineNumber": 1,
@@ -89038,6 +89366,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 33",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 24,
+  "endSurah": 4,
+  "endAyah": 26,
   "lines": [
     {
       "lineNumber": 1,
@@ -90057,6 +90389,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 33",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 27,
+  "endSurah": 4,
+  "endAyah": 33,
   "lines": [
     {
       "lineNumber": 1,
@@ -91087,6 +91423,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 33",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 34,
+  "endSurah": 4,
+  "endAyah": 37,
   "lines": [
     {
       "lineNumber": 1,
@@ -92043,6 +92383,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 34",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 38,
+  "endSurah": 4,
+  "endAyah": 44,
   "lines": [
     {
       "lineNumber": 1,
@@ -93185,6 +93529,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 34",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 45,
+  "endSurah": 4,
+  "endAyah": 51,
   "lines": [
     {
       "lineNumber": 1,
@@ -94354,6 +94702,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 34",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 52,
+  "endSurah": 4,
+  "endAyah": 59,
   "lines": [
     {
       "lineNumber": 1,
@@ -95595,6 +95947,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 35",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 60,
+  "endSurah": 4,
+  "endAyah": 65,
   "lines": [
     {
       "lineNumber": 1,
@@ -96581,6 +96937,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 35",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 66,
+  "endSurah": 4,
+  "endAyah": 74,
   "lines": [
     {
       "lineNumber": 1,
@@ -97676,6 +98036,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 36",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 75,
+  "endSurah": 4,
+  "endAyah": 79,
   "lines": [
     {
       "lineNumber": 1,
@@ -98963,6 +99327,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 36",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 80,
+  "endSurah": 4,
+  "endAyah": 86,
   "lines": [
     {
       "lineNumber": 1,
@@ -100175,6 +100543,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 36",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 87,
+  "endSurah": 4,
+  "endAyah": 91,
   "lines": [
     {
       "lineNumber": 1,
@@ -101342,6 +101714,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 37",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 92,
+  "endSurah": 4,
+  "endAyah": 94,
   "lines": [
     {
       "lineNumber": 1,
@@ -102318,6 +102694,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 37",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 95,
+  "endSurah": 4,
+  "endAyah": 101,
   "lines": [
     {
       "lineNumber": 1,
@@ -103572,6 +103952,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 38",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 102,
+  "endSurah": 4,
+  "endAyah": 105,
   "lines": [
     {
       "lineNumber": 1,
@@ -104606,6 +104990,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 38",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 106,
+  "endSurah": 4,
+  "endAyah": 113,
   "lines": [
     {
       "lineNumber": 1,
@@ -105735,6 +106123,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 39",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 114,
+  "endSurah": 4,
+  "endAyah": 121,
   "lines": [
     {
       "lineNumber": 1,
@@ -106787,6 +107179,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 39",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 122,
+  "endSurah": 4,
+  "endAyah": 127,
   "lines": [
     {
       "lineNumber": 1,
@@ -107864,6 +108260,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 39",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 128,
+  "endSurah": 4,
+  "endAyah": 134,
   "lines": [
     {
       "lineNumber": 1,
@@ -109013,6 +109413,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 40",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 135,
+  "endSurah": 4,
+  "endAyah": 140,
   "lines": [
     {
       "lineNumber": 1,
@@ -110181,6 +110585,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 40",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 141,
+  "endSurah": 4,
+  "endAyah": 147,
   "lines": [
     {
       "lineNumber": 1,
@@ -111274,6 +111682,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 41",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 148,
+  "endSurah": 4,
+  "endAyah": 154,
   "lines": [
     {
       "lineNumber": 1,
@@ -112395,6 +112807,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 41",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 155,
+  "endSurah": 4,
+  "endAyah": 162,
   "lines": [
     {
       "lineNumber": 1,
@@ -113587,6 +114003,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 42",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 163,
+  "endSurah": 4,
+  "endAyah": 170,
   "lines": [
     {
       "lineNumber": 1,
@@ -114695,6 +115115,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 42",
   "isRightPage": true,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 171,
+  "endSurah": 4,
+  "endAyah": 175,
   "lines": [
     {
       "lineNumber": 1,
@@ -115764,6 +116188,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 42",
   "isRightPage": false,
   "surahHeaderName": "سورة النساء",
+  "startSurah": 4,
+  "startAyah": 176,
+  "endSurah": 5,
+  "endAyah": 2,
   "lines": [
     {
       "lineNumber": 1,
@@ -116888,6 +117316,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 43",
   "isRightPage": true,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 3,
+  "endSurah": 5,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -118046,6 +118478,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 43",
   "isRightPage": false,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 6,
+  "endSurah": 5,
+  "endAyah": 9,
   "lines": [
     {
       "lineNumber": 1,
@@ -119059,6 +119495,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 43",
   "isRightPage": true,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 10,
+  "endSurah": 5,
+  "endAyah": 13,
   "lines": [
     {
       "lineNumber": 1,
@@ -120015,6 +120455,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 44",
   "isRightPage": false,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 14,
+  "endSurah": 5,
+  "endAyah": 17,
   "lines": [
     {
       "lineNumber": 1,
@@ -120944,6 +121388,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 44",
   "isRightPage": true,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 18,
+  "endSurah": 5,
+  "endAyah": 23,
   "lines": [
     {
       "lineNumber": 1,
@@ -122071,6 +122519,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 44",
   "isRightPage": false,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 24,
+  "endSurah": 5,
+  "endAyah": 31,
   "lines": [
     {
       "lineNumber": 1,
@@ -123221,6 +123673,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 45",
   "isRightPage": true,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 32,
+  "endSurah": 5,
+  "endAyah": 36,
   "lines": [
     {
       "lineNumber": 1,
@@ -124263,6 +124719,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 45",
   "isRightPage": false,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 37,
+  "endSurah": 5,
+  "endAyah": 41,
   "lines": [
     {
       "lineNumber": 1,
@@ -125368,6 +125828,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 46",
   "isRightPage": true,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 42,
+  "endSurah": 5,
+  "endAyah": 45,
   "lines": [
     {
       "lineNumber": 1,
@@ -126360,6 +126824,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 46",
   "isRightPage": false,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 46,
+  "endSurah": 5,
+  "endAyah": 50,
   "lines": [
     {
       "lineNumber": 1,
@@ -127527,6 +127995,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 47",
   "isRightPage": true,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 51,
+  "endSurah": 5,
+  "endAyah": 57,
   "lines": [
     {
       "lineNumber": 1,
@@ -128794,6 +129266,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 47",
   "isRightPage": false,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 58,
+  "endSurah": 5,
+  "endAyah": 64,
   "lines": [
     {
       "lineNumber": 1,
@@ -130075,6 +130551,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 47",
   "isRightPage": true,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 65,
+  "endSurah": 5,
+  "endAyah": 70,
   "lines": [
     {
       "lineNumber": 1,
@@ -131188,6 +131668,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 48",
   "isRightPage": false,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 71,
+  "endSurah": 5,
+  "endAyah": 76,
   "lines": [
     {
       "lineNumber": 1,
@@ -132287,6 +132771,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 48",
   "isRightPage": true,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 77,
+  "endSurah": 5,
+  "endAyah": 82,
   "lines": [
     {
       "lineNumber": 1,
@@ -133245,6 +133733,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 49",
   "isRightPage": false,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 83,
+  "endSurah": 5,
+  "endAyah": 89,
   "lines": [
     {
       "lineNumber": 1,
@@ -134387,6 +134879,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 49",
   "isRightPage": true,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 90,
+  "endSurah": 5,
+  "endAyah": 95,
   "lines": [
     {
       "lineNumber": 1,
@@ -135605,6 +136101,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 49",
   "isRightPage": false,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 96,
+  "endSurah": 5,
+  "endAyah": 103,
   "lines": [
     {
       "lineNumber": 1,
@@ -136789,6 +137289,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 50",
   "isRightPage": true,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 104,
+  "endSurah": 5,
+  "endAyah": 108,
   "lines": [
     {
       "lineNumber": 1,
@@ -137970,6 +138474,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 51",
   "isRightPage": false,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 109,
+  "endSurah": 5,
+  "endAyah": 113,
   "lines": [
     {
       "lineNumber": 1,
@@ -139061,6 +139569,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 51",
   "isRightPage": true,
   "surahHeaderName": "سورة المائدة",
+  "startSurah": 5,
+  "startAyah": 114,
+  "endSurah": 5,
+  "endAyah": 120,
   "lines": [
     {
       "lineNumber": 1,
@@ -140420,6 +140932,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 51",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 1,
+  "endSurah": 6,
+  "endAyah": 8,
   "lines": [
     {
       "lineNumber": 1,
@@ -141514,6 +142030,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 51",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 9,
+  "endSurah": 6,
+  "endAyah": 18,
   "lines": [
     {
       "lineNumber": 1,
@@ -142693,6 +143213,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 52",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 19,
+  "endSurah": 6,
+  "endAyah": 27,
   "lines": [
     {
       "lineNumber": 1,
@@ -144054,6 +144578,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 52",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 28,
+  "endSurah": 6,
+  "endAyah": 35,
   "lines": [
     {
       "lineNumber": 1,
@@ -145336,6 +145864,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 53",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 36,
+  "endSurah": 6,
+  "endAyah": 44,
   "lines": [
     {
       "lineNumber": 1,
@@ -146529,6 +147061,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 53",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 45,
+  "endSurah": 6,
+  "endAyah": 52,
   "lines": [
     {
       "lineNumber": 1,
@@ -147721,6 +148257,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 53",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 53,
+  "endSurah": 6,
+  "endAyah": 59,
   "lines": [
     {
       "lineNumber": 1,
@@ -148919,6 +149459,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 54",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 60,
+  "endSurah": 6,
+  "endAyah": 68,
   "lines": [
     {
       "lineNumber": 1,
@@ -150133,6 +150677,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 54",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 69,
+  "endSurah": 6,
+  "endAyah": 73,
   "lines": [
     {
       "lineNumber": 1,
@@ -151245,6 +151793,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 55",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 74,
+  "endSurah": 6,
+  "endAyah": 81,
   "lines": [
     {
       "lineNumber": 1,
@@ -152422,6 +152974,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 55",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 82,
+  "endSurah": 6,
+  "endAyah": 90,
   "lines": [
     {
       "lineNumber": 1,
@@ -153524,6 +154080,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 55",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 91,
+  "endSurah": 6,
+  "endAyah": 94,
   "lines": [
     {
       "lineNumber": 1,
@@ -154740,6 +155300,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 56",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 95,
+  "endSurah": 6,
+  "endAyah": 101,
   "lines": [
     {
       "lineNumber": 1,
@@ -155938,6 +156502,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 56",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 102,
+  "endSurah": 6,
+  "endAyah": 110,
   "lines": [
     {
       "lineNumber": 1,
@@ -157138,6 +157706,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 57",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 111,
+  "endSurah": 6,
+  "endAyah": 118,
   "lines": [
     {
       "lineNumber": 1,
@@ -158274,6 +158846,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 57",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 119,
+  "endSurah": 6,
+  "endAyah": 124,
   "lines": [
     {
       "lineNumber": 1,
@@ -159394,6 +159970,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 57",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 125,
+  "endSurah": 6,
+  "endAyah": 131,
   "lines": [
     {
       "lineNumber": 1,
@@ -160508,6 +161088,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 58",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 132,
+  "endSurah": 6,
+  "endAyah": 137,
   "lines": [
     {
       "lineNumber": 1,
@@ -161446,6 +162030,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 58",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 138,
+  "endSurah": 6,
+  "endAyah": 142,
   "lines": [
     {
       "lineNumber": 1,
@@ -162467,6 +163055,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 59",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 143,
+  "endSurah": 6,
+  "endAyah": 146,
   "lines": [
     {
       "lineNumber": 1,
@@ -163585,6 +164177,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 59",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 147,
+  "endSurah": 6,
+  "endAyah": 151,
   "lines": [
     {
       "lineNumber": 1,
@@ -164711,6 +165307,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 60",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 152,
+  "endSurah": 6,
+  "endAyah": 157,
   "lines": [
     {
       "lineNumber": 1,
@@ -165810,6 +166410,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 60",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنعام",
+  "startSurah": 6,
+  "startAyah": 158,
+  "endSurah": 6,
+  "endAyah": 165,
   "lines": [
     {
       "lineNumber": 1,
@@ -167128,6 +167732,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 61",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 1,
+  "endSurah": 7,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -168134,6 +168742,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 61",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 12,
+  "endSurah": 7,
+  "endAyah": 22,
   "lines": [
     {
       "lineNumber": 1,
@@ -169385,6 +169997,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 61",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 23,
+  "endSurah": 7,
+  "endAyah": 30,
   "lines": [
     {
       "lineNumber": 1,
@@ -170555,6 +171171,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 62",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 31,
+  "endSurah": 7,
+  "endAyah": 37,
   "lines": [
     {
       "lineNumber": 1,
@@ -171816,6 +172436,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 62",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 38,
+  "endSurah": 7,
+  "endAyah": 43,
   "lines": [
     {
       "lineNumber": 1,
@@ -172991,6 +173615,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 62",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 44,
+  "endSurah": 7,
+  "endAyah": 51,
   "lines": [
     {
       "lineNumber": 1,
@@ -174175,6 +174803,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 63",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 52,
+  "endSurah": 7,
+  "endAyah": 57,
   "lines": [
     {
       "lineNumber": 1,
@@ -175302,6 +175934,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 63",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 58,
+  "endSurah": 7,
+  "endAyah": 67,
   "lines": [
     {
       "lineNumber": 1,
@@ -176454,6 +177090,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 64",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 68,
+  "endSurah": 7,
+  "endAyah": 73,
   "lines": [
     {
       "lineNumber": 1,
@@ -177538,6 +178178,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 64",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 74,
+  "endSurah": 7,
+  "endAyah": 81,
   "lines": [
     {
       "lineNumber": 1,
@@ -178526,6 +179170,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 64",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 82,
+  "endSurah": 7,
+  "endAyah": 87,
   "lines": [
     {
       "lineNumber": 1,
@@ -179491,6 +180139,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 65",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 88,
+  "endSurah": 7,
+  "endAyah": 95,
   "lines": [
     {
       "lineNumber": 1,
@@ -180690,6 +181342,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 65",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 96,
+  "endSurah": 7,
+  "endAyah": 104,
   "lines": [
     {
       "lineNumber": 1,
@@ -181749,6 +182405,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 65",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 105,
+  "endSurah": 7,
+  "endAyah": 120,
   "lines": [
     {
       "lineNumber": 1,
@@ -182914,6 +183574,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 66",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 121,
+  "endSurah": 7,
+  "endAyah": 130,
   "lines": [
     {
       "lineNumber": 1,
@@ -184010,6 +184674,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 66",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 131,
+  "endSurah": 7,
+  "endAyah": 137,
   "lines": [
     {
       "lineNumber": 1,
@@ -185040,6 +185708,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 66",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 138,
+  "endSurah": 7,
+  "endAyah": 143,
   "lines": [
     {
       "lineNumber": 1,
@@ -186117,6 +186789,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 67",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 144,
+  "endSurah": 7,
+  "endAyah": 149,
   "lines": [
     {
       "lineNumber": 1,
@@ -187160,6 +187836,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 67",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 150,
+  "endSurah": 7,
+  "endAyah": 155,
   "lines": [
     {
       "lineNumber": 1,
@@ -188328,6 +189008,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 68",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 156,
+  "endSurah": 7,
+  "endAyah": 159,
   "lines": [
     {
       "lineNumber": 1,
@@ -189298,6 +189982,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 68",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 160,
+  "endSurah": 7,
+  "endAyah": 163,
   "lines": [
     {
       "lineNumber": 1,
@@ -190241,6 +190929,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 68",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 164,
+  "endSurah": 7,
+  "endAyah": 170,
   "lines": [
     {
       "lineNumber": 1,
@@ -191376,6 +192068,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 69",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 171,
+  "endSurah": 7,
+  "endAyah": 178,
   "lines": [
     {
       "lineNumber": 1,
@@ -192491,6 +193187,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 69",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 179,
+  "endSurah": 7,
+  "endAyah": 187,
   "lines": [
     {
       "lineNumber": 1,
@@ -193782,6 +194482,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 69",
   "isRightPage": true,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 188,
+  "endSurah": 7,
+  "endAyah": 195,
   "lines": [
     {
       "lineNumber": 1,
@@ -194974,6 +195678,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 70",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعراف",
+  "startSurah": 7,
+  "startAyah": 196,
+  "endSurah": 7,
+  "endAyah": 206,
   "lines": [
     {
       "lineNumber": 1,
@@ -196078,6 +196786,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 71",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنفال",
+  "startSurah": 8,
+  "startAyah": 1,
+  "endSurah": 8,
+  "endAyah": 8,
   "lines": [
     {
       "lineNumber": 1,
@@ -197025,6 +197737,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 71",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنفال",
+  "startSurah": 8,
+  "startAyah": 9,
+  "endSurah": 8,
+  "endAyah": 16,
   "lines": [
     {
       "lineNumber": 1,
@@ -198090,6 +198806,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 71",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنفال",
+  "startSurah": 8,
+  "startAyah": 17,
+  "endSurah": 8,
+  "endAyah": 25,
   "lines": [
     {
       "lineNumber": 1,
@@ -199192,6 +199912,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 72",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنفال",
+  "startSurah": 8,
+  "startAyah": 26,
+  "endSurah": 8,
+  "endAyah": 33,
   "lines": [
     {
       "lineNumber": 1,
@@ -200244,6 +200968,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 72",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنفال",
+  "startSurah": 8,
+  "startAyah": 34,
+  "endSurah": 8,
+  "endAyah": 40,
   "lines": [
     {
       "lineNumber": 1,
@@ -201253,6 +201981,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 73",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنفال",
+  "startSurah": 8,
+  "startAyah": 41,
+  "endSurah": 8,
+  "endAyah": 45,
   "lines": [
     {
       "lineNumber": 1,
@@ -202281,6 +203013,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 73",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنفال",
+  "startSurah": 8,
+  "startAyah": 46,
+  "endSurah": 8,
+  "endAyah": 52,
   "lines": [
     {
       "lineNumber": 1,
@@ -203366,6 +204102,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 73",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنفال",
+  "startSurah": 8,
+  "startAyah": 53,
+  "endSurah": 8,
+  "endAyah": 61,
   "lines": [
     {
       "lineNumber": 1,
@@ -204537,6 +205277,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 74",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنفال",
+  "startSurah": 8,
+  "startAyah": 62,
+  "endSurah": 8,
+  "endAyah": 69,
   "lines": [
     {
       "lineNumber": 1,
@@ -205714,6 +206458,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 74",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنفال",
+  "startSurah": 8,
+  "startAyah": 70,
+  "endSurah": 8,
+  "endAyah": 75,
   "lines": [
     {
       "lineNumber": 1,
@@ -206869,6 +207617,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 75",
   "isRightPage": true,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 1,
+  "endSurah": 9,
+  "endAyah": 6,
   "lines": [
     {
       "lineNumber": 1,
@@ -207925,6 +208677,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 75",
   "isRightPage": false,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 7,
+  "endSurah": 9,
+  "endAyah": 13,
   "lines": [
     {
       "lineNumber": 1,
@@ -208934,6 +209690,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 75",
   "isRightPage": true,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 14,
+  "endSurah": 9,
+  "endAyah": 20,
   "lines": [
     {
       "lineNumber": 1,
@@ -210041,6 +210801,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 76",
   "isRightPage": false,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 21,
+  "endSurah": 9,
+  "endAyah": 26,
   "lines": [
     {
       "lineNumber": 1,
@@ -211006,6 +211770,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 76",
   "isRightPage": true,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 27,
+  "endSurah": 9,
+  "endAyah": 31,
   "lines": [
     {
       "lineNumber": 1,
@@ -212006,6 +212774,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 76",
   "isRightPage": false,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 32,
+  "endSurah": 9,
+  "endAyah": 36,
   "lines": [
     {
       "lineNumber": 1,
@@ -212977,6 +213749,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 77",
   "isRightPage": true,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 37,
+  "endSurah": 9,
+  "endAyah": 40,
   "lines": [
     {
       "lineNumber": 1,
@@ -213997,6 +214773,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 77",
   "isRightPage": false,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 41,
+  "endSurah": 9,
+  "endAyah": 47,
   "lines": [
     {
       "lineNumber": 1,
@@ -214963,6 +215743,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 78",
   "isRightPage": true,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 48,
+  "endSurah": 9,
+  "endAyah": 54,
   "lines": [
     {
       "lineNumber": 1,
@@ -215986,6 +216770,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 78",
   "isRightPage": false,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 55,
+  "endSurah": 9,
+  "endAyah": 61,
   "lines": [
     {
       "lineNumber": 1,
@@ -217030,6 +217818,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 79",
   "isRightPage": true,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 62,
+  "endSurah": 9,
+  "endAyah": 68,
   "lines": [
     {
       "lineNumber": 1,
@@ -218017,6 +218809,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 79",
   "isRightPage": false,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 69,
+  "endSurah": 9,
+  "endAyah": 72,
   "lines": [
     {
       "lineNumber": 1,
@@ -218953,6 +219749,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 79",
   "isRightPage": true,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 73,
+  "endSurah": 9,
+  "endAyah": 79,
   "lines": [
     {
       "lineNumber": 1,
@@ -220031,6 +220831,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 80",
   "isRightPage": false,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 80,
+  "endSurah": 9,
+  "endAyah": 86,
   "lines": [
     {
       "lineNumber": 1,
@@ -221193,6 +221997,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 80",
   "isRightPage": true,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 87,
+  "endSurah": 9,
+  "endAyah": 93,
   "lines": [
     {
       "lineNumber": 1,
@@ -222264,6 +223072,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 81",
   "isRightPage": false,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 94,
+  "endSurah": 9,
+  "endAyah": 99,
   "lines": [
     {
       "lineNumber": 1,
@@ -223341,6 +224153,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 81",
   "isRightPage": true,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 100,
+  "endSurah": 9,
+  "endAyah": 106,
   "lines": [
     {
       "lineNumber": 1,
@@ -224434,6 +225250,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 81",
   "isRightPage": false,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 107,
+  "endSurah": 9,
+  "endAyah": 111,
   "lines": [
     {
       "lineNumber": 1,
@@ -225546,6 +226366,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 82",
   "isRightPage": true,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 112,
+  "endSurah": 9,
+  "endAyah": 117,
   "lines": [
     {
       "lineNumber": 1,
@@ -226575,6 +227399,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 82",
   "isRightPage": false,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 118,
+  "endSurah": 9,
+  "endAyah": 122,
   "lines": [
     {
       "lineNumber": 1,
@@ -227666,6 +228494,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 83",
   "isRightPage": true,
   "surahHeaderName": "سورة التوبة",
+  "startSurah": 9,
+  "startAyah": 123,
+  "endSurah": 9,
+  "endAyah": 129,
   "lines": [
     {
       "lineNumber": 1,
@@ -228639,6 +229471,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 83",
   "isRightPage": false,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 1,
+  "endSurah": 10,
+  "endAyah": 6,
   "lines": [
     {
       "lineNumber": 1,
@@ -229766,6 +230602,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 83",
   "isRightPage": true,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 7,
+  "endSurah": 10,
+  "endAyah": 14,
   "lines": [
     {
       "lineNumber": 1,
@@ -230831,6 +231671,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 84",
   "isRightPage": false,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 15,
+  "endSurah": 10,
+  "endAyah": 20,
   "lines": [
     {
       "lineNumber": 1,
@@ -231986,6 +232830,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 84",
   "isRightPage": true,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 21,
+  "endSurah": 10,
+  "endAyah": 25,
   "lines": [
     {
       "lineNumber": 1,
@@ -233175,6 +234023,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 85",
   "isRightPage": false,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 26,
+  "endSurah": 10,
+  "endAyah": 33,
   "lines": [
     {
       "lineNumber": 1,
@@ -234395,6 +235247,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 85",
   "isRightPage": true,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 34,
+  "endSurah": 10,
+  "endAyah": 42,
   "lines": [
     {
       "lineNumber": 1,
@@ -235763,6 +236619,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 85",
   "isRightPage": false,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 43,
+  "endSurah": 10,
+  "endAyah": 53,
   "lines": [
     {
       "lineNumber": 1,
@@ -237028,6 +237888,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 86",
   "isRightPage": true,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 54,
+  "endSurah": 10,
+  "endAyah": 61,
   "lines": [
     {
       "lineNumber": 1,
@@ -238269,6 +239133,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 86",
   "isRightPage": false,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 62,
+  "endSurah": 10,
+  "endAyah": 70,
   "lines": [
     {
       "lineNumber": 1,
@@ -239406,6 +240274,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 87",
   "isRightPage": true,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 71,
+  "endSurah": 10,
+  "endAyah": 78,
   "lines": [
     {
       "lineNumber": 1,
@@ -240583,6 +241455,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 87",
   "isRightPage": false,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 79,
+  "endSurah": 10,
+  "endAyah": 88,
   "lines": [
     {
       "lineNumber": 1,
@@ -241735,6 +242611,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 87",
   "isRightPage": true,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 89,
+  "endSurah": 10,
+  "endAyah": 97,
   "lines": [
     {
       "lineNumber": 1,
@@ -242858,6 +243738,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 88",
   "isRightPage": false,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 98,
+  "endSurah": 10,
+  "endAyah": 106,
   "lines": [
     {
       "lineNumber": 1,
@@ -244058,6 +244942,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 88",
   "isRightPage": true,
   "surahHeaderName": "سورة يونس",
+  "startSurah": 10,
+  "startAyah": 107,
+  "endSurah": 11,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -245235,6 +246123,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 89",
   "isRightPage": false,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 6,
+  "endSurah": 11,
+  "endAyah": 12,
   "lines": [
     {
       "lineNumber": 1,
@@ -246349,6 +247241,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 89",
   "isRightPage": true,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 13,
+  "endSurah": 11,
+  "endAyah": 19,
   "lines": [
     {
       "lineNumber": 1,
@@ -247525,6 +248421,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 89",
   "isRightPage": false,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 20,
+  "endSurah": 11,
+  "endAyah": 28,
   "lines": [
     {
       "lineNumber": 1,
@@ -248676,6 +249576,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 90",
   "isRightPage": true,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 29,
+  "endSurah": 11,
+  "endAyah": 37,
   "lines": [
     {
       "lineNumber": 1,
@@ -249911,6 +250815,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 90",
   "isRightPage": false,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 38,
+  "endSurah": 11,
+  "endAyah": 45,
   "lines": [
     {
       "lineNumber": 1,
@@ -251103,6 +252011,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 91",
   "isRightPage": true,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 46,
+  "endSurah": 11,
+  "endAyah": 53,
   "lines": [
     {
       "lineNumber": 1,
@@ -252337,6 +253249,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 91",
   "isRightPage": false,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 54,
+  "endSurah": 11,
+  "endAyah": 62,
   "lines": [
     {
       "lineNumber": 1,
@@ -253677,6 +254593,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 92",
   "isRightPage": true,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 63,
+  "endSurah": 11,
+  "endAyah": 71,
   "lines": [
     {
       "lineNumber": 1,
@@ -254814,6 +255734,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 92",
   "isRightPage": false,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 72,
+  "endSurah": 11,
+  "endAyah": 81,
   "lines": [
     {
       "lineNumber": 1,
@@ -256113,6 +257037,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 92",
   "isRightPage": true,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 82,
+  "endSurah": 11,
+  "endAyah": 88,
   "lines": [
     {
       "lineNumber": 1,
@@ -257234,6 +258162,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 93",
   "isRightPage": false,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 89,
+  "endSurah": 11,
+  "endAyah": 97,
   "lines": [
     {
       "lineNumber": 1,
@@ -258357,6 +259289,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 93",
   "isRightPage": true,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 98,
+  "endSurah": 11,
+  "endAyah": 108,
   "lines": [
     {
       "lineNumber": 1,
@@ -259573,6 +260509,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 94",
   "isRightPage": false,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 109,
+  "endSurah": 11,
+  "endAyah": 117,
   "lines": [
     {
       "lineNumber": 1,
@@ -260731,6 +261671,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 94",
   "isRightPage": true,
   "surahHeaderName": "سورة هود",
+  "startSurah": 11,
+  "startAyah": 118,
+  "endSurah": 12,
+  "endAyah": 4,
   "lines": [
     {
       "lineNumber": 1,
@@ -261764,6 +262708,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 94",
   "isRightPage": false,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 5,
+  "endSurah": 12,
+  "endAyah": 14,
   "lines": [
     {
       "lineNumber": 1,
@@ -262895,6 +263843,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 95",
   "isRightPage": true,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 15,
+  "endSurah": 12,
+  "endAyah": 22,
   "lines": [
     {
       "lineNumber": 1,
@@ -263996,6 +264948,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 95",
   "isRightPage": false,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 23,
+  "endSurah": 12,
+  "endAyah": 30,
   "lines": [
     {
       "lineNumber": 1,
@@ -265202,6 +266158,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 96",
   "isRightPage": true,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 31,
+  "endSurah": 12,
+  "endAyah": 37,
   "lines": [
     {
       "lineNumber": 1,
@@ -266428,6 +267388,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 96",
   "isRightPage": false,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 38,
+  "endSurah": 12,
+  "endAyah": 43,
   "lines": [
     {
       "lineNumber": 1,
@@ -267527,6 +268491,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 96",
   "isRightPage": true,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 44,
+  "endSurah": 12,
+  "endAyah": 52,
   "lines": [
     {
       "lineNumber": 1,
@@ -268741,6 +269709,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 97",
   "isRightPage": false,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 53,
+  "endSurah": 12,
+  "endAyah": 63,
   "lines": [
     {
       "lineNumber": 1,
@@ -269914,6 +270886,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 97",
   "isRightPage": true,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 64,
+  "endSurah": 12,
+  "endAyah": 69,
   "lines": [
     {
       "lineNumber": 1,
@@ -271125,6 +272101,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 97",
   "isRightPage": false,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 70,
+  "endSurah": 12,
+  "endAyah": 78,
   "lines": [
     {
       "lineNumber": 1,
@@ -272296,6 +273276,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 98",
   "isRightPage": true,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 79,
+  "endSurah": 12,
+  "endAyah": 86,
   "lines": [
     {
       "lineNumber": 1,
@@ -273439,6 +274423,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 98",
   "isRightPage": false,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 87,
+  "endSurah": 12,
+  "endAyah": 95,
   "lines": [
     {
       "lineNumber": 1,
@@ -274534,6 +275522,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 98",
   "isRightPage": true,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 96,
+  "endSurah": 12,
+  "endAyah": 103,
   "lines": [
     {
       "lineNumber": 1,
@@ -275733,6 +276725,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 99",
   "isRightPage": false,
   "surahHeaderName": "سورة يوسف",
+  "startSurah": 12,
+  "startAyah": 104,
+  "endSurah": 12,
+  "endAyah": 111,
   "lines": [
     {
       "lineNumber": 1,
@@ -276862,6 +277858,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 99",
   "isRightPage": true,
   "surahHeaderName": "سورة الرعد",
+  "startSurah": 13,
+  "startAyah": 1,
+  "endSurah": 13,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -277953,6 +278953,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 100",
   "isRightPage": false,
   "surahHeaderName": "سورة الرعد",
+  "startSurah": 13,
+  "startAyah": 6,
+  "endSurah": 13,
+  "endAyah": 13,
   "lines": [
     {
       "lineNumber": 1,
@@ -279096,6 +280100,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 100",
   "isRightPage": true,
   "surahHeaderName": "سورة الرعد",
+  "startSurah": 13,
+  "startAyah": 14,
+  "endSurah": 13,
+  "endAyah": 18,
   "lines": [
     {
       "lineNumber": 1,
@@ -280404,6 +281412,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 101",
   "isRightPage": false,
   "surahHeaderName": "سورة الرعد",
+  "startSurah": 13,
+  "startAyah": 19,
+  "endSurah": 13,
+  "endAyah": 28,
   "lines": [
     {
       "lineNumber": 1,
@@ -281654,6 +282666,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 101",
   "isRightPage": true,
   "surahHeaderName": "سورة الرعد",
+  "startSurah": 13,
+  "startAyah": 29,
+  "endSurah": 13,
+  "endAyah": 34,
   "lines": [
     {
       "lineNumber": 1,
@@ -282956,6 +283972,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 102",
   "isRightPage": false,
   "surahHeaderName": "سورة الرعد",
+  "startSurah": 13,
+  "startAyah": 35,
+  "endSurah": 13,
+  "endAyah": 42,
   "lines": [
     {
       "lineNumber": 1,
@@ -284204,6 +285224,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 102",
   "isRightPage": true,
   "surahHeaderName": "سورة الرعد",
+  "startSurah": 13,
+  "startAyah": 43,
+  "endSurah": 14,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -285135,6 +286159,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 102",
   "isRightPage": false,
   "surahHeaderName": "سورة إبراهيم",
+  "startSurah": 14,
+  "startAyah": 6,
+  "endSurah": 14,
+  "endAyah": 10,
   "lines": [
     {
       "lineNumber": 1,
@@ -286170,6 +287198,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 103",
   "isRightPage": true,
   "surahHeaderName": "سورة إبراهيم",
+  "startSurah": 14,
+  "startAyah": 11,
+  "endSurah": 14,
+  "endAyah": 18,
   "lines": [
     {
       "lineNumber": 1,
@@ -287256,6 +288288,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 103",
   "isRightPage": false,
   "surahHeaderName": "سورة إبراهيم",
+  "startSurah": 14,
+  "startAyah": 19,
+  "endSurah": 14,
+  "endAyah": 24,
   "lines": [
     {
       "lineNumber": 1,
@@ -288369,6 +289405,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 103",
   "isRightPage": true,
   "surahHeaderName": "سورة إبراهيم",
+  "startSurah": 14,
+  "startAyah": 25,
+  "endSurah": 14,
+  "endAyah": 33,
   "lines": [
     {
       "lineNumber": 1,
@@ -289485,6 +290525,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 104",
   "isRightPage": false,
   "surahHeaderName": "سورة إبراهيم",
+  "startSurah": 14,
+  "startAyah": 34,
+  "endSurah": 14,
+  "endAyah": 42,
   "lines": [
     {
       "lineNumber": 1,
@@ -290622,6 +291666,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 104",
   "isRightPage": true,
   "surahHeaderName": "سورة إبراهيم",
+  "startSurah": 14,
+  "startAyah": 43,
+  "endSurah": 14,
+  "endAyah": 52,
   "lines": [
     {
       "lineNumber": 1,
@@ -291655,6 +292703,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 105",
   "isRightPage": false,
   "surahHeaderName": "سورة الحجر",
+  "startSurah": 15,
+  "startAyah": 1,
+  "endSurah": 15,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -292700,6 +293752,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 105",
   "isRightPage": true,
   "surahHeaderName": "سورة الحجر",
+  "startSurah": 15,
+  "startAyah": 16,
+  "endSurah": 15,
+  "endAyah": 31,
   "lines": [
     {
       "lineNumber": 1,
@@ -293830,6 +294886,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 105",
   "isRightPage": false,
   "surahHeaderName": "سورة الحجر",
+  "startSurah": 15,
+  "startAyah": 32,
+  "endSurah": 15,
+  "endAyah": 51,
   "lines": [
     {
       "lineNumber": 1,
@@ -294985,6 +296045,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 106",
   "isRightPage": true,
   "surahHeaderName": "سورة الحجر",
+  "startSurah": 15,
+  "startAyah": 52,
+  "endSurah": 15,
+  "endAyah": 70,
   "lines": [
     {
       "lineNumber": 1,
@@ -296111,6 +297175,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 106",
   "isRightPage": false,
   "surahHeaderName": "سورة الحجر",
+  "startSurah": 15,
+  "startAyah": 71,
+  "endSurah": 15,
+  "endAyah": 90,
   "lines": [
     {
       "lineNumber": 1,
@@ -297224,6 +298292,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 106",
   "isRightPage": true,
   "surahHeaderName": "سورة الحجر",
+  "startSurah": 15,
+  "startAyah": 91,
+  "endSurah": 16,
+  "endAyah": 6,
   "lines": [
     {
       "lineNumber": 1,
@@ -298212,6 +299284,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 107",
   "isRightPage": false,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 7,
+  "endSurah": 16,
+  "endAyah": 14,
   "lines": [
     {
       "lineNumber": 1,
@@ -299208,6 +300284,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 107",
   "isRightPage": true,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 15,
+  "endSurah": 16,
+  "endAyah": 26,
   "lines": [
     {
       "lineNumber": 1,
@@ -300334,6 +301414,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 107",
   "isRightPage": false,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 27,
+  "endSurah": 16,
+  "endAyah": 34,
   "lines": [
     {
       "lineNumber": 1,
@@ -301484,6 +302568,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 108",
   "isRightPage": true,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 35,
+  "endSurah": 16,
+  "endAyah": 42,
   "lines": [
     {
       "lineNumber": 1,
@@ -302661,6 +303749,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 108",
   "isRightPage": false,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 43,
+  "endSurah": 16,
+  "endAyah": 54,
   "lines": [
     {
       "lineNumber": 1,
@@ -303899,6 +304991,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 109",
   "isRightPage": true,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 55,
+  "endSurah": 16,
+  "endAyah": 64,
   "lines": [
     {
       "lineNumber": 1,
@@ -305114,6 +306210,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 109",
   "isRightPage": false,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 65,
+  "endSurah": 16,
+  "endAyah": 72,
   "lines": [
     {
       "lineNumber": 1,
@@ -306382,6 +307482,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 109",
   "isRightPage": true,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 73,
+  "endSurah": 16,
+  "endAyah": 79,
   "lines": [
     {
       "lineNumber": 1,
@@ -307544,6 +308648,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 110",
   "isRightPage": false,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 80,
+  "endSurah": 16,
+  "endAyah": 87,
   "lines": [
     {
       "lineNumber": 1,
@@ -308554,6 +309662,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 110",
   "isRightPage": true,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 88,
+  "endSurah": 16,
+  "endAyah": 93,
   "lines": [
     {
       "lineNumber": 1,
@@ -309610,6 +310722,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 111",
   "isRightPage": false,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 94,
+  "endSurah": 16,
+  "endAyah": 102,
   "lines": [
     {
       "lineNumber": 1,
@@ -310697,6 +311813,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 111",
   "isRightPage": true,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 103,
+  "endSurah": 16,
+  "endAyah": 110,
   "lines": [
     {
       "lineNumber": 1,
@@ -311664,6 +312784,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 112",
   "isRightPage": false,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 111,
+  "endSurah": 16,
+  "endAyah": 118,
   "lines": [
     {
       "lineNumber": 1,
@@ -312729,6 +313853,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 112",
   "isRightPage": true,
   "surahHeaderName": "سورة النحل",
+  "startSurah": 16,
+  "startAyah": 119,
+  "endSurah": 16,
+  "endAyah": 128,
   "lines": [
     {
       "lineNumber": 1,
@@ -313888,6 +315016,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 113",
   "isRightPage": false,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 1,
+  "endSurah": 17,
+  "endAyah": 7,
   "lines": [
     {
       "lineNumber": 1,
@@ -314847,6 +315979,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 113",
   "isRightPage": true,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 8,
+  "endSurah": 17,
+  "endAyah": 17,
   "lines": [
     {
       "lineNumber": 1,
@@ -316041,6 +317177,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 113",
   "isRightPage": false,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 18,
+  "endSurah": 17,
+  "endAyah": 27,
   "lines": [
     {
       "lineNumber": 1,
@@ -317172,6 +318312,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 114",
   "isRightPage": true,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 28,
+  "endSurah": 17,
+  "endAyah": 38,
   "lines": [
     {
       "lineNumber": 1,
@@ -318443,6 +319587,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 114",
   "isRightPage": false,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 39,
+  "endSurah": 17,
+  "endAyah": 49,
   "lines": [
     {
       "lineNumber": 1,
@@ -319694,6 +320842,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 115",
   "isRightPage": true,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 50,
+  "endSurah": 17,
+  "endAyah": 58,
   "lines": [
     {
       "lineNumber": 1,
@@ -320887,6 +322039,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 115",
   "isRightPage": false,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 59,
+  "endSurah": 17,
+  "endAyah": 66,
   "lines": [
     {
       "lineNumber": 1,
@@ -321981,6 +323137,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 115",
   "isRightPage": true,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 67,
+  "endSurah": 17,
+  "endAyah": 75,
   "lines": [
     {
       "lineNumber": 1,
@@ -323118,6 +324278,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 116",
   "isRightPage": false,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 76,
+  "endSurah": 17,
+  "endAyah": 86,
   "lines": [
     {
       "lineNumber": 1,
@@ -324305,6 +325469,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 116",
   "isRightPage": true,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 87,
+  "endSurah": 17,
+  "endAyah": 96,
   "lines": [
     {
       "lineNumber": 1,
@@ -325491,6 +326659,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 116",
   "isRightPage": false,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 97,
+  "endSurah": 17,
+  "endAyah": 104,
   "lines": [
     {
       "lineNumber": 1,
@@ -326641,6 +327813,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 117",
   "isRightPage": true,
   "surahHeaderName": "سورة الإسراء",
+  "startSurah": 17,
+  "startAyah": 105,
+  "endSurah": 18,
+  "endAyah": 4,
   "lines": [
     {
       "lineNumber": 1,
@@ -327794,6 +328970,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 117",
   "isRightPage": false,
   "surahHeaderName": "سورة الكهف",
+  "startSurah": 18,
+  "startAyah": 5,
+  "endSurah": 18,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -328960,6 +330140,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 117",
   "isRightPage": true,
   "surahHeaderName": "سورة الكهف",
+  "startSurah": 18,
+  "startAyah": 16,
+  "endSurah": 18,
+  "endAyah": 20,
   "lines": [
     {
       "lineNumber": 1,
@@ -330051,6 +331235,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 118",
   "isRightPage": false,
   "surahHeaderName": "سورة الكهف",
+  "startSurah": 18,
+  "startAyah": 21,
+  "endSurah": 18,
+  "endAyah": 27,
   "lines": [
     {
       "lineNumber": 1,
@@ -331227,6 +332415,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 118",
   "isRightPage": true,
   "surahHeaderName": "سورة الكهف",
+  "startSurah": 18,
+  "startAyah": 28,
+  "endSurah": 18,
+  "endAyah": 34,
   "lines": [
     {
       "lineNumber": 1,
@@ -332396,6 +333588,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 119",
   "isRightPage": false,
   "surahHeaderName": "سورة الكهف",
+  "startSurah": 18,
+  "startAyah": 35,
+  "endSurah": 18,
+  "endAyah": 45,
   "lines": [
     {
       "lineNumber": 1,
@@ -333667,6 +334863,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 119",
   "isRightPage": true,
   "surahHeaderName": "سورة الكهف",
+  "startSurah": 18,
+  "startAyah": 46,
+  "endSurah": 18,
+  "endAyah": 53,
   "lines": [
     {
       "lineNumber": 1,
@@ -334782,6 +335982,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 120",
   "isRightPage": false,
   "surahHeaderName": "سورة الكهف",
+  "startSurah": 18,
+  "startAyah": 54,
+  "endSurah": 18,
+  "endAyah": 61,
   "lines": [
     {
       "lineNumber": 1,
@@ -335918,6 +337122,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 120",
   "isRightPage": true,
   "surahHeaderName": "سورة الكهف",
+  "startSurah": 18,
+  "startAyah": 62,
+  "endSurah": 18,
+  "endAyah": 74,
   "lines": [
     {
       "lineNumber": 1,
@@ -337185,6 +338393,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 121",
   "isRightPage": false,
   "surahHeaderName": "سورة الكهف",
+  "startSurah": 18,
+  "startAyah": 75,
+  "endSurah": 18,
+  "endAyah": 83,
   "lines": [
     {
       "lineNumber": 1,
@@ -338370,6 +339582,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 121",
   "isRightPage": true,
   "surahHeaderName": "سورة الكهف",
+  "startSurah": 18,
+  "startAyah": 84,
+  "endSurah": 18,
+  "endAyah": 97,
   "lines": [
     {
       "lineNumber": 1,
@@ -339729,6 +340945,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 121",
   "isRightPage": false,
   "surahHeaderName": "سورة الكهف",
+  "startSurah": 18,
+  "startAyah": 98,
+  "endSurah": 18,
+  "endAyah": 110,
   "lines": [
     {
       "lineNumber": 1,
@@ -341045,6 +342265,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 122",
   "isRightPage": true,
   "surahHeaderName": "سورة مريم",
+  "startSurah": 19,
+  "startAyah": 1,
+  "endSurah": 19,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -342044,6 +343268,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 122",
   "isRightPage": false,
   "surahHeaderName": "سورة مريم",
+  "startSurah": 19,
+  "startAyah": 12,
+  "endSurah": 19,
+  "endAyah": 25,
   "lines": [
     {
       "lineNumber": 1,
@@ -343186,6 +344414,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 123",
   "isRightPage": true,
   "surahHeaderName": "سورة مريم",
+  "startSurah": 19,
+  "startAyah": 26,
+  "endSurah": 19,
+  "endAyah": 38,
   "lines": [
     {
       "lineNumber": 1,
@@ -344418,6 +345650,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 123",
   "isRightPage": false,
   "surahHeaderName": "سورة مريم",
+  "startSurah": 19,
+  "startAyah": 39,
+  "endSurah": 19,
+  "endAyah": 51,
   "lines": [
     {
       "lineNumber": 1,
@@ -345691,6 +346927,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 123",
   "isRightPage": true,
   "surahHeaderName": "سورة مريم",
+  "startSurah": 19,
+  "startAyah": 52,
+  "endSurah": 19,
+  "endAyah": 64,
   "lines": [
     {
       "lineNumber": 1,
@@ -346986,6 +348226,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 124",
   "isRightPage": false,
   "surahHeaderName": "سورة مريم",
+  "startSurah": 19,
+  "startAyah": 65,
+  "endSurah": 19,
+  "endAyah": 76,
   "lines": [
     {
       "lineNumber": 1,
@@ -348160,6 +349404,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 124",
   "isRightPage": true,
   "surahHeaderName": "سورة مريم",
+  "startSurah": 19,
+  "startAyah": 77,
+  "endSurah": 19,
+  "endAyah": 95,
   "lines": [
     {
       "lineNumber": 1,
@@ -349307,6 +350555,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 124",
   "isRightPage": false,
   "surahHeaderName": "سورة مريم",
+  "startSurah": 19,
+  "startAyah": 96,
+  "endSurah": 20,
+  "endAyah": 12,
   "lines": [
     {
       "lineNumber": 1,
@@ -350372,6 +351624,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 125",
   "isRightPage": true,
   "surahHeaderName": "سورة طه",
+  "startSurah": 20,
+  "startAyah": 13,
+  "endSurah": 20,
+  "endAyah": 37,
   "lines": [
     {
       "lineNumber": 1,
@@ -351616,6 +352872,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 125",
   "isRightPage": false,
   "surahHeaderName": "سورة طه",
+  "startSurah": 20,
+  "startAyah": 38,
+  "endSurah": 20,
+  "endAyah": 51,
   "lines": [
     {
       "lineNumber": 1,
@@ -352933,6 +354193,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 125",
   "isRightPage": true,
   "surahHeaderName": "سورة طه",
+  "startSurah": 20,
+  "startAyah": 52,
+  "endSurah": 20,
+  "endAyah": 64,
   "lines": [
     {
       "lineNumber": 1,
@@ -354088,6 +355352,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 126",
   "isRightPage": false,
   "surahHeaderName": "سورة طه",
+  "startSurah": 20,
+  "startAyah": 65,
+  "endSurah": 20,
+  "endAyah": 76,
   "lines": [
     {
       "lineNumber": 1,
@@ -355410,6 +356678,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 126",
   "isRightPage": true,
   "surahHeaderName": "سورة طه",
+  "startSurah": 20,
+  "startAyah": 77,
+  "endSurah": 20,
+  "endAyah": 87,
   "lines": [
     {
       "lineNumber": 1,
@@ -356570,6 +357842,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 127",
   "isRightPage": false,
   "surahHeaderName": "سورة طه",
+  "startSurah": 20,
+  "startAyah": 88,
+  "endSurah": 20,
+  "endAyah": 98,
   "lines": [
     {
       "lineNumber": 1,
@@ -357772,6 +359048,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 127",
   "isRightPage": true,
   "surahHeaderName": "سورة طه",
+  "startSurah": 20,
+  "startAyah": 99,
+  "endSurah": 20,
+  "endAyah": 113,
   "lines": [
     {
       "lineNumber": 1,
@@ -359006,6 +360286,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 128",
   "isRightPage": false,
   "surahHeaderName": "سورة طه",
+  "startSurah": 20,
+  "startAyah": 114,
+  "endSurah": 20,
+  "endAyah": 125,
   "lines": [
     {
       "lineNumber": 1,
@@ -360173,6 +361457,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 128",
   "isRightPage": true,
   "surahHeaderName": "سورة طه",
+  "startSurah": 20,
+  "startAyah": 126,
+  "endSurah": 20,
+  "endAyah": 135,
   "lines": [
     {
       "lineNumber": 1,
@@ -361395,6 +362683,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 129",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنبياء",
+  "startSurah": 21,
+  "startAyah": 1,
+  "endSurah": 21,
+  "endAyah": 10,
   "lines": [
     {
       "lineNumber": 1,
@@ -362371,6 +363663,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 129",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنبياء",
+  "startSurah": 21,
+  "startAyah": 11,
+  "endSurah": 21,
+  "endAyah": 24,
   "lines": [
     {
       "lineNumber": 1,
@@ -363590,6 +364886,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 129",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنبياء",
+  "startSurah": 21,
+  "startAyah": 25,
+  "endSurah": 21,
+  "endAyah": 35,
   "lines": [
     {
       "lineNumber": 1,
@@ -364743,6 +366043,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 130",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنبياء",
+  "startSurah": 21,
+  "startAyah": 36,
+  "endSurah": 21,
+  "endAyah": 44,
   "lines": [
     {
       "lineNumber": 1,
@@ -365761,6 +367065,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 130",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنبياء",
+  "startSurah": 21,
+  "startAyah": 45,
+  "endSurah": 21,
+  "endAyah": 57,
   "lines": [
     {
       "lineNumber": 1,
@@ -366874,6 +368182,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 131",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنبياء",
+  "startSurah": 21,
+  "startAyah": 58,
+  "endSurah": 21,
+  "endAyah": 72,
   "lines": [
     {
       "lineNumber": 1,
@@ -367926,6 +369238,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 131",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنبياء",
+  "startSurah": 21,
+  "startAyah": 73,
+  "endSurah": 21,
+  "endAyah": 81,
   "lines": [
     {
       "lineNumber": 1,
@@ -368951,6 +370267,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 131",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنبياء",
+  "startSurah": 21,
+  "startAyah": 82,
+  "endSurah": 21,
+  "endAyah": 90,
   "lines": [
     {
       "lineNumber": 1,
@@ -369962,6 +371282,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 132",
   "isRightPage": false,
   "surahHeaderName": "سورة الأنبياء",
+  "startSurah": 21,
+  "startAyah": 91,
+  "endSurah": 21,
+  "endAyah": 101,
   "lines": [
     {
       "lineNumber": 1,
@@ -370925,6 +372249,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 132",
   "isRightPage": true,
   "surahHeaderName": "سورة الأنبياء",
+  "startSurah": 21,
+  "startAyah": 102,
+  "endSurah": 21,
+  "endAyah": 112,
   "lines": [
     {
       "lineNumber": 1,
@@ -371924,6 +373252,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 133",
   "isRightPage": false,
   "surahHeaderName": "سورة الحج",
+  "startSurah": 22,
+  "startAyah": 1,
+  "endSurah": 22,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -372979,6 +374311,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 133",
   "isRightPage": true,
   "surahHeaderName": "سورة الحج",
+  "startSurah": 22,
+  "startAyah": 6,
+  "endSurah": 22,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -374263,6 +375599,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 133",
   "isRightPage": false,
   "surahHeaderName": "سورة الحج",
+  "startSurah": 22,
+  "startAyah": 16,
+  "endSurah": 22,
+  "endAyah": 23,
   "lines": [
     {
       "lineNumber": 1,
@@ -375385,6 +376725,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 134",
   "isRightPage": true,
   "surahHeaderName": "سورة الحج",
+  "startSurah": 22,
+  "startAyah": 24,
+  "endSurah": 22,
+  "endAyah": 30,
   "lines": [
     {
       "lineNumber": 1,
@@ -376380,6 +377724,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 134",
   "isRightPage": false,
   "surahHeaderName": "سورة الحج",
+  "startSurah": 22,
+  "startAyah": 31,
+  "endSurah": 22,
+  "endAyah": 38,
   "lines": [
     {
       "lineNumber": 1,
@@ -377564,6 +378912,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 135",
   "isRightPage": true,
   "surahHeaderName": "سورة الحج",
+  "startSurah": 22,
+  "startAyah": 39,
+  "endSurah": 22,
+  "endAyah": 46,
   "lines": [
     {
       "lineNumber": 1,
@@ -378643,6 +379995,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 135",
   "isRightPage": false,
   "surahHeaderName": "سورة الحج",
+  "startSurah": 22,
+  "startAyah": 47,
+  "endSurah": 22,
+  "endAyah": 55,
   "lines": [
     {
       "lineNumber": 1,
@@ -379745,6 +381101,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 135",
   "isRightPage": true,
   "surahHeaderName": "سورة الحج",
+  "startSurah": 22,
+  "startAyah": 56,
+  "endSurah": 22,
+  "endAyah": 64,
   "lines": [
     {
       "lineNumber": 1,
@@ -380804,6 +382164,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 136",
   "isRightPage": false,
   "surahHeaderName": "سورة الحج",
+  "startSurah": 22,
+  "startAyah": 65,
+  "endSurah": 22,
+  "endAyah": 72,
   "lines": [
     {
       "lineNumber": 1,
@@ -381996,6 +383360,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 136",
   "isRightPage": true,
   "surahHeaderName": "سورة الحج",
+  "startSurah": 22,
+  "startAyah": 73,
+  "endSurah": 22,
+  "endAyah": 78,
   "lines": [
     {
       "lineNumber": 1,
@@ -383018,6 +384386,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 137",
   "isRightPage": false,
   "surahHeaderName": "سورة المؤمنون",
+  "startSurah": 23,
+  "startAyah": 1,
+  "endSurah": 23,
+  "endAyah": 17,
   "lines": [
     {
       "lineNumber": 1,
@@ -384065,6 +385437,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 137",
   "isRightPage": true,
   "surahHeaderName": "سورة المؤمنون",
+  "startSurah": 23,
+  "startAyah": 18,
+  "endSurah": 23,
+  "endAyah": 27,
   "lines": [
     {
       "lineNumber": 1,
@@ -385287,6 +386663,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 137",
   "isRightPage": false,
   "surahHeaderName": "سورة المؤمنون",
+  "startSurah": 23,
+  "startAyah": 28,
+  "endSurah": 23,
+  "endAyah": 42,
   "lines": [
     {
       "lineNumber": 1,
@@ -386514,6 +387894,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 138",
   "isRightPage": true,
   "surahHeaderName": "سورة المؤمنون",
+  "startSurah": 23,
+  "startAyah": 43,
+  "endSurah": 23,
+  "endAyah": 59,
   "lines": [
     {
       "lineNumber": 1,
@@ -387722,6 +389106,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 138",
   "isRightPage": false,
   "surahHeaderName": "سورة المؤمنون",
+  "startSurah": 23,
+  "startAyah": 60,
+  "endSurah": 23,
+  "endAyah": 74,
   "lines": [
     {
       "lineNumber": 1,
@@ -388935,6 +390323,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 139",
   "isRightPage": true,
   "surahHeaderName": "سورة المؤمنون",
+  "startSurah": 23,
+  "startAyah": 75,
+  "endSurah": 23,
+  "endAyah": 89,
   "lines": [
     {
       "lineNumber": 1,
@@ -390099,6 +391491,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 139",
   "isRightPage": false,
   "surahHeaderName": "سورة المؤمنون",
+  "startSurah": 23,
+  "startAyah": 90,
+  "endSurah": 23,
+  "endAyah": 104,
   "lines": [
     {
       "lineNumber": 1,
@@ -391276,6 +392672,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 139",
   "isRightPage": true,
   "surahHeaderName": "سورة المؤمنون",
+  "startSurah": 23,
+  "startAyah": 105,
+  "endSurah": 23,
+  "endAyah": 118,
   "lines": [
     {
       "lineNumber": 1,
@@ -392390,6 +393790,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 140",
   "isRightPage": false,
   "surahHeaderName": "سورة النور",
+  "startSurah": 24,
+  "startAyah": 1,
+  "endSurah": 24,
+  "endAyah": 10,
   "lines": [
     {
       "lineNumber": 1,
@@ -393605,6 +395009,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 140",
   "isRightPage": true,
   "surahHeaderName": "سورة النور",
+  "startSurah": 24,
+  "startAyah": 11,
+  "endSurah": 24,
+  "endAyah": 20,
   "lines": [
     {
       "lineNumber": 1,
@@ -394841,6 +396249,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 141",
   "isRightPage": false,
   "surahHeaderName": "سورة النور",
+  "startSurah": 24,
+  "startAyah": 21,
+  "endSurah": 24,
+  "endAyah": 27,
   "lines": [
     {
       "lineNumber": 1,
@@ -395962,6 +397374,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 141",
   "isRightPage": true,
   "surahHeaderName": "سورة النور",
+  "startSurah": 24,
+  "startAyah": 28,
+  "endSurah": 24,
+  "endAyah": 31,
   "lines": [
     {
       "lineNumber": 1,
@@ -397087,6 +398503,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 141",
   "isRightPage": false,
   "surahHeaderName": "سورة النور",
+  "startSurah": 24,
+  "startAyah": 32,
+  "endSurah": 24,
+  "endAyah": 36,
   "lines": [
     {
       "lineNumber": 1,
@@ -398304,6 +399724,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 142",
   "isRightPage": true,
   "surahHeaderName": "سورة النور",
+  "startSurah": 24,
+  "startAyah": 37,
+  "endSurah": 24,
+  "endAyah": 43,
   "lines": [
     {
       "lineNumber": 1,
@@ -399600,6 +401024,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 142",
   "isRightPage": false,
   "surahHeaderName": "سورة النور",
+  "startSurah": 24,
+  "startAyah": 44,
+  "endSurah": 24,
+  "endAyah": 53,
   "lines": [
     {
       "lineNumber": 1,
@@ -400884,6 +402312,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 143",
   "isRightPage": true,
   "surahHeaderName": "سورة النور",
+  "startSurah": 24,
+  "startAyah": 54,
+  "endSurah": 24,
+  "endAyah": 58,
   "lines": [
     {
       "lineNumber": 1,
@@ -402017,6 +403449,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 143",
   "isRightPage": false,
   "surahHeaderName": "سورة النور",
+  "startSurah": 24,
+  "startAyah": 59,
+  "endSurah": 24,
+  "endAyah": 61,
   "lines": [
     {
       "lineNumber": 1,
@@ -403015,6 +404451,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 143",
   "isRightPage": true,
   "surahHeaderName": "سورة النور",
+  "startSurah": 24,
+  "startAyah": 62,
+  "endSurah": 25,
+  "endAyah": 2,
   "lines": [
     {
       "lineNumber": 1,
@@ -404043,6 +405483,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 144",
   "isRightPage": false,
   "surahHeaderName": "سورة الفرقان",
+  "startSurah": 25,
+  "startAyah": 3,
+  "endSurah": 25,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -405130,6 +406574,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 144",
   "isRightPage": true,
   "surahHeaderName": "سورة الفرقان",
+  "startSurah": 25,
+  "startAyah": 12,
+  "endSurah": 25,
+  "endAyah": 20,
   "lines": [
     {
       "lineNumber": 1,
@@ -406183,6 +407631,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 145",
   "isRightPage": false,
   "surahHeaderName": "سورة الفرقان",
+  "startSurah": 25,
+  "startAyah": 21,
+  "endSurah": 25,
+  "endAyah": 32,
   "lines": [
     {
       "lineNumber": 1,
@@ -407295,6 +408747,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 145",
   "isRightPage": true,
   "surahHeaderName": "سورة الفرقان",
+  "startSurah": 25,
+  "startAyah": 33,
+  "endSurah": 25,
+  "endAyah": 43,
   "lines": [
     {
       "lineNumber": 1,
@@ -408343,6 +409799,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 145",
   "isRightPage": false,
   "surahHeaderName": "سورة الفرقان",
+  "startSurah": 25,
+  "startAyah": 44,
+  "endSurah": 25,
+  "endAyah": 55,
   "lines": [
     {
       "lineNumber": 1,
@@ -409517,6 +410977,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 146",
   "isRightPage": true,
   "surahHeaderName": "سورة الفرقان",
+  "startSurah": 25,
+  "startAyah": 56,
+  "endSurah": 25,
+  "endAyah": 67,
   "lines": [
     {
       "lineNumber": 1,
@@ -410643,6 +412107,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 146",
   "isRightPage": false,
   "surahHeaderName": "سورة الفرقان",
+  "startSurah": 25,
+  "startAyah": 68,
+  "endSurah": 25,
+  "endAyah": 77,
   "lines": [
     {
       "lineNumber": 1,
@@ -411641,6 +413109,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 147",
   "isRightPage": true,
   "surahHeaderName": "سورة الشعراء",
+  "startSurah": 26,
+  "startAyah": 1,
+  "endSurah": 26,
+  "endAyah": 19,
   "lines": [
     {
       "lineNumber": 1,
@@ -412879,6 +414351,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 147",
   "isRightPage": false,
   "surahHeaderName": "سورة الشعراء",
+  "startSurah": 26,
+  "startAyah": 20,
+  "endSurah": 26,
+  "endAyah": 39,
   "lines": [
     {
       "lineNumber": 1,
@@ -414083,6 +415559,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 147",
   "isRightPage": true,
   "surahHeaderName": "سورة الشعراء",
+  "startSurah": 26,
+  "startAyah": 40,
+  "endSurah": 26,
+  "endAyah": 60,
   "lines": [
     {
       "lineNumber": 1,
@@ -415316,6 +416796,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 148",
   "isRightPage": false,
   "surahHeaderName": "سورة الشعراء",
+  "startSurah": 26,
+  "startAyah": 61,
+  "endSurah": 26,
+  "endAyah": 83,
   "lines": [
     {
       "lineNumber": 1,
@@ -416501,6 +417985,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 148",
   "isRightPage": true,
   "surahHeaderName": "سورة الشعراء",
+  "startSurah": 26,
+  "startAyah": 84,
+  "endSurah": 26,
+  "endAyah": 111,
   "lines": [
     {
       "lineNumber": 1,
@@ -417832,6 +419320,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 149",
   "isRightPage": false,
   "surahHeaderName": "سورة الشعراء",
+  "startSurah": 26,
+  "startAyah": 112,
+  "endSurah": 26,
+  "endAyah": 136,
   "lines": [
     {
       "lineNumber": 1,
@@ -419104,6 +420596,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 149",
   "isRightPage": true,
   "surahHeaderName": "سورة الشعراء",
+  "startSurah": 26,
+  "startAyah": 137,
+  "endSurah": 26,
+  "endAyah": 159,
   "lines": [
     {
       "lineNumber": 1,
@@ -420339,6 +421835,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 149",
   "isRightPage": false,
   "surahHeaderName": "سورة الشعراء",
+  "startSurah": 26,
+  "startAyah": 160,
+  "endSurah": 26,
+  "endAyah": 183,
   "lines": [
     {
       "lineNumber": 1,
@@ -421630,6 +423130,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 150",
   "isRightPage": true,
   "surahHeaderName": "سورة الشعراء",
+  "startSurah": 26,
+  "startAyah": 184,
+  "endSurah": 26,
+  "endAyah": 206,
   "lines": [
     {
       "lineNumber": 1,
@@ -422822,6 +424326,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 150",
   "isRightPage": false,
   "surahHeaderName": "سورة الشعراء",
+  "startSurah": 26,
+  "startAyah": 207,
+  "endSurah": 26,
+  "endAyah": 227,
   "lines": [
     {
       "lineNumber": 1,
@@ -423929,6 +425437,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 151",
   "isRightPage": true,
   "surahHeaderName": "سورة النمل",
+  "startSurah": 27,
+  "startAyah": 1,
+  "endSurah": 27,
+  "endAyah": 13,
   "lines": [
     {
       "lineNumber": 1,
@@ -425161,6 +426673,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 151",
   "isRightPage": false,
   "surahHeaderName": "سورة النمل",
+  "startSurah": 27,
+  "startAyah": 14,
+  "endSurah": 27,
+  "endAyah": 22,
   "lines": [
     {
       "lineNumber": 1,
@@ -426277,6 +427793,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 151",
   "isRightPage": true,
   "surahHeaderName": "سورة النمل",
+  "startSurah": 27,
+  "startAyah": 23,
+  "endSurah": 27,
+  "endAyah": 35,
   "lines": [
     {
       "lineNumber": 1,
@@ -427439,6 +428959,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 152",
   "isRightPage": false,
   "surahHeaderName": "سورة النمل",
+  "startSurah": 27,
+  "startAyah": 36,
+  "endSurah": 27,
+  "endAyah": 44,
   "lines": [
     {
       "lineNumber": 1,
@@ -428793,6 +430317,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 152",
   "isRightPage": true,
   "surahHeaderName": "سورة النمل",
+  "startSurah": 27,
+  "startAyah": 45,
+  "endSurah": 27,
+  "endAyah": 55,
   "lines": [
     {
       "lineNumber": 1,
@@ -429806,6 +431334,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 153",
   "isRightPage": false,
   "surahHeaderName": "سورة النمل",
+  "startSurah": 27,
+  "startAyah": 56,
+  "endSurah": 27,
+  "endAyah": 63,
   "lines": [
     {
       "lineNumber": 1,
@@ -430921,6 +432453,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 153",
   "isRightPage": true,
   "surahHeaderName": "سورة النمل",
+  "startSurah": 27,
+  "startAyah": 64,
+  "endSurah": 27,
+  "endAyah": 76,
   "lines": [
     {
       "lineNumber": 1,
@@ -432153,6 +433689,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 153",
   "isRightPage": false,
   "surahHeaderName": "سورة النمل",
+  "startSurah": 27,
+  "startAyah": 77,
+  "endSurah": 27,
+  "endAyah": 88,
   "lines": [
     {
       "lineNumber": 1,
@@ -433405,6 +434945,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 154",
   "isRightPage": true,
   "surahHeaderName": "سورة النمل",
+  "startSurah": 27,
+  "startAyah": 89,
+  "endSurah": 28,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -434431,6 +435975,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 154",
   "isRightPage": false,
   "surahHeaderName": "سورة القصص",
+  "startSurah": 28,
+  "startAyah": 6,
+  "endSurah": 28,
+  "endAyah": 13,
   "lines": [
     {
       "lineNumber": 1,
@@ -435517,6 +437065,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 155",
   "isRightPage": true,
   "surahHeaderName": "سورة القصص",
+  "startSurah": 28,
+  "startAyah": 14,
+  "endSurah": 28,
+  "endAyah": 21,
   "lines": [
     {
       "lineNumber": 1,
@@ -436758,6 +438310,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 155",
   "isRightPage": false,
   "surahHeaderName": "سورة القصص",
+  "startSurah": 28,
+  "startAyah": 22,
+  "endSurah": 28,
+  "endAyah": 28,
   "lines": [
     {
       "lineNumber": 1,
@@ -437920,6 +439476,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 156",
   "isRightPage": true,
   "surahHeaderName": "سورة القصص",
+  "startSurah": 28,
+  "startAyah": 29,
+  "endSurah": 28,
+  "endAyah": 35,
   "lines": [
     {
       "lineNumber": 1,
@@ -439027,6 +440587,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 156",
   "isRightPage": false,
   "surahHeaderName": "سورة القصص",
+  "startSurah": 28,
+  "startAyah": 36,
+  "endSurah": 28,
+  "endAyah": 43,
   "lines": [
     {
       "lineNumber": 1,
@@ -440051,6 +441615,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 156",
   "isRightPage": true,
   "surahHeaderName": "سورة القصص",
+  "startSurah": 28,
+  "startAyah": 44,
+  "endSurah": 28,
+  "endAyah": 50,
   "lines": [
     {
       "lineNumber": 1,
@@ -441158,6 +442726,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 157",
   "isRightPage": false,
   "surahHeaderName": "سورة القصص",
+  "startSurah": 28,
+  "startAyah": 51,
+  "endSurah": 28,
+  "endAyah": 59,
   "lines": [
     {
       "lineNumber": 1,
@@ -442288,6 +443860,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 157",
   "isRightPage": true,
   "surahHeaderName": "سورة القصص",
+  "startSurah": 28,
+  "startAyah": 60,
+  "endSurah": 28,
+  "endAyah": 70,
   "lines": [
     {
       "lineNumber": 1,
@@ -443454,6 +445030,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 157",
   "isRightPage": false,
   "surahHeaderName": "سورة القصص",
+  "startSurah": 28,
+  "startAyah": 71,
+  "endSurah": 28,
+  "endAyah": 77,
   "lines": [
     {
       "lineNumber": 1,
@@ -444603,6 +446183,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 158",
   "isRightPage": true,
   "surahHeaderName": "سورة القصص",
+  "startSurah": 28,
+  "startAyah": 78,
+  "endSurah": 28,
+  "endAyah": 84,
   "lines": [
     {
       "lineNumber": 1,
@@ -445779,6 +447363,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 158",
   "isRightPage": false,
   "surahHeaderName": "سورة القصص",
+  "startSurah": 28,
+  "startAyah": 85,
+  "endSurah": 29,
+  "endAyah": 6,
   "lines": [
     {
       "lineNumber": 1,
@@ -446924,6 +448512,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 159",
   "isRightPage": true,
   "surahHeaderName": "سورة العنكبوت",
+  "startSurah": 29,
+  "startAyah": 7,
+  "endSurah": 29,
+  "endAyah": 14,
   "lines": [
     {
       "lineNumber": 1,
@@ -447976,6 +449568,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 159",
   "isRightPage": false,
   "surahHeaderName": "سورة العنكبوت",
+  "startSurah": 29,
+  "startAyah": 15,
+  "endSurah": 29,
+  "endAyah": 23,
   "lines": [
     {
       "lineNumber": 1,
@@ -449113,6 +450709,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 159",
   "isRightPage": true,
   "surahHeaderName": "سورة العنكبوت",
+  "startSurah": 29,
+  "startAyah": 24,
+  "endSurah": 29,
+  "endAyah": 30,
   "lines": [
     {
       "lineNumber": 1,
@@ -450157,6 +451757,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 160",
   "isRightPage": false,
   "surahHeaderName": "سورة العنكبوت",
+  "startSurah": 29,
+  "startAyah": 31,
+  "endSurah": 29,
+  "endAyah": 38,
   "lines": [
     {
       "lineNumber": 1,
@@ -451138,6 +452742,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 160",
   "isRightPage": true,
   "surahHeaderName": "سورة العنكبوت",
+  "startSurah": 29,
+  "startAyah": 39,
+  "endSurah": 29,
+  "endAyah": 45,
   "lines": [
     {
       "lineNumber": 1,
@@ -452147,6 +453755,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 161",
   "isRightPage": false,
   "surahHeaderName": "سورة العنكبوت",
+  "startSurah": 29,
+  "startAyah": 46,
+  "endSurah": 29,
+  "endAyah": 52,
   "lines": [
     {
       "lineNumber": 1,
@@ -453225,6 +454837,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 161",
   "isRightPage": true,
   "surahHeaderName": "سورة العنكبوت",
+  "startSurah": 29,
+  "startAyah": 53,
+  "endSurah": 29,
+  "endAyah": 63,
   "lines": [
     {
       "lineNumber": 1,
@@ -454371,6 +455987,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 161",
   "isRightPage": false,
   "surahHeaderName": "سورة العنكبوت",
+  "startSurah": 29,
+  "startAyah": 64,
+  "endSurah": 30,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -455419,6 +457039,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 162",
   "isRightPage": true,
   "surahHeaderName": "سورة الروم",
+  "startSurah": 30,
+  "startAyah": 6,
+  "endSurah": 30,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -456500,6 +458124,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 162",
   "isRightPage": false,
   "surahHeaderName": "سورة الروم",
+  "startSurah": 30,
+  "startAyah": 16,
+  "endSurah": 30,
+  "endAyah": 24,
   "lines": [
     {
       "lineNumber": 1,
@@ -457532,6 +459160,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 162",
   "isRightPage": true,
   "surahHeaderName": "سورة الروم",
+  "startSurah": 30,
+  "startAyah": 25,
+  "endSurah": 30,
+  "endAyah": 32,
   "lines": [
     {
       "lineNumber": 1,
@@ -458675,6 +460307,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 163",
   "isRightPage": false,
   "surahHeaderName": "سورة الروم",
+  "startSurah": 30,
+  "startAyah": 33,
+  "endSurah": 30,
+  "endAyah": 41,
   "lines": [
     {
       "lineNumber": 1,
@@ -459875,6 +461511,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 163",
   "isRightPage": true,
   "surahHeaderName": "سورة الروم",
+  "startSurah": 30,
+  "startAyah": 42,
+  "endSurah": 30,
+  "endAyah": 50,
   "lines": [
     {
       "lineNumber": 1,
@@ -461096,6 +462736,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 163",
   "isRightPage": false,
   "surahHeaderName": "سورة الروم",
+  "startSurah": 30,
+  "startAyah": 51,
+  "endSurah": 30,
+  "endAyah": 60,
   "lines": [
     {
       "lineNumber": 1,
@@ -462282,6 +463926,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 164",
   "isRightPage": true,
   "surahHeaderName": "سورة لقمان",
+  "startSurah": 31,
+  "startAyah": 1,
+  "endSurah": 31,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -463364,6 +465012,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 164",
   "isRightPage": false,
   "surahHeaderName": "سورة لقمان",
+  "startSurah": 31,
+  "startAyah": 12,
+  "endSurah": 31,
+  "endAyah": 19,
   "lines": [
     {
       "lineNumber": 1,
@@ -464619,6 +466271,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 164",
   "isRightPage": true,
   "surahHeaderName": "سورة لقمان",
+  "startSurah": 31,
+  "startAyah": 20,
+  "endSurah": 31,
+  "endAyah": 28,
   "lines": [
     {
       "lineNumber": 1,
@@ -465882,6 +467538,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 165",
   "isRightPage": false,
   "surahHeaderName": "سورة لقمان",
+  "startSurah": 31,
+  "startAyah": 29,
+  "endSurah": 31,
+  "endAyah": 34,
   "lines": [
     {
       "lineNumber": 1,
@@ -467050,6 +468710,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 165",
   "isRightPage": true,
   "surahHeaderName": "سورة السجدة",
+  "startSurah": 32,
+  "startAyah": 1,
+  "endSurah": 32,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -468237,6 +469901,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 166",
   "isRightPage": false,
   "surahHeaderName": "سورة السجدة",
+  "startSurah": 32,
+  "startAyah": 12,
+  "endSurah": 32,
+  "endAyah": 20,
   "lines": [
     {
       "lineNumber": 1,
@@ -469317,6 +470985,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 166",
   "isRightPage": true,
   "surahHeaderName": "سورة السجدة",
+  "startSurah": 32,
+  "startAyah": 21,
+  "endSurah": 32,
+  "endAyah": 30,
   "lines": [
     {
       "lineNumber": 1,
@@ -470343,6 +472015,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 167",
   "isRightPage": false,
   "surahHeaderName": "سورة الأحزاب",
+  "startSurah": 33,
+  "startAyah": 1,
+  "endSurah": 33,
+  "endAyah": 6,
   "lines": [
     {
       "lineNumber": 1,
@@ -471420,6 +473096,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 167",
   "isRightPage": true,
   "surahHeaderName": "سورة الأحزاب",
+  "startSurah": 33,
+  "startAyah": 7,
+  "endSurah": 33,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -472564,6 +474244,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 167",
   "isRightPage": false,
   "surahHeaderName": "سورة الأحزاب",
+  "startSurah": 33,
+  "startAyah": 16,
+  "endSurah": 33,
+  "endAyah": 22,
   "lines": [
     {
       "lineNumber": 1,
@@ -473811,6 +475495,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 168",
   "isRightPage": true,
   "surahHeaderName": "سورة الأحزاب",
+  "startSurah": 33,
+  "startAyah": 23,
+  "endSurah": 33,
+  "endAyah": 30,
   "lines": [
     {
       "lineNumber": 1,
@@ -474890,6 +476578,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 169",
   "isRightPage": false,
   "surahHeaderName": "سورة الأحزاب",
+  "startSurah": 33,
+  "startAyah": 31,
+  "endSurah": 33,
+  "endAyah": 35,
   "lines": [
     {
       "lineNumber": 1,
@@ -475777,6 +477469,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 169",
   "isRightPage": true,
   "surahHeaderName": "سورة الأحزاب",
+  "startSurah": 33,
+  "startAyah": 36,
+  "endSurah": 33,
+  "endAyah": 43,
   "lines": [
     {
       "lineNumber": 1,
@@ -477025,6 +478721,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 169",
   "isRightPage": false,
   "surahHeaderName": "سورة الأحزاب",
+  "startSurah": 33,
+  "startAyah": 44,
+  "endSurah": 33,
+  "endAyah": 50,
   "lines": [
     {
       "lineNumber": 1,
@@ -478082,6 +479782,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 170",
   "isRightPage": true,
   "surahHeaderName": "سورة الأحزاب",
+  "startSurah": 33,
+  "startAyah": 51,
+  "endSurah": 33,
+  "endAyah": 54,
   "lines": [
     {
       "lineNumber": 1,
@@ -479277,6 +480981,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 170",
   "isRightPage": false,
   "surahHeaderName": "سورة الأحزاب",
+  "startSurah": 33,
+  "startAyah": 55,
+  "endSurah": 33,
+  "endAyah": 62,
   "lines": [
     {
       "lineNumber": 1,
@@ -480385,6 +482093,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 171",
   "isRightPage": true,
   "surahHeaderName": "سورة الأحزاب",
+  "startSurah": 33,
+  "startAyah": 63,
+  "endSurah": 33,
+  "endAyah": 73,
   "lines": [
     {
       "lineNumber": 1,
@@ -481517,6 +483229,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 171",
   "isRightPage": false,
   "surahHeaderName": "سورة سبأ",
+  "startSurah": 34,
+  "startAyah": 1,
+  "endSurah": 34,
+  "endAyah": 7,
   "lines": [
     {
       "lineNumber": 1,
@@ -482574,6 +484290,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 171",
   "isRightPage": true,
   "surahHeaderName": "سورة سبأ",
+  "startSurah": 34,
+  "startAyah": 8,
+  "endSurah": 34,
+  "endAyah": 14,
   "lines": [
     {
       "lineNumber": 1,
@@ -483821,6 +485541,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 172",
   "isRightPage": false,
   "surahHeaderName": "سورة سبأ",
+  "startSurah": 34,
+  "startAyah": 15,
+  "endSurah": 34,
+  "endAyah": 22,
   "lines": [
     {
       "lineNumber": 1,
@@ -484998,6 +486722,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 172",
   "isRightPage": true,
   "surahHeaderName": "سورة سبأ",
+  "startSurah": 34,
+  "startAyah": 23,
+  "endSurah": 34,
+  "endAyah": 31,
   "lines": [
     {
       "lineNumber": 1,
@@ -486156,6 +487884,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 173",
   "isRightPage": false,
   "surahHeaderName": "سورة سبأ",
+  "startSurah": 34,
+  "startAyah": 32,
+  "endSurah": 34,
+  "endAyah": 39,
   "lines": [
     {
       "lineNumber": 1,
@@ -487306,6 +489038,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 173",
   "isRightPage": true,
   "surahHeaderName": "سورة سبأ",
+  "startSurah": 34,
+  "startAyah": 40,
+  "endSurah": 34,
+  "endAyah": 48,
   "lines": [
     {
       "lineNumber": 1,
@@ -488589,6 +490325,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 174",
   "isRightPage": false,
   "surahHeaderName": "سورة سبأ",
+  "startSurah": 34,
+  "startAyah": 49,
+  "endSurah": 35,
+  "endAyah": 3,
   "lines": [
     {
       "lineNumber": 1,
@@ -489789,6 +491529,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 174",
   "isRightPage": true,
   "surahHeaderName": "سورة فاطر",
+  "startSurah": 35,
+  "startAyah": 4,
+  "endSurah": 35,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -491114,6 +492858,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 174",
   "isRightPage": false,
   "surahHeaderName": "سورة فاطر",
+  "startSurah": 35,
+  "startAyah": 12,
+  "endSurah": 35,
+  "endAyah": 18,
   "lines": [
     {
       "lineNumber": 1,
@@ -492256,6 +494004,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 175",
   "isRightPage": true,
   "surahHeaderName": "سورة فاطر",
+  "startSurah": 35,
+  "startAyah": 19,
+  "endSurah": 35,
+  "endAyah": 30,
   "lines": [
     {
       "lineNumber": 1,
@@ -493396,6 +495148,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 175",
   "isRightPage": false,
   "surahHeaderName": "سورة فاطر",
+  "startSurah": 35,
+  "startAyah": 31,
+  "endSurah": 35,
+  "endAyah": 38,
   "lines": [
     {
       "lineNumber": 1,
@@ -494518,6 +496274,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 175",
   "isRightPage": true,
   "surahHeaderName": "سورة فاطر",
+  "startSurah": 35,
+  "startAyah": 39,
+  "endSurah": 35,
+  "endAyah": 44,
   "lines": [
     {
       "lineNumber": 1,
@@ -495820,6 +497580,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 176",
   "isRightPage": false,
   "surahHeaderName": "سورة فاطر",
+  "startSurah": 35,
+  "startAyah": 45,
+  "endSurah": 36,
+  "endAyah": 12,
   "lines": [
     {
       "lineNumber": 1,
@@ -496828,6 +498592,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 176",
   "isRightPage": true,
   "surahHeaderName": "سورة يس",
+  "startSurah": 36,
+  "startAyah": 13,
+  "endSurah": 36,
+  "endAyah": 27,
   "lines": [
     {
       "lineNumber": 1,
@@ -497978,6 +499746,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 177",
   "isRightPage": false,
   "surahHeaderName": "سورة يس",
+  "startSurah": 36,
+  "startAyah": 28,
+  "endSurah": 36,
+  "endAyah": 40,
   "lines": [
     {
       "lineNumber": 1,
@@ -499119,6 +500891,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 177",
   "isRightPage": true,
   "surahHeaderName": "سورة يس",
+  "startSurah": 36,
+  "startAyah": 41,
+  "endSurah": 36,
+  "endAyah": 54,
   "lines": [
     {
       "lineNumber": 1,
@@ -500324,6 +502100,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 177",
   "isRightPage": false,
   "surahHeaderName": "سورة يس",
+  "startSurah": 36,
+  "startAyah": 55,
+  "endSurah": 36,
+  "endAyah": 70,
   "lines": [
     {
       "lineNumber": 1,
@@ -501447,6 +503227,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 178",
   "isRightPage": true,
   "surahHeaderName": "سورة يس",
+  "startSurah": 36,
+  "startAyah": 71,
+  "endSurah": 36,
+  "endAyah": 83,
   "lines": [
     {
       "lineNumber": 1,
@@ -502538,6 +504322,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 178",
   "isRightPage": false,
   "surahHeaderName": "سورة الصافات",
+  "startSurah": 37,
+  "startAyah": 1,
+  "endSurah": 37,
+  "endAyah": 24,
   "lines": [
     {
       "lineNumber": 1,
@@ -503760,6 +505548,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 179",
   "isRightPage": true,
   "surahHeaderName": "سورة الصافات",
+  "startSurah": 37,
+  "startAyah": 25,
+  "endSurah": 37,
+  "endAyah": 51,
   "lines": [
     {
       "lineNumber": 1,
@@ -505041,6 +506833,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 179",
   "isRightPage": false,
   "surahHeaderName": "سورة الصافات",
+  "startSurah": 37,
+  "startAyah": 52,
+  "endSurah": 37,
+  "endAyah": 76,
   "lines": [
     {
       "lineNumber": 1,
@@ -506201,6 +507997,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 179",
   "isRightPage": true,
   "surahHeaderName": "سورة الصافات",
+  "startSurah": 37,
+  "startAyah": 77,
+  "endSurah": 37,
+  "endAyah": 102,
   "lines": [
     {
       "lineNumber": 1,
@@ -507474,6 +509274,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 180",
   "isRightPage": false,
   "surahHeaderName": "سورة الصافات",
+  "startSurah": 37,
+  "startAyah": 103,
+  "endSurah": 37,
+  "endAyah": 126,
   "lines": [
     {
       "lineNumber": 1,
@@ -508521,6 +510325,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 180",
   "isRightPage": true,
   "surahHeaderName": "سورة الصافات",
+  "startSurah": 37,
+  "startAyah": 127,
+  "endSurah": 37,
+  "endAyah": 153,
   "lines": [
     {
       "lineNumber": 1,
@@ -509662,6 +511470,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 181",
   "isRightPage": false,
   "surahHeaderName": "سورة الصافات",
+  "startSurah": 37,
+  "startAyah": 154,
+  "endSurah": 37,
+  "endAyah": 182,
   "lines": [
     {
       "lineNumber": 1,
@@ -510853,6 +512665,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 181",
   "isRightPage": true,
   "surahHeaderName": "سورة ص",
+  "startSurah": 38,
+  "startAyah": 1,
+  "endSurah": 38,
+  "endAyah": 16,
   "lines": [
     {
       "lineNumber": 1,
@@ -512129,6 +513945,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 181",
   "isRightPage": false,
   "surahHeaderName": "سورة ص",
+  "startSurah": 38,
+  "startAyah": 17,
+  "endSurah": 38,
+  "endAyah": 26,
   "lines": [
     {
       "lineNumber": 1,
@@ -513393,6 +515213,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 182",
   "isRightPage": true,
   "surahHeaderName": "سورة ص",
+  "startSurah": 38,
+  "startAyah": 27,
+  "endSurah": 38,
+  "endAyah": 42,
   "lines": [
     {
       "lineNumber": 1,
@@ -514635,6 +516459,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 182",
   "isRightPage": false,
   "surahHeaderName": "سورة ص",
+  "startSurah": 38,
+  "startAyah": 43,
+  "endSurah": 38,
+  "endAyah": 61,
   "lines": [
     {
       "lineNumber": 1,
@@ -515894,6 +517722,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 183",
   "isRightPage": true,
   "surahHeaderName": "سورة ص",
+  "startSurah": 38,
+  "startAyah": 62,
+  "endSurah": 38,
+  "endAyah": 83,
   "lines": [
     {
       "lineNumber": 1,
@@ -517233,6 +519065,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 183",
   "isRightPage": false,
   "surahHeaderName": "سورة ص",
+  "startSurah": 38,
+  "startAyah": 84,
+  "endSurah": 39,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -518321,6 +520157,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 183",
   "isRightPage": true,
   "surahHeaderName": "سورة الزمر",
+  "startSurah": 39,
+  "startAyah": 6,
+  "endSurah": 39,
+  "endAyah": 10,
   "lines": [
     {
       "lineNumber": 1,
@@ -519600,6 +521440,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 184",
   "isRightPage": false,
   "surahHeaderName": "سورة الزمر",
+  "startSurah": 39,
+  "startAyah": 11,
+  "endSurah": 39,
+  "endAyah": 21,
   "lines": [
     {
       "lineNumber": 1,
@@ -520907,6 +522751,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 184",
   "isRightPage": true,
   "surahHeaderName": "سورة الزمر",
+  "startSurah": 39,
+  "startAyah": 22,
+  "endSurah": 39,
+  "endAyah": 31,
   "lines": [
     {
       "lineNumber": 1,
@@ -522108,6 +523956,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 185",
   "isRightPage": false,
   "surahHeaderName": "سورة الزمر",
+  "startSurah": 39,
+  "startAyah": 32,
+  "endSurah": 39,
+  "endAyah": 40,
   "lines": [
     {
       "lineNumber": 1,
@@ -523217,6 +525069,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 185",
   "isRightPage": true,
   "surahHeaderName": "سورة الزمر",
+  "startSurah": 39,
+  "startAyah": 41,
+  "endSurah": 39,
+  "endAyah": 47,
   "lines": [
     {
       "lineNumber": 1,
@@ -524345,6 +526201,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 185",
   "isRightPage": false,
   "surahHeaderName": "سورة الزمر",
+  "startSurah": 39,
+  "startAyah": 48,
+  "endSurah": 39,
+  "endAyah": 56,
   "lines": [
     {
       "lineNumber": 1,
@@ -525516,6 +527376,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 186",
   "isRightPage": true,
   "surahHeaderName": "سورة الزمر",
+  "startSurah": 39,
+  "startAyah": 57,
+  "endSurah": 39,
+  "endAyah": 67,
   "lines": [
     {
       "lineNumber": 1,
@@ -526571,6 +528435,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 186",
   "isRightPage": false,
   "surahHeaderName": "سورة الزمر",
+  "startSurah": 39,
+  "startAyah": 68,
+  "endSurah": 39,
+  "endAyah": 74,
   "lines": [
     {
       "lineNumber": 1,
@@ -527642,6 +529510,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 186",
   "isRightPage": true,
   "surahHeaderName": "سورة الزمر",
+  "startSurah": 39,
+  "startAyah": 75,
+  "endSurah": 40,
+  "endAyah": 7,
   "lines": [
     {
       "lineNumber": 1,
@@ -528638,6 +530510,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 187",
   "isRightPage": false,
   "surahHeaderName": "سورة غافر",
+  "startSurah": 40,
+  "startAyah": 8,
+  "endSurah": 40,
+  "endAyah": 16,
   "lines": [
     {
       "lineNumber": 1,
@@ -529740,6 +531616,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 187",
   "isRightPage": true,
   "surahHeaderName": "سورة غافر",
+  "startSurah": 40,
+  "startAyah": 17,
+  "endSurah": 40,
+  "endAyah": 25,
   "lines": [
     {
       "lineNumber": 1,
@@ -530842,6 +532722,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 188",
   "isRightPage": false,
   "surahHeaderName": "سورة غافر",
+  "startSurah": 40,
+  "startAyah": 26,
+  "endSurah": 40,
+  "endAyah": 33,
   "lines": [
     {
       "lineNumber": 1,
@@ -532048,6 +533932,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 188",
   "isRightPage": true,
   "surahHeaderName": "سورة غافر",
+  "startSurah": 40,
+  "startAyah": 34,
+  "endSurah": 40,
+  "endAyah": 40,
   "lines": [
     {
       "lineNumber": 1,
@@ -533141,6 +535029,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 189",
   "isRightPage": false,
   "surahHeaderName": "سورة غافر",
+  "startSurah": 40,
+  "startAyah": 41,
+  "endSurah": 40,
+  "endAyah": 49,
   "lines": [
     {
       "lineNumber": 1,
@@ -534221,6 +536113,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 189",
   "isRightPage": true,
   "surahHeaderName": "سورة غافر",
+  "startSurah": 40,
+  "startAyah": 50,
+  "endSurah": 40,
+  "endAyah": 58,
   "lines": [
     {
       "lineNumber": 1,
@@ -535210,6 +537106,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 189",
   "isRightPage": false,
   "surahHeaderName": "سورة غافر",
+  "startSurah": 40,
+  "startAyah": 59,
+  "endSurah": 40,
+  "endAyah": 66,
   "lines": [
     {
       "lineNumber": 1,
@@ -536248,6 +538148,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 190",
   "isRightPage": true,
   "surahHeaderName": "سورة غافر",
+  "startSurah": 40,
+  "startAyah": 67,
+  "endSurah": 40,
+  "endAyah": 77,
   "lines": [
     {
       "lineNumber": 1,
@@ -537401,6 +539305,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 190",
   "isRightPage": false,
   "surahHeaderName": "سورة غافر",
+  "startSurah": 40,
+  "startAyah": 78,
+  "endSurah": 40,
+  "endAyah": 85,
   "lines": [
     {
       "lineNumber": 1,
@@ -538495,6 +540403,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 190",
   "isRightPage": true,
   "surahHeaderName": "سورة فصلت",
+  "startSurah": 41,
+  "startAyah": 1,
+  "endSurah": 41,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -539529,6 +541441,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 191",
   "isRightPage": false,
   "surahHeaderName": "سورة فصلت",
+  "startSurah": 41,
+  "startAyah": 12,
+  "endSurah": 41,
+  "endAyah": 20,
   "lines": [
     {
       "lineNumber": 1,
@@ -540687,6 +542603,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 191",
   "isRightPage": true,
   "surahHeaderName": "سورة فصلت",
+  "startSurah": 41,
+  "startAyah": 21,
+  "endSurah": 41,
+  "endAyah": 29,
   "lines": [
     {
       "lineNumber": 1,
@@ -541838,6 +543758,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 192",
   "isRightPage": false,
   "surahHeaderName": "سورة فصلت",
+  "startSurah": 41,
+  "startAyah": 30,
+  "endSurah": 41,
+  "endAyah": 38,
   "lines": [
     {
       "lineNumber": 1,
@@ -542897,6 +544821,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 192",
   "isRightPage": true,
   "surahHeaderName": "سورة فصلت",
+  "startSurah": 41,
+  "startAyah": 39,
+  "endSurah": 41,
+  "endAyah": 46,
   "lines": [
     {
       "lineNumber": 1,
@@ -544194,6 +546122,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 193",
   "isRightPage": false,
   "surahHeaderName": "سورة فصلت",
+  "startSurah": 41,
+  "startAyah": 47,
+  "endSurah": 41,
+  "endAyah": 54,
   "lines": [
     {
       "lineNumber": 1,
@@ -545414,6 +547346,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 193",
   "isRightPage": true,
   "surahHeaderName": "سورة الشورى",
+  "startSurah": 42,
+  "startAyah": 1,
+  "endSurah": 42,
+  "endAyah": 10,
   "lines": [
     {
       "lineNumber": 1,
@@ -546545,6 +548481,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 193",
   "isRightPage": false,
   "surahHeaderName": "سورة الشورى",
+  "startSurah": 42,
+  "startAyah": 11,
+  "endSurah": 42,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -547769,6 +549709,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 194",
   "isRightPage": true,
   "surahHeaderName": "سورة الشورى",
+  "startSurah": 42,
+  "startAyah": 16,
+  "endSurah": 42,
+  "endAyah": 22,
   "lines": [
     {
       "lineNumber": 1,
@@ -548890,6 +550834,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 194",
   "isRightPage": false,
   "surahHeaderName": "سورة الشورى",
+  "startSurah": 42,
+  "startAyah": 23,
+  "endSurah": 42,
+  "endAyah": 31,
   "lines": [
     {
       "lineNumber": 1,
@@ -550159,6 +552107,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 195",
   "isRightPage": true,
   "surahHeaderName": "سورة الشورى",
+  "startSurah": 42,
+  "startAyah": 32,
+  "endSurah": 42,
+  "endAyah": 44,
   "lines": [
     {
       "lineNumber": 1,
@@ -551432,6 +553384,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 195",
   "isRightPage": false,
   "surahHeaderName": "سورة الشورى",
+  "startSurah": 42,
+  "startAyah": 45,
+  "endSurah": 42,
+  "endAyah": 51,
   "lines": [
     {
       "lineNumber": 1,
@@ -552651,6 +554607,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 196",
   "isRightPage": true,
   "surahHeaderName": "سورة الشورى",
+  "startSurah": 42,
+  "startAyah": 52,
+  "endSurah": 43,
+  "endAyah": 10,
   "lines": [
     {
       "lineNumber": 1,
@@ -553651,6 +555611,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 196",
   "isRightPage": false,
   "surahHeaderName": "سورة الزخرف",
+  "startSurah": 43,
+  "startAyah": 11,
+  "endSurah": 43,
+  "endAyah": 22,
   "lines": [
     {
       "lineNumber": 1,
@@ -554798,6 +556762,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 196",
   "isRightPage": true,
   "surahHeaderName": "سورة الزخرف",
+  "startSurah": 43,
+  "startAyah": 23,
+  "endSurah": 43,
+  "endAyah": 33,
   "lines": [
     {
       "lineNumber": 1,
@@ -555958,6 +557926,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 197",
   "isRightPage": false,
   "surahHeaderName": "سورة الزخرف",
+  "startSurah": 43,
+  "startAyah": 34,
+  "endSurah": 43,
+  "endAyah": 47,
   "lines": [
     {
       "lineNumber": 1,
@@ -557072,6 +559044,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 197",
   "isRightPage": true,
   "surahHeaderName": "سورة الزخرف",
+  "startSurah": 43,
+  "startAyah": 48,
+  "endSurah": 43,
+  "endAyah": 60,
   "lines": [
     {
       "lineNumber": 1,
@@ -558213,6 +560189,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 198",
   "isRightPage": false,
   "surahHeaderName": "سورة الزخرف",
+  "startSurah": 43,
+  "startAyah": 61,
+  "endSurah": 43,
+  "endAyah": 73,
   "lines": [
     {
       "lineNumber": 1,
@@ -559283,6 +561263,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 198",
   "isRightPage": true,
   "surahHeaderName": "سورة الزخرف",
+  "startSurah": 43,
+  "startAyah": 74,
+  "endSurah": 43,
+  "endAyah": 89,
   "lines": [
     {
       "lineNumber": 1,
@@ -560461,6 +562445,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 198",
   "isRightPage": false,
   "surahHeaderName": "سورة الدخان",
+  "startSurah": 44,
+  "startAyah": 1,
+  "endSurah": 44,
+  "endAyah": 18,
   "lines": [
     {
       "lineNumber": 1,
@@ -561572,6 +563560,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 199",
   "isRightPage": true,
   "surahHeaderName": "سورة الدخان",
+  "startSurah": 44,
+  "startAyah": 19,
+  "endSurah": 44,
+  "endAyah": 39,
   "lines": [
     {
       "lineNumber": 1,
@@ -562798,6 +564790,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 199",
   "isRightPage": false,
   "surahHeaderName": "سورة الدخان",
+  "startSurah": 44,
+  "startAyah": 40,
+  "endSurah": 44,
+  "endAyah": 59,
   "lines": [
     {
       "lineNumber": 1,
@@ -563806,6 +565802,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 199",
   "isRightPage": true,
   "surahHeaderName": "سورة الجاثية",
+  "startSurah": 45,
+  "startAyah": 1,
+  "endSurah": 45,
+  "endAyah": 13,
   "lines": [
     {
       "lineNumber": 1,
@@ -565093,6 +567093,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 200",
   "isRightPage": false,
   "surahHeaderName": "سورة الجاثية",
+  "startSurah": 45,
+  "startAyah": 14,
+  "endSurah": 45,
+  "endAyah": 22,
   "lines": [
     {
       "lineNumber": 1,
@@ -566202,6 +568206,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 200",
   "isRightPage": true,
   "surahHeaderName": "سورة الجاثية",
+  "startSurah": 45,
+  "startAyah": 23,
+  "endSurah": 45,
+  "endAyah": 32,
   "lines": [
     {
       "lineNumber": 1,
@@ -567557,6 +569565,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 200",
   "isRightPage": false,
   "surahHeaderName": "سورة الجاثية",
+  "startSurah": 45,
+  "startAyah": 33,
+  "endSurah": 46,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -568674,6 +570686,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 201",
   "isRightPage": true,
   "surahHeaderName": "سورة الأحقاف",
+  "startSurah": 46,
+  "startAyah": 6,
+  "endSurah": 46,
+  "endAyah": 14,
   "lines": [
     {
       "lineNumber": 1,
@@ -569972,6 +571988,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 201",
   "isRightPage": false,
   "surahHeaderName": "سورة الأحقاف",
+  "startSurah": 46,
+  "startAyah": 15,
+  "endSurah": 46,
+  "endAyah": 20,
   "lines": [
     {
       "lineNumber": 1,
@@ -571176,6 +573196,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 202",
   "isRightPage": true,
   "surahHeaderName": "سورة الأحقاف",
+  "startSurah": 46,
+  "startAyah": 21,
+  "endSurah": 46,
+  "endAyah": 28,
   "lines": [
     {
       "lineNumber": 1,
@@ -572368,6 +574392,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 202",
   "isRightPage": false,
   "surahHeaderName": "سورة الأحقاف",
+  "startSurah": 46,
+  "startAyah": 29,
+  "endSurah": 46,
+  "endAyah": 35,
   "lines": [
     {
       "lineNumber": 1,
@@ -573530,6 +575558,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 202",
   "isRightPage": true,
   "surahHeaderName": "سورة محمد",
+  "startSurah": 47,
+  "startAyah": 1,
+  "endSurah": 47,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -574767,6 +576799,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 203",
   "isRightPage": false,
   "surahHeaderName": "سورة محمد",
+  "startSurah": 47,
+  "startAyah": 12,
+  "endSurah": 47,
+  "endAyah": 19,
   "lines": [
     {
       "lineNumber": 1,
@@ -576049,6 +578085,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 203",
   "isRightPage": true,
   "surahHeaderName": "سورة محمد",
+  "startSurah": 47,
+  "startAyah": 20,
+  "endSurah": 47,
+  "endAyah": 29,
   "lines": [
     {
       "lineNumber": 1,
@@ -577123,6 +579163,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 203",
   "isRightPage": false,
   "surahHeaderName": "سورة محمد",
+  "startSurah": 47,
+  "startAyah": 30,
+  "endSurah": 47,
+  "endAyah": 38,
   "lines": [
     {
       "lineNumber": 1,
@@ -578225,6 +580269,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 204",
   "isRightPage": true,
   "surahHeaderName": "سورة الفتح",
+  "startSurah": 48,
+  "startAyah": 1,
+  "endSurah": 48,
+  "endAyah": 9,
   "lines": [
     {
       "lineNumber": 1,
@@ -579200,6 +581248,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 204",
   "isRightPage": false,
   "surahHeaderName": "سورة الفتح",
+  "startSurah": 48,
+  "startAyah": 10,
+  "endSurah": 48,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -580375,6 +582427,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 204",
   "isRightPage": true,
   "surahHeaderName": "سورة الفتح",
+  "startSurah": 48,
+  "startAyah": 16,
+  "endSurah": 48,
+  "endAyah": 23,
   "lines": [
     {
       "lineNumber": 1,
@@ -581552,6 +583608,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 205",
   "isRightPage": false,
   "surahHeaderName": "سورة الفتح",
+  "startSurah": 48,
+  "startAyah": 24,
+  "endSurah": 48,
+  "endAyah": 28,
   "lines": [
     {
       "lineNumber": 1,
@@ -582650,6 +584710,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 205",
   "isRightPage": true,
   "surahHeaderName": "سورة الفتح",
+  "startSurah": 48,
+  "startAyah": 29,
+  "endSurah": 49,
+  "endAyah": 4,
   "lines": [
     {
       "lineNumber": 1,
@@ -583699,6 +585763,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 206",
   "isRightPage": false,
   "surahHeaderName": "سورة الحجرات",
+  "startSurah": 49,
+  "startAyah": 5,
+  "endSurah": 49,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -584932,6 +587000,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 206",
   "isRightPage": true,
   "surahHeaderName": "سورة الحجرات",
+  "startSurah": 49,
+  "startAyah": 12,
+  "endSurah": 49,
+  "endAyah": 18,
   "lines": [
     {
       "lineNumber": 1,
@@ -586179,6 +588251,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 207",
   "isRightPage": false,
   "surahHeaderName": "سورة ق",
+  "startSurah": 50,
+  "startAyah": 1,
+  "endSurah": 50,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -587315,6 +589391,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 207",
   "isRightPage": true,
   "surahHeaderName": "سورة ق",
+  "startSurah": 50,
+  "startAyah": 16,
+  "endSurah": 50,
+  "endAyah": 35,
   "lines": [
     {
       "lineNumber": 1,
@@ -588680,6 +590760,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 208",
   "isRightPage": false,
   "surahHeaderName": "سورة ق",
+  "startSurah": 50,
+  "startAyah": 36,
+  "endSurah": 51,
+  "endAyah": 6,
   "lines": [
     {
       "lineNumber": 1,
@@ -589760,6 +591844,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 208",
   "isRightPage": true,
   "surahHeaderName": "سورة الذاريات",
+  "startSurah": 51,
+  "startAyah": 7,
+  "endSurah": 51,
+  "endAyah": 30,
   "lines": [
     {
       "lineNumber": 1,
@@ -591044,6 +593132,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 209",
   "isRightPage": false,
   "surahHeaderName": "سورة الذاريات",
+  "startSurah": 51,
+  "startAyah": 31,
+  "endSurah": 51,
+  "endAyah": 51,
   "lines": [
     {
       "lineNumber": 1,
@@ -592339,6 +594431,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 209",
   "isRightPage": true,
   "surahHeaderName": "سورة الذاريات",
+  "startSurah": 51,
+  "startAyah": 52,
+  "endSurah": 52,
+  "endAyah": 14,
   "lines": [
     {
       "lineNumber": 1,
@@ -593455,6 +595551,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 209",
   "isRightPage": false,
   "surahHeaderName": "سورة الطور",
+  "startSurah": 52,
+  "startAyah": 15,
+  "endSurah": 52,
+  "endAyah": 31,
   "lines": [
     {
       "lineNumber": 1,
@@ -594641,6 +596741,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 210",
   "isRightPage": true,
   "surahHeaderName": "سورة الطور",
+  "startSurah": 52,
+  "startAyah": 32,
+  "endSurah": 52,
+  "endAyah": 49,
   "lines": [
     {
       "lineNumber": 1,
@@ -595871,6 +597975,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 210",
   "isRightPage": false,
   "surahHeaderName": "سورة النجم",
+  "startSurah": 53,
+  "startAyah": 1,
+  "endSurah": 53,
+  "endAyah": 26,
   "lines": [
     {
       "lineNumber": 1,
@@ -597193,6 +599301,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 211",
   "isRightPage": true,
   "surahHeaderName": "سورة النجم",
+  "startSurah": 53,
+  "startAyah": 27,
+  "endSurah": 53,
+  "endAyah": 44,
   "lines": [
     {
       "lineNumber": 1,
@@ -598542,6 +600654,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 211",
   "isRightPage": false,
   "surahHeaderName": "سورة النجم",
+  "startSurah": 53,
+  "startAyah": 45,
+  "endSurah": 54,
+  "endAyah": 6,
   "lines": [
     {
       "lineNumber": 1,
@@ -599652,6 +601768,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 211",
   "isRightPage": true,
   "surahHeaderName": "سورة القمر",
+  "startSurah": 54,
+  "startAyah": 7,
+  "endSurah": 54,
+  "endAyah": 27,
   "lines": [
     {
       "lineNumber": 1,
@@ -600899,6 +603019,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 212",
   "isRightPage": false,
   "surahHeaderName": "سورة القمر",
+  "startSurah": 54,
+  "startAyah": 28,
+  "endSurah": 54,
+  "endAyah": 49,
   "lines": [
     {
       "lineNumber": 1,
@@ -602140,6 +604264,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 212",
   "isRightPage": true,
   "surahHeaderName": "سورة القمر",
+  "startSurah": 54,
+  "startAyah": 50,
+  "endSurah": 55,
+  "endAyah": 16,
   "lines": [
     {
       "lineNumber": 1,
@@ -603073,6 +605201,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 213",
   "isRightPage": false,
   "surahHeaderName": "سورة الرحمن",
+  "startSurah": 55,
+  "startAyah": 17,
+  "endSurah": 55,
+  "endAyah": 40,
   "lines": [
     {
       "lineNumber": 1,
@@ -604266,6 +606398,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 213",
   "isRightPage": true,
   "surahHeaderName": "سورة الرحمن",
+  "startSurah": 55,
+  "startAyah": 41,
+  "endSurah": 55,
+  "endAyah": 67,
   "lines": [
     {
       "lineNumber": 1,
@@ -605407,6 +607543,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 213",
   "isRightPage": false,
   "surahHeaderName": "سورة الرحمن",
+  "startSurah": 55,
+  "startAyah": 68,
+  "endSurah": 56,
+  "endAyah": 16,
   "lines": [
     {
       "lineNumber": 1,
@@ -606443,6 +608583,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 214",
   "isRightPage": true,
   "surahHeaderName": "سورة الواقعة",
+  "startSurah": 56,
+  "startAyah": 17,
+  "endSurah": 56,
+  "endAyah": 50,
   "lines": [
     {
       "lineNumber": 1,
@@ -607668,6 +609812,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 214",
   "isRightPage": false,
   "surahHeaderName": "سورة الواقعة",
+  "startSurah": 56,
+  "startAyah": 51,
+  "endSurah": 56,
+  "endAyah": 76,
   "lines": [
     {
       "lineNumber": 1,
@@ -608836,6 +610984,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 215",
   "isRightPage": true,
   "surahHeaderName": "سورة الواقعة",
+  "startSurah": 56,
+  "startAyah": 77,
+  "endSurah": 57,
+  "endAyah": 3,
   "lines": [
     {
       "lineNumber": 1,
@@ -609973,6 +612125,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 215",
   "isRightPage": false,
   "surahHeaderName": "سورة الحديد",
+  "startSurah": 57,
+  "startAyah": 4,
+  "endSurah": 57,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -611284,6 +613440,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 215",
   "isRightPage": true,
   "surahHeaderName": "سورة الحديد",
+  "startSurah": 57,
+  "startAyah": 12,
+  "endSurah": 57,
+  "endAyah": 18,
   "lines": [
     {
       "lineNumber": 1,
@@ -612453,6 +614613,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 216",
   "isRightPage": false,
   "surahHeaderName": "سورة الحديد",
+  "startSurah": 57,
+  "startAyah": 19,
+  "endSurah": 57,
+  "endAyah": 24,
   "lines": [
     {
       "lineNumber": 1,
@@ -613594,6 +615758,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 216",
   "isRightPage": true,
   "surahHeaderName": "سورة الحديد",
+  "startSurah": 57,
+  "startAyah": 25,
+  "endSurah": 57,
+  "endAyah": 29,
   "lines": [
     {
       "lineNumber": 1,
@@ -614663,6 +616831,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 217",
   "isRightPage": false,
   "surahHeaderName": "سورة المجادلة",
+  "startSurah": 58,
+  "startAyah": 1,
+  "endSurah": 58,
+  "endAyah": 6,
   "lines": [
     {
       "lineNumber": 1,
@@ -615783,6 +617955,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 217",
   "isRightPage": true,
   "surahHeaderName": "سورة المجادلة",
+  "startSurah": 58,
+  "startAyah": 7,
+  "endSurah": 58,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -617042,6 +619218,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 217",
   "isRightPage": false,
   "surahHeaderName": "سورة المجادلة",
+  "startSurah": 58,
+  "startAyah": 12,
+  "endSurah": 58,
+  "endAyah": 21,
   "lines": [
     {
       "lineNumber": 1,
@@ -618355,6 +620535,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 218",
   "isRightPage": true,
   "surahHeaderName": "سورة المجادلة",
+  "startSurah": 58,
+  "startAyah": 22,
+  "endSurah": 59,
+  "endAyah": 3,
   "lines": [
     {
       "lineNumber": 1,
@@ -619403,6 +621587,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 218",
   "isRightPage": false,
   "surahHeaderName": "سورة الحشر",
+  "startSurah": 59,
+  "startAyah": 4,
+  "endSurah": 59,
+  "endAyah": 9,
   "lines": [
     {
       "lineNumber": 1,
@@ -620551,6 +622739,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 218",
   "isRightPage": true,
   "surahHeaderName": "سورة الحشر",
+  "startSurah": 59,
+  "startAyah": 10,
+  "endSurah": 59,
+  "endAyah": 16,
   "lines": [
     {
       "lineNumber": 1,
@@ -621658,6 +623850,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 219",
   "isRightPage": false,
   "surahHeaderName": "سورة الحشر",
+  "startSurah": 59,
+  "startAyah": 17,
+  "endSurah": 59,
+  "endAyah": 24,
   "lines": [
     {
       "lineNumber": 1,
@@ -622703,6 +624899,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 219",
   "isRightPage": true,
   "surahHeaderName": "سورة الممتحنة",
+  "startSurah": 60,
+  "startAyah": 1,
+  "endSurah": 60,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -623892,6 +626092,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 219",
   "isRightPage": false,
   "surahHeaderName": "سورة الممتحنة",
+  "startSurah": 60,
+  "startAyah": 6,
+  "endSurah": 60,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -625215,6 +627419,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 220",
   "isRightPage": true,
   "surahHeaderName": "سورة الممتحنة",
+  "startSurah": 60,
+  "startAyah": 12,
+  "endSurah": 61,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -626266,6 +628474,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 220",
   "isRightPage": false,
   "surahHeaderName": "سورة الصف",
+  "startSurah": 61,
+  "startAyah": 6,
+  "endSurah": 61,
+  "endAyah": 14,
   "lines": [
     {
       "lineNumber": 1,
@@ -627613,6 +629825,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 221",
   "isRightPage": true,
   "surahHeaderName": "سورة الجمعة",
+  "startSurah": 62,
+  "startAyah": 1,
+  "endSurah": 62,
+  "endAyah": 8,
   "lines": [
     {
       "lineNumber": 1,
@@ -628671,6 +630887,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 221",
   "isRightPage": false,
   "surahHeaderName": "سورة الجمعة",
+  "startSurah": 62,
+  "startAyah": 9,
+  "endSurah": 63,
+  "endAyah": 4,
   "lines": [
     {
       "lineNumber": 1,
@@ -629771,6 +631991,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 222",
   "isRightPage": true,
   "surahHeaderName": "سورة المنافقون",
+  "startSurah": 63,
+  "startAyah": 5,
+  "endSurah": 63,
+  "endAyah": 11,
   "lines": [
     {
       "lineNumber": 1,
@@ -630787,6 +633011,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 222",
   "isRightPage": false,
   "surahHeaderName": "سورة التغابن",
+  "startSurah": 64,
+  "startAyah": 1,
+  "endSurah": 64,
+  "endAyah": 9,
   "lines": [
     {
       "lineNumber": 1,
@@ -632022,6 +634250,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 222",
   "isRightPage": true,
   "surahHeaderName": "سورة التغابن",
+  "startSurah": 64,
+  "startAyah": 10,
+  "endSurah": 64,
+  "endAyah": 18,
   "lines": [
     {
       "lineNumber": 1,
@@ -632997,6 +635229,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 223",
   "isRightPage": false,
   "surahHeaderName": "سورة الطلاق",
+  "startSurah": 65,
+  "startAyah": 1,
+  "endSurah": 65,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -634193,6 +636429,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 223",
   "isRightPage": true,
   "surahHeaderName": "سورة الطلاق",
+  "startSurah": 65,
+  "startAyah": 6,
+  "endSurah": 65,
+  "endAyah": 12,
   "lines": [
     {
       "lineNumber": 1,
@@ -635496,6 +637736,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 224",
   "isRightPage": false,
   "surahHeaderName": "سورة التحريم",
+  "startSurah": 66,
+  "startAyah": 1,
+  "endSurah": 66,
+  "endAyah": 7,
   "lines": [
     {
       "lineNumber": 1,
@@ -636617,6 +638861,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 224",
   "isRightPage": true,
   "surahHeaderName": "سورة التحريم",
+  "startSurah": 66,
+  "startAyah": 8,
+  "endSurah": 66,
+  "endAyah": 12,
   "lines": [
     {
       "lineNumber": 1,
@@ -637659,6 +639907,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 225",
   "isRightPage": false,
   "surahHeaderName": "سورة الملك",
+  "startSurah": 67,
+  "startAyah": 1,
+  "endSurah": 67,
+  "endAyah": 12,
   "lines": [
     {
       "lineNumber": 1,
@@ -638840,6 +641092,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 225",
   "isRightPage": true,
   "surahHeaderName": "سورة الملك",
+  "startSurah": 67,
+  "startAyah": 13,
+  "endSurah": 67,
+  "endAyah": 26,
   "lines": [
     {
       "lineNumber": 1,
@@ -640164,6 +642420,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 225",
   "isRightPage": false,
   "surahHeaderName": "سورة الملك",
+  "startSurah": 67,
+  "startAyah": 27,
+  "endSurah": 68,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -641290,6 +643550,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 226",
   "isRightPage": true,
   "surahHeaderName": "سورة القلم",
+  "startSurah": 68,
+  "startAyah": 16,
+  "endSurah": 68,
+  "endAyah": 42,
   "lines": [
     {
       "lineNumber": 1,
@@ -642682,6 +644946,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 226",
   "isRightPage": false,
   "surahHeaderName": "سورة القلم",
+  "startSurah": 68,
+  "startAyah": 43,
+  "endSurah": 69,
+  "endAyah": 8,
   "lines": [
     {
       "lineNumber": 1,
@@ -643828,6 +646096,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 227",
   "isRightPage": true,
   "surahHeaderName": "سورة الحاقة",
+  "startSurah": 69,
+  "startAyah": 9,
+  "endSurah": 69,
+  "endAyah": 34,
   "lines": [
     {
       "lineNumber": 1,
@@ -645114,6 +647386,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 227",
   "isRightPage": false,
   "surahHeaderName": "سورة الحاقة",
+  "startSurah": 69,
+  "startAyah": 35,
+  "endSurah": 70,
+  "endAyah": 10,
   "lines": [
     {
       "lineNumber": 1,
@@ -646326,6 +648602,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 227",
   "isRightPage": true,
   "surahHeaderName": "سورة المعارج",
+  "startSurah": 70,
+  "startAyah": 11,
+  "endSurah": 70,
+  "endAyah": 39,
   "lines": [
     {
       "lineNumber": 1,
@@ -647622,6 +649902,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 228",
   "isRightPage": false,
   "surahHeaderName": "سورة المعارج",
+  "startSurah": 70,
+  "startAyah": 40,
+  "endSurah": 71,
+  "endAyah": 10,
   "lines": [
     {
       "lineNumber": 1,
@@ -648779,6 +651063,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 228",
   "isRightPage": true,
   "surahHeaderName": "سورة نوح",
+  "startSurah": 71,
+  "startAyah": 11,
+  "endSurah": 71,
+  "endAyah": 28,
   "lines": [
     {
       "lineNumber": 1,
@@ -650009,6 +652297,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 229",
   "isRightPage": false,
   "surahHeaderName": "سورة الجن",
+  "startSurah": 72,
+  "startAyah": 1,
+  "endSurah": 72,
+  "endAyah": 13,
   "lines": [
     {
       "lineNumber": 1,
@@ -651220,6 +653512,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 229",
   "isRightPage": true,
   "surahHeaderName": "سورة الجن",
+  "startSurah": 72,
+  "startAyah": 14,
+  "endSurah": 72,
+  "endAyah": 28,
   "lines": [
     {
       "lineNumber": 1,
@@ -652502,6 +654798,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 229",
   "isRightPage": false,
   "surahHeaderName": "سورة المزمل",
+  "startSurah": 73,
+  "startAyah": 1,
+  "endSurah": 73,
+  "endAyah": 19,
   "lines": [
     {
       "lineNumber": 1,
@@ -653642,6 +655942,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 230",
   "isRightPage": true,
   "surahHeaderName": "سورة المزمل",
+  "startSurah": 73,
+  "startAyah": 20,
+  "endSurah": 74,
+  "endAyah": 17,
   "lines": [
     {
       "lineNumber": 1,
@@ -654907,6 +657211,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 230",
   "isRightPage": false,
   "surahHeaderName": "سورة المدثر",
+  "startSurah": 74,
+  "startAyah": 18,
+  "endSurah": 74,
+  "endAyah": 47,
   "lines": [
     {
       "lineNumber": 1,
@@ -656394,6 +658702,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 230",
   "isRightPage": true,
   "surahHeaderName": "سورة المدثر",
+  "startSurah": 74,
+  "startAyah": 48,
+  "endSurah": 75,
+  "endAyah": 19,
   "lines": [
     {
       "lineNumber": 1,
@@ -657641,6 +659953,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 231",
   "isRightPage": false,
   "surahHeaderName": "سورة القيامة",
+  "startSurah": 75,
+  "startAyah": 20,
+  "endSurah": 76,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -658865,6 +661181,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 231",
   "isRightPage": true,
   "surahHeaderName": "سورة الإنسان",
+  "startSurah": 76,
+  "startAyah": 6,
+  "endSurah": 76,
+  "endAyah": 25,
   "lines": [
     {
       "lineNumber": 1,
@@ -660174,6 +662494,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 232",
   "isRightPage": false,
   "surahHeaderName": "سورة الإنسان",
+  "startSurah": 76,
+  "startAyah": 26,
+  "endSurah": 77,
+  "endAyah": 19,
   "lines": [
     {
       "lineNumber": 1,
@@ -661277,6 +663601,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 232",
   "isRightPage": true,
   "surahHeaderName": "سورة المرسلات",
+  "startSurah": 77,
+  "startAyah": 20,
+  "endSurah": 77,
+  "endAyah": 50,
   "lines": [
     {
       "lineNumber": 1,
@@ -662527,6 +664855,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 233",
   "isRightPage": false,
   "surahHeaderName": "سورة النبأ",
+  "startSurah": 78,
+  "startAyah": 1,
+  "endSurah": 78,
+  "endAyah": 30,
   "lines": [
     {
       "lineNumber": 1,
@@ -663628,6 +665960,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 233",
   "isRightPage": true,
   "surahHeaderName": "سورة النبأ",
+  "startSurah": 78,
+  "startAyah": 31,
+  "endSurah": 79,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -664767,6 +667103,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 233",
   "isRightPage": false,
   "surahHeaderName": "سورة النازعات",
+  "startSurah": 79,
+  "startAyah": 16,
+  "endSurah": 79,
+  "endAyah": 46,
   "lines": [
     {
       "lineNumber": 1,
@@ -666058,6 +668398,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 234",
   "isRightPage": true,
   "surahHeaderName": "سورة عبس",
+  "startSurah": 80,
+  "startAyah": 1,
+  "endSurah": 80,
+  "endAyah": 42,
   "lines": [
     {
       "lineNumber": 1,
@@ -667452,6 +669796,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 234",
   "isRightPage": false,
   "surahHeaderName": "سورة التكوير",
+  "startSurah": 81,
+  "startAyah": 1,
+  "endSurah": 81,
+  "endAyah": 29,
   "lines": [
     {
       "lineNumber": 1,
@@ -668538,6 +670886,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 235",
   "isRightPage": true,
   "surahHeaderName": "سورة الانفطار",
+  "startSurah": 82,
+  "startAyah": 1,
+  "endSurah": 83,
+  "endAyah": 6,
   "lines": [
     {
       "lineNumber": 1,
@@ -669634,6 +671986,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 235",
   "isRightPage": false,
   "surahHeaderName": "سورة المطففين",
+  "startSurah": 83,
+  "startAyah": 7,
+  "endSurah": 83,
+  "endAyah": 34,
   "lines": [
     {
       "lineNumber": 1,
@@ -670922,6 +673278,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 235",
   "isRightPage": true,
   "surahHeaderName": "سورة المطففين",
+  "startSurah": 83,
+  "startAyah": 35,
+  "endSurah": 84,
+  "endAyah": 25,
   "lines": [
     {
       "lineNumber": 1,
@@ -672084,6 +674444,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 236",
   "isRightPage": false,
   "surahHeaderName": "سورة البروج",
+  "startSurah": 85,
+  "startAyah": 1,
+  "endSurah": 85,
+  "endAyah": 22,
   "lines": [
     {
       "lineNumber": 1,
@@ -673163,6 +675527,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 236",
   "isRightPage": true,
   "surahHeaderName": "سورة الطارق",
+  "startSurah": 86,
+  "startAyah": 1,
+  "endSurah": 87,
+  "endAyah": 15,
   "lines": [
     {
       "lineNumber": 1,
@@ -674407,6 +676775,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 237",
   "isRightPage": false,
   "surahHeaderName": "سورة الأعلى",
+  "startSurah": 87,
+  "startAyah": 16,
+  "endSurah": 88,
+  "endAyah": 26,
   "lines": [
     {
       "lineNumber": 1,
@@ -675523,6 +677895,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 237",
   "isRightPage": true,
   "surahHeaderName": "سورة الفجر",
+  "startSurah": 89,
+  "startAyah": 1,
+  "endSurah": 89,
+  "endAyah": 23,
   "lines": [
     {
       "lineNumber": 1,
@@ -676624,6 +679000,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 237",
   "isRightPage": false,
   "surahHeaderName": "سورة الفجر",
+  "startSurah": 89,
+  "startAyah": 24,
+  "endSurah": 90,
+  "endAyah": 20,
   "lines": [
     {
       "lineNumber": 1,
@@ -677722,6 +680102,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 238",
   "isRightPage": true,
   "surahHeaderName": "سورة الشمس",
+  "startSurah": 91,
+  "startAyah": 1,
+  "endSurah": 92,
+  "endAyah": 14,
   "lines": [
     {
       "lineNumber": 1,
@@ -678801,6 +681185,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 238",
   "isRightPage": false,
   "surahHeaderName": "سورة الليل",
+  "startSurah": 92,
+  "startAyah": 15,
+  "endSurah": 94,
+  "endAyah": 8,
   "lines": [
     {
       "lineNumber": 1,
@@ -679815,6 +682203,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 239",
   "isRightPage": true,
   "surahHeaderName": "سورة التين",
+  "startSurah": 95,
+  "startAyah": 1,
+  "endSurah": 96,
+  "endAyah": 19,
   "lines": [
     {
       "lineNumber": 1,
@@ -680935,6 +683327,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 239",
   "isRightPage": false,
   "surahHeaderName": "سورة القدر",
+  "startSurah": 97,
+  "startAyah": 1,
+  "endSurah": 98,
+  "endAyah": 7,
   "lines": [
     {
       "lineNumber": 1,
@@ -681920,6 +684316,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 239",
   "isRightPage": true,
   "surahHeaderName": "سورة البينة",
+  "startSurah": 98,
+  "startAyah": 8,
+  "endSurah": 100,
+  "endAyah": 9,
   "lines": [
     {
       "lineNumber": 1,
@@ -682856,6 +685256,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 240",
   "isRightPage": false,
   "surahHeaderName": "سورة العاديات",
+  "startSurah": 100,
+  "startAyah": 10,
+  "endSurah": 102,
+  "endAyah": 8,
   "lines": [
     {
       "lineNumber": 1,
@@ -683690,6 +686094,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 240",
   "isRightPage": true,
   "surahHeaderName": "سورة العصر",
+  "startSurah": 103,
+  "startAyah": 1,
+  "endSurah": 105,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -684506,6 +686914,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 240",
   "isRightPage": false,
   "surahHeaderName": "سورة قريش",
+  "startSurah": 106,
+  "startAyah": 1,
+  "endSurah": 108,
+  "endAyah": 3,
   "lines": [
     {
       "lineNumber": 1,
@@ -685163,6 +687575,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 240",
   "isRightPage": true,
   "surahHeaderName": "سورة الكافرون",
+  "startSurah": 109,
+  "startAyah": 1,
+  "endSurah": 111,
+  "endAyah": 5,
   "lines": [
     {
       "lineNumber": 1,
@@ -685940,6 +688356,10 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   "hizbQuarter": "الحزب 240",
   "isRightPage": false,
   "surahHeaderName": "سورة الإخلاص",
+  "startSurah": 112,
+  "startAyah": 1,
+  "endSurah": 114,
+  "endAyah": 6,
   "lines": [
     {
       "lineNumber": 1,
@@ -686644,3 +689064,6 @@ export const MEDINA_PAGES: Record<number, MedinaPageData> = {
   ]
 },
 };
+
+export const medinaPages = MEDINA_PAGES;
+export default MEDINA_PAGES;
