@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Header } from '@/components/shell/Header';
-import { RecitationHUD } from '@/components/hud/RecitationHUD';
 
 export const metadata: Metadata = {
   title: 'Quran Cognitive OS — نظام تحفيظ القرآن المعرفي',
@@ -32,15 +31,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
         <link rel="manifest" href="/manifest.webmanifest" />
         <link rel="icon" href="/icons/icon-192x192.svg" type="image/svg+xml" />
       </head>
-      <body className="min-h-screen bg-mushaf-parchment dark:bg-darkMushaf-bg text-mushaf-ink dark:text-darkMushaf-ink selection:bg-mushaf-gold/30 selection:text-mushaf-ink pb-36">
+      <body
+        className="min-h-screen bg-mushaf-parchment dark:bg-darkMushaf-bg text-mushaf-ink dark:text-darkMushaf-ink selection:bg-mushaf-gold/30 selection:text-mushaf-ink"
+        suppressHydrationWarning
+      >
         <Header />
         <main className="w-full">{children}</main>
-        <RecitationHUD />
 
         {/* PWA Service Worker Registration */}
         <script

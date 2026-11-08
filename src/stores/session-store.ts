@@ -38,8 +38,8 @@ export const useSessionStore = create<SessionState>((set) => ({
   currentSurah: 1,
   currentJuz: 1,
   dailyGoal: 20,
-  todayRecitedCount: 7,
-  streakDays: 14,
+  todayRecitedCount: 0,
+  streakDays: 0,
   audioSensitivity: 75,
   isOnline: true,
 

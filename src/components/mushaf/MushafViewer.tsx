@@ -14,6 +14,7 @@ import { MedinaPage } from './MedinaPage';
 import { AcquisitionGuide } from './AcquisitionGuide';
 import { RetentionGuide } from './RetentionGuide';
 import { TransitionGuide } from './TransitionGuide';
+import { RecitationHUD } from '@/components/hud/RecitationHUD';
 import {
   ChevronRight,
   ChevronLeft,
@@ -314,6 +315,8 @@ export const MushafViewer: React.FC = () => {
         />
       </div>
 
+      {/* Floating Recitation HUD (strictly active in Mushaf View) */}
+      <RecitationHUD />
     </div>
   );
 };

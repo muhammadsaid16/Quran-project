@@ -129,13 +129,13 @@ export const Header: React.FC = () => {
             title={`تتابع الإنجاز اليومي: ${streakDays} يومًا`}
           >
             <Flame className="w-3.5 h-3.5 fill-orange-500 text-orange-500" />
-            <span className="font-arabic">{streakDays} يومًا</span>
+            <span suppressHydrationWarning className="font-arabic">{streakDays} يومًا</span>
           </div>
 
           {/* Daily Goal Progress */}
           <div className="hidden lg:flex items-center gap-1.5 text-xs text-mushaf-ink-muted dark:text-darkMushaf-ink-muted border-l border-r border-mushaf-border/60 dark:border-darkMushaf-border px-2.5 whitespace-nowrap">
             <span>الهدف:</span>
-            <span className="font-bold text-mushaf-ink dark:text-darkMushaf-ink">
+            <span suppressHydrationWarning className="font-bold text-mushaf-ink dark:text-darkMushaf-ink">
               {todayRecitedCount}/{dailyGoal} آية
             </span>
           </div>
@@ -175,6 +175,7 @@ export const Header: React.FC = () => {
 
           {/* PWA Offline Readiness Indicator */}
           <div
+            suppressHydrationWarning
             className="p-1.5 rounded-lg text-xs flex items-center text-mushaf-emerald dark:text-darkMushaf-emerald bg-mushaf-emerald/10 border border-mushaf-emerald/20 flex-shrink-0"
             title={(!isMounted || isOnline) ? 'PWA جاهز للعمل بدون إنترنت (Local-First)' : 'أنت غير متصل (يعمل محليًا بالكامل)'}
           >

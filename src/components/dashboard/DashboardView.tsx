@@ -317,7 +317,7 @@ export const DashboardView: React.FC = () => {
             <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
             <div>
               <span className="font-bold">حالة التخزين:</span>
-              <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">
+              <span suppressHydrationWarning className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">
                 {isMounted && isStoragePersisted ? 'تخزين دائم معتمد (Persistent Grant)' : 'تخزين قياسي (Standard Storage)'}
                 {isMounted && storageEstimate ? ` (~${storageEstimate.usageMB}MB مستخدم)` : ''}
               </span>
@@ -332,7 +332,7 @@ export const DashboardView: React.FC = () => {
             )}
             <div>
               <span className="font-bold">الاتصال بالشبكة:</span>
-              <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">
+              <span suppressHydrationWarning className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">
                 {(!isMounted || isOnline) ? 'متصل (يمكن التسميع بدون نت)' : 'غير متصل (يعمل 100% بكفاءة كاملة)'}
               </span>
             </div>
