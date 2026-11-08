@@ -10,6 +10,7 @@
     "test:poc": "npx tsx tests/milestone-0-poc/poc-runner.ts",
     "test:qa": "node --experimental-strip-types tests/run-all-qa-suites.ts",
     "test:browser-gate": "vitest run tests/browser-audio-gate/browser-audio-gate.spec.ts",
+    "test:pwa": "vitest run tests/milestone-7-pwa/milestone-7-pwa.spec.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

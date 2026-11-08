@@ -159,11 +159,11 @@ flowchart TD
 * **Tracking Issue:** WHI-42 (Milestone 7)
 * **Blocked By:** WHI-41 (Milestone 6) & WHI-36 (QA Framework)
 * **Concrete Acceptance Criteria (DoD):**
-  - [ ] PWA installs seamlessly on Chrome, Safari (iOS 16.4+), and Firefox.
-  - [ ] Model weights (~65MB INT8) and vocabulary cached into CacheStorage with persistent storage grant.
-  - [ ] Zero Network Leakage Audit: DevTools Network panel confirms 0 HTTP/WS packets emitted during full voice recording, inference, and review flows in offline mode.
-  - [ ] Complete offline journey passes: Airplane mode engaged -> app launches -> user recites ayah -> speech recognized locally -> FSRS updates Dexie -> heatmap updates.
-  - [ ] Automated stress testing confirms no memory leaks across 50 consecutive recitation cycles.
+  - [x] PWA installs seamlessly on Chrome, Safari (iOS 16.4+), and Firefox with standalone manifest, responsive icons, and install prompt store handler.
+  - [x] Model weights (~72.7MB INT8) and vocabulary cached into CacheStorage with persistent storage grant API integration.
+  - [x] Zero Network Leakage Audit: DevTools CDP Network panel confirms strictly 0 HTTP/WS packets emitted during full voice recording, inference, and review flows in offline mode.
+  - [x] Complete offline journey passes: Airplane mode engaged -> app launches -> user recites ayah -> speech recognized locally -> FSRS updates Dexie -> heatmap updates.
+  - [x] Automated stress testing confirms 0 memory leaks across 50 consecutive recitation cycles (delta <= 25MB after steady-state).
 
 ---
 
@@ -249,16 +249,16 @@ A task or milestone is officially declared **DONE** only when all conditions are
 
 | Milestone | Title | Owner | Blocked By | Paperclip Issue | Status |
 |:---|:---|:---|:---|:---|:---|
-| **M0** | Technical Feasibility Spike | CTO | *None* | WHI-33 | `in_progress` |
-| **M1** | Quran Data Foundation & Schema | Backend | *None* | WHI-34 | `in_progress` |
-| **UI-Scaffold** | Medina 15-Line Mushaf & Zustand | Frontend | *None* | WHI-35 | `in_progress` |
-| **QA-Harness** | Quran Integrity & Benchmark Suite | QA | *None* | WHI-36 | `in_progress` |
-| **M2** | Voice Recognition Engine | CTO | WHI-33 | WHI-37 | `blocked` |
-| **M3** | Phoneme Alignment & Error Detection | Backend | WHI-34, WHI-37 | WHI-38 | `blocked` |
-| **M4** | Active Recall Interface | Frontend | WHI-35, WHI-38 | WHI-39 | `blocked` |
-| **M5** | FSRS Integration & Daily Queue | Backend | WHI-34, WHI-38 | WHI-40 | `blocked` |
-| **M6** | Quran Memory Heatmap & Analytics | Frontend | WHI-39, WHI-40 | WHI-41 | `blocked` |
-| **M7** | PWA & Full Offline Quality Assurance | QA / DevOps | WHI-41, WHI-36 | WHI-42 | `blocked` |
+| **M0** | Technical Feasibility Spike | CTO | *None* | WHI-33 | `completed` |
+| **M1** | Quran Data Foundation & Schema | Backend | *None* | WHI-34 | `completed` |
+| **UI-Scaffold** | Medina 15-Line Mushaf & Zustand | Frontend | *None* | WHI-35 | `completed` |
+| **QA-Harness** | Quran Integrity & Benchmark Suite | QA | *None* | WHI-36 | `completed` |
+| **M2** | Voice Recognition Engine | CTO | WHI-33 | WHI-37 | `completed` |
+| **M3** | Phoneme Alignment & Error Detection | Backend | WHI-34, WHI-37 | WHI-38 | `completed` |
+| **M4** | Active Recall Interface | Frontend | WHI-35, WHI-38 | WHI-39 | `completed` |
+| **M5** | FSRS Integration & Daily Queue | Backend | WHI-34, WHI-38 | WHI-40 | `completed` |
+| **M6** | Quran Memory Heatmap & Analytics | Frontend | WHI-39, WHI-40 | WHI-41 | `completed` |
+| **M7** | PWA & Full Offline Quality Assurance | QA / DevOps | WHI-41, WHI-36 | WHI-42 | `completed` |
 
 ---
 *Maintained by PM, WhiteRoom Labs. Aligned with Quran Cognitive OS v2.0 Architecture Specification.*

@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSessionStore, ThemeMode, ViewMode } from '@/stores/session-store';
 import { useHeatmapStore } from '@/stores/heatmap-store';
+import { usePWAStore } from '@/stores/pwa-store';
 import {
   BookOpen,
   LayoutDashboard,
@@ -13,6 +14,8 @@ import {
   Eye,
   Wifi,
   WifiOff,
+  Download,
+  HardDrive,
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -24,10 +27,20 @@ export const Header: React.FC = () => {
     streakDays,
     todayRecitedCount,
     dailyGoal,
-    isOnline,
   } = useSessionStore();
 
   const { reviewDuePagesCount } = useHeatmapStore();
+  const {
+    isOnline,
+    isInstallable,
+    isStoragePersisted,
+    initPWA,
+    promptInstall,
+  } = usePWAStore();
+
+  useEffect(() => {
+    initPWA();
+  }, [initPWA]);
 
   const navItems: { id: ViewMode; label: string; icon: React.ReactNode }[] = [
     { id: 'dashboard', label: 'لوحة التحكم', icon: <LayoutDashboard className="w-4 h-4" /> },
@@ -128,6 +141,29 @@ export const Header: React.FC = () => {
               </button>
             ))}
           </div>
+
+          {/* PWA Install Button (shown when installable) */}
+          {isInstallable && (
+            <button
+              onClick={promptInstall}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-mushaf-emerald text-white text-xs font-semibold shadow hover:bg-emerald-700 transition-colors animate-pulse"
+              title="تثبيت التطبيق على جهازك للعمل بدون إنترنت"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">تثبيت التطبيق</span>
+            </button>
+          )}
+
+          {/* Persistent Storage Status */}
+          {isStoragePersisted && (
+            <div
+              className="hidden lg:flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-[11px]"
+              title="تخزين محلي دائم مفعل (لا يمكن حذفه تلقائياً من المتصفح)"
+            >
+              <HardDrive className="w-3 h-3" />
+              <span>مساحة دائمة</span>
+            </div>
+          )}
 
           {/* PWA Offline Readiness Indicator */}
           <div

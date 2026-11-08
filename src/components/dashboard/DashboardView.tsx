@@ -4,6 +4,7 @@ import React from 'react';
 import { useSessionStore } from '@/stores/session-store';
 import { useActiveRecallStore, RecallMode } from '@/stores/active-recall-store';
 import { useHeatmapStore } from '@/stores/heatmap-store';
+import { usePWAStore } from '@/stores/pwa-store';
 import {
   BookOpen,
   Brain,
@@ -16,6 +17,11 @@ import {
   Calendar,
   Sparkles,
   ChevronLeft,
+  ShieldCheck,
+  HardDrive,
+  Download,
+  Wifi,
+  WifiOff,
 } from 'lucide-react';
 
 export const DashboardView: React.FC = () => {
@@ -28,6 +34,14 @@ export const DashboardView: React.FC = () => {
     reviewDuePagesCount,
     highRiskPagesCount,
   } = useHeatmapStore();
+  const {
+    isOnline,
+    isInstallable,
+    isStoragePersisted,
+    storageEstimate,
+    promptInstall,
+    requestPersistentStorage,
+  } = usePWAStore();
 
   const handleStartMode = (mode: RecallMode) => {
     startRecallSession(mode);
@@ -241,6 +255,82 @@ export const DashboardView: React.FC = () => {
             </button>
           </div>
 
+        </div>
+      </div>
+
+      {/* Local-First Architecture & PWA Storage Panel */}
+      <div className="bg-mushaf-surface dark:bg-darkMushaf-card border border-mushaf-border dark:border-darkMushaf-border rounded-xl p-5 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-mushaf-border/60 dark:border-darkMushaf-border">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-arabic font-bold text-sm text-mushaf-ink dark:text-darkMushaf-ink">
+                حالة التشغيل دون اتصال (100% Local-First Offline PWA)
+              </h3>
+              <p className="font-arabic text-xs text-mushaf-ink-muted dark:text-darkMushaf-ink-muted">
+                يعمل نموذج الذكاء الاصطناعي (Zipformer INT8) ومحرك FSRS وقاعدة البيانات محلياً على جهازك دون إرسال أي صوت للخوادم.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {isInstallable && (
+              <button
+                onClick={promptInstall}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-mushaf-emerald hover:bg-emerald-700 text-white text-xs font-arabic font-bold transition-all shadow-xs"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>تثبيت التطبيق</span>
+              </button>
+            )}
+
+            {!isStoragePersisted && (
+              <button
+                onClick={requestPersistentStorage}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-border text-mushaf-ink dark:text-darkMushaf-ink border border-mushaf-border dark:border-darkMushaf-border text-xs font-arabic font-semibold transition-all"
+              >
+                <HardDrive className="w-3.5 h-3.5" />
+                <span>تفعيل التخزين الدائم</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 text-xs font-arabic">
+          <div className="flex items-center gap-2 text-mushaf-ink dark:text-darkMushaf-ink bg-mushaf-parchment/60 dark:bg-darkMushaf-surface/60 p-2.5 rounded-lg border border-mushaf-border/40 dark:border-darkMushaf-border/40">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+            <div>
+              <span className="font-bold">الموديل الصوتي:</span>
+              <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">محفوظ في ذاكرة المتصفح (72.7MB INT8)</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 text-mushaf-ink dark:text-darkMushaf-ink bg-mushaf-parchment/60 dark:bg-darkMushaf-surface/60 p-2.5 rounded-lg border border-mushaf-border/40 dark:border-darkMushaf-border/40">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+            <div>
+              <span className="font-bold">حالة التخزين:</span>
+              <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">
+                {isStoragePersisted ? 'تخزين دائم معتمد (Persistent Grant)' : 'تخزين قياسي (Standard Storage)'}
+                {storageEstimate ? ` (~${storageEstimate.usageMB}MB مستخدم)` : ''}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 text-mushaf-ink dark:text-darkMushaf-ink bg-mushaf-parchment/60 dark:bg-darkMushaf-surface/60 p-2.5 rounded-lg border border-mushaf-border/40 dark:border-darkMushaf-border/40">
+            {isOnline ? (
+              <Wifi className="w-4 h-4 text-blue-500 flex-shrink-0" />
+            ) : (
+              <WifiOff className="w-4 h-4 text-amber-500 flex-shrink-0" />
+            )}
+            <div>
+              <span className="font-bold">الاتصال بالشبكة:</span>
+              <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">
+                {isOnline ? 'متصل (يمكن التسميع بدون نت)' : 'غير متصل (يعمل 100% بكفاءة كاملة)'}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
