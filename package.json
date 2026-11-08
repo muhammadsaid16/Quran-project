@@ -6,6 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "vitest run",
+    "test:poc": "npx tsx tests/milestone-0-poc/poc-runner.ts",
+    "test:qa": "node --experimental-strip-types tests/run-all-qa-suites.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -15,6 +18,7 @@
     "next": "^14.2.20",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "sherpa-onnx": "^2.0.1",
     "tailwind-merge": "^2.5.4",
     "ts-fsrs": "^6.0.0",
     "zustand": "^4.5.5"
@@ -24,8 +28,10 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "autoprefixer": "^10.4.20",
+    "fake-indexeddb": "^6.2.7",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^5.1.0"
   }
 }
