@@ -123,15 +123,15 @@ flowchart TD
 * **Tracking Issue:** WHI-40 (Milestone 5)
 * **Blocked By:** WHI-34 (Milestone 1 Data) & WHI-38 (Milestone 3 Error Analysis)
 * **Concrete Acceptance Criteria (DoD):**
-  - [ ] `ts-fsrs` configured with default retention target of 90% (R=0.90).
-  - [ ] Automatic rating calculation derived from recitation error metrics:
+  - [x] `ts-fsrs` configured with default retention target of 90% (R=0.90).
+  - [x] Automatic rating calculation derived from recitation error metrics:
     - *Easy (4):* Flawless recitation, zero omissions, minimal hesitation.
     - *Good (3):* Correct recitation with minor hesitation or self-correction.
     - *Hard (2):* Single omission or substitution corrected with struggle.
     - *Again (1):* Multiple errors, severe stumbling, or sequence breakdown.
-  - [ ] Daily Due Queue dynamically computed from `memory_cards` where `due <= current_timestamp`, partitioned by New vs Due.
-  - [ ] Transition edge cards scheduled independently to guarantee inter-ayah and page-boundary link stability.
-  - [ ] Review logs persisted in Dexie with timestamps, duration, error counts, and FSRS state transitions.
+  - [x] Daily Due Queue dynamically computed from `memory_cards` where `due <= current_timestamp`, partitioned by New vs Due.
+  - [x] Transition edge cards scheduled independently to guarantee inter-ayah and page-boundary link stability.
+  - [x] Review logs persisted in Dexie with timestamps, duration, error counts, and FSRS state transitions (16 tests passing).
 
 ### Milestone 6: Quran Memory Heatmap & Retrievability Analytics
 * **Goal:** Visualize memorization strength across the entire Quran using the 15-line Medina Mushaf grid and retrievability mathematics.
