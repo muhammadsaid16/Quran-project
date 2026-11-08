@@ -225,7 +225,8 @@ export class CtcDtwAligner {
     }
 
     const per = Math.round(((substitutions + deletions + insertions) / n) * 10000) / 10000;
-    const accuracy = Math.round(Math.max(0, 1 - (substitutions + deletions) / n) * 10000) / 10000;
+    // Accuracy subtracts all error types (substitutions, deletions, and insertions)
+    const accuracy = Math.round(Math.max(0, 1 - (substitutions + deletions + insertions) / n) * 10000) / 10000;
     const meanConfidence = this.calculateMeanConfidence(hyp);
     const latencyMs = Math.round((performance.now() - startTime) * 100) / 100;
 

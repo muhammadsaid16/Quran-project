@@ -2,6 +2,7 @@ import * as path from 'node:path';
 import { runQuranIntegrityTests } from './quran-integrity/quran-integrity.test.ts';
 import { runAudioRecognitionBenchmarkTests } from './audio-recognition-benchmarks/audio-benchmarks.test.ts';
 import { runOfflinePerformanceTests } from './offline-performance/offline-performance.test.ts';
+import { runBrowserAudioGate } from './browser-audio-gate/browser-audio-gate.ts';
 
 async function main() {
   const projectRoot = path.resolve(process.cwd());
@@ -13,28 +14,40 @@ async function main() {
   console.log();
 
   // 1. Quran Integrity Suite
-  console.log('>>> [1/3] Executing Quran Text Integrity & Boundary Verification Suite...');
+  console.log('>>> [1/4] Executing Quran Text Integrity & Boundary Verification Suite...');
   const integrityReport = runQuranIntegrityTests(projectRoot);
   console.log(`    Total Checks: ${integrityReport.totalChecks} | Passed: ${integrityReport.passedChecks} | Failed: ${integrityReport.failedChecks} (${integrityReport.executionTimeMs}ms)`);
   console.log();
 
   // 2. Audio Recognition & Alignment Benchmark Matrix
-  console.log('>>> [2/3] Executing Speech Recognition Benchmarks & Phoneme Alignment Matrix...');
+  console.log('>>> [2/4] Executing Speech Recognition Benchmarks & Phoneme Alignment Matrix...');
   const audioReport = runAudioRecognitionBenchmarkTests(projectRoot);
   console.log(`    Total Checks: ${audioReport.totalChecks} | Passed: ${audioReport.passedChecks} | Failed: ${audioReport.failedChecks} (${audioReport.executionTimeMs}ms)`);
   console.log();
 
   // 3. Offline & Performance Profiling Matrix
-  console.log('>>> [3/3] Executing Zero Network Leakage, Performance Profiling & Offline PWA Matrix...');
+  console.log('>>> [3/4] Executing Zero Network Leakage, Performance Profiling & Offline PWA Matrix...');
   const offlineReport = await runOfflinePerformanceTests(projectRoot);
   console.log(`    Total Checks: ${offlineReport.totalChecks} | Passed: ${offlineReport.passedChecks} | Failed: ${offlineReport.failedChecks} (${offlineReport.executionTimeMs}ms)`);
   console.log();
 
+  // 4. Browser Audio Integration Gate (Real Chromium + WebAssembly + CDP Zero-Leakage)
+  console.log('>>> [4/4] Executing Browser Audio Integration Gate (Chromium + WebAssembly + CDP)...');
+  const browserGateStart = Date.now();
+  const browserGateResult = await runBrowserAudioGate(projectRoot);
+  const browserGateDuration = Date.now() - browserGateStart;
+  const browserGatePassed = browserGateResult.checks.filter(c => c.passed).length;
+  const browserGateFailed = browserGateResult.checks.filter(c => !c.passed).length;
+  console.log(`    Total Checks: ${browserGateResult.checks.length} | Passed: ${browserGatePassed} | Failed: ${browserGateFailed} (${browserGateDuration}ms)`);
+  console.log();
+
   // Master Summary
-  const grandTotal = integrityReport.totalChecks + audioReport.totalChecks + offlineReport.totalChecks;
-  const grandPassed = integrityReport.passedChecks + audioReport.passedChecks + offlineReport.passedChecks;
-  const grandFailed = integrityReport.failedChecks + audioReport.failedChecks + offlineReport.failedChecks;
-  const allFindings = [...integrityReport.findings, ...audioReport.findings, ...offlineReport.findings];
+  const grandTotal = integrityReport.totalChecks + audioReport.totalChecks + offlineReport.totalChecks + browserGateResult.checks.length;
+  const grandPassed = integrityReport.passedChecks + audioReport.passedChecks + offlineReport.passedChecks + browserGatePassed;
+  const grandFailed = integrityReport.failedChecks + audioReport.failedChecks + offlineReport.failedChecks + browserGateFailed;
+  
+  const browserGateFindings = browserGateResult.checks.map(c => `[BROWSER GATE] ${c.name}: ${c.details}`);
+  const allFindings = [...integrityReport.findings, ...audioReport.findings, ...offlineReport.findings, ...browserGateFindings];
 
   console.log('='.repeat(78));
   console.log('  QUALITY ASSURANCE VERDICT & CONFORMANCE SUMMARY');

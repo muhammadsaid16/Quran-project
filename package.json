@@ -9,6 +9,7 @@
     "test": "vitest run",
     "test:poc": "npx tsx tests/milestone-0-poc/poc-runner.ts",
     "test:qa": "node --experimental-strip-types tests/run-all-qa-suites.ts",
+    "test:browser-gate": "vitest run tests/browser-audio-gate/browser-audio-gate.spec.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

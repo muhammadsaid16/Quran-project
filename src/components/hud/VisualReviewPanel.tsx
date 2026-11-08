@@ -4,6 +4,8 @@ import React from 'react';
 import { useRecitationStore, FSRSRating } from '@/stores/recitation-store';
 import { useActiveRecallStore } from '@/stores/active-recall-store';
 import { useSessionStore } from '@/stores/session-store';
+import { useHeatmapStore } from '@/stores/heatmap-store';
+import { ReviewRating } from '@/db';
 import {
   CheckCircle2,
   AlertTriangle,
@@ -50,21 +52,19 @@ export const VisualReviewPanel: React.FC = () => {
   ).length;
 
   const totalWords = evaluatedWords.length;
-  const calculatedAccuracy =
-    confidenceScore > 0
-      ? confidenceScore
-      : Math.round((correctCount / Math.max(1, totalWords)) * 100);
+  // True recall accuracy is strictly the ratio of correctly recalled words
+  const recallAccuracy = Math.round((correctCount / Math.max(1, totalWords)) * 100);
 
-  // Suggested FSRS rating
+  // Suggested FSRS rating strictly derived from user active recall accuracy
   let suggestedRating: FSRSRating = 4;
   let ratingLabel = 'سهل (Easy): استرجاع فوري متقن';
-  if (omissionCount > 1 || stumbleCount > 2 || calculatedAccuracy < 70) {
+  if (omissionCount > 1 || stumbleCount > 2 || recallAccuracy < 70) {
     suggestedRating = 1;
     ratingLabel = 'إعادة (Again): تعثر أو حذف متعدد';
-  } else if (omissionCount === 1 || stumbleCount > 0 || calculatedAccuracy < 90) {
+  } else if (omissionCount === 1 || stumbleCount > 0 || recallAccuracy < 90) {
     suggestedRating = 2;
     ratingLabel = 'صعب (Hard): تم الاسترجاع مع تعثر أو مساعدة';
-  } else if (calculatedAccuracy < 98) {
+  } else if (recallAccuracy < 98) {
     suggestedRating = 3;
     ratingLabel = 'جيد (Good): تسميع صحيح مع تردد طفيف';
   }
@@ -72,6 +72,16 @@ export const VisualReviewPanel: React.FC = () => {
   const handleApplyRating = (rating: FSRSRating) => {
     setLastFsrsRating(rating);
     incrementRecitedCount();
+
+    // Persist review to Dexie and update heatmap immediately
+    if (currentAyah) {
+      const verseKey = `${currentAyah.surahNumber}:${currentAyah.ayahNumber}`;
+      useHeatmapStore.getState().recordReviewAndUpdate(verseKey, rating as ReviewRating, {
+        recording_duration_ms: (evaluatedWords.length || 1) * 600,
+        alignment_confidence: confidenceScore > 1 ? confidenceScore / 100 : confidenceScore,
+        error_count: omissionCount + stumbleCount,
+      }).catch(console.error);
+    }
 
     if (mode === 'acquisition') {
       const isFlawless = rating >= 3 && omissionCount === 0 && stumbleCount === 0;
@@ -120,10 +130,15 @@ export const VisualReviewPanel: React.FC = () => {
         <div className="grid grid-cols-4 gap-2 mb-4">
           {/* Accuracy Score */}
           <div className="p-3 rounded-xl bg-mushaf-parchment dark:bg-darkMushaf-surface border border-mushaf-border text-center">
-            <span className="text-[11px] font-arabic text-mushaf-ink-muted block">نسبة الدقة</span>
+            <span className="text-[11px] font-arabic text-mushaf-ink-muted block">نسبة دقة الاسترجاع</span>
             <span className="font-arabic font-extrabold text-xl text-mushaf-emerald dark:text-darkMushaf-emerald">
-              {calculatedAccuracy}%
+              {recallAccuracy}%
             </span>
+            {confidenceScore > 0 && (
+              <span className="text-[9px] font-mono text-mushaf-ink-muted block mt-0.5">
+                ثقة الصوت: {confidenceScore > 1 ? Math.round(confidenceScore) : Math.round(confidenceScore * 100)}%
+              </span>
+            )}
           </div>
 
           {/* Correct Chip (Emerald) */}

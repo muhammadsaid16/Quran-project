@@ -108,14 +108,14 @@ flowchart TD
 * **Tracking Issue:** WHI-39 (Milestone 4)
 * **Blocked By:** WHI-35 (App Scaffold) & WHI-38 (Milestone 3 Alignment)
 * **Concrete Acceptance Criteria (DoD):**
-  - [ ] Authentic Medina Mushaf 15-line layout rendered with responsive Uthmani typography and page navigation.
-  - [ ] Ghost Text feature implemented with 3 distinct toggleable levels:
+  - [x] Authentic Medina Mushaf 15-line layout rendered with responsive Uthmani typography and page navigation.
+  - [x] Ghost Text feature implemented with 3 distinct toggleable levels:
     - *Level 1 (Full Concealment):* Blank lines / invisible glyphs with ayah outline.
     - *Level 2 (First Words/Anchor Clues):* First 1-2 words visible per ayah.
     - *Level 3 (Key Landmarks):* Anchors and structural connectors visible.
-  - [ ] Recitation HUD displays live mic activity, streaming word verification, and real-time stumbling feedback without revealing answers prematurely.
-  - [ ] Post-recitation review highlights omissions in red, substitutions in amber, and correct recitations in emerald.
-  - [ ] Zero text entry inputs present on any active recitation screen.
+  - [x] Recitation HUD displays live mic activity, streaming word verification, and real-time stumbling feedback without revealing answers prematurely.
+  - [x] Post-recitation review highlights omissions in red, substitutions in amber, and correct recitations in emerald.
+  - [x] Zero text entry inputs present on any active recitation screen.
 
 ### Milestone 5: FSRS Integration & Daily Due Queue
 * **Goal:** Integrate `ts-fsrs` algorithm to schedule spaced reviews, update memory stability/difficulty, and generate daily review queues.
@@ -139,18 +139,19 @@ flowchart TD
 * **Tracking Issue:** WHI-41 (Milestone 6)
 * **Blocked By:** WHI-39 (Milestone 4 UI) & WHI-40 (Milestone 5 FSRS)
 * **Concrete Acceptance Criteria (DoD):**
-  - [ ] Retrievability score calculated dynamically per ayah:  
+  - [x] Retrievability score calculated dynamically per ayah:  
     $$R(t) = \left(1 + \text{factor} \times \frac{t}{S}\right)^{-1}$$
-  - [ ] Color-coded Mushaf heatmap overlay:
-    - $R \ge 95\%$: Neutral / Calm text color (Mastered).
-    - $85\% \le R < 95\%$: Amber / Yellow tint (Review recommended).
-    - $R < 85\%$: Warm Orange / Red tint (Critical lapse risk).
-  - [ ] Comprehensive dashboard rollups:
+  - [x] Color-coded Mushaf heatmap overlay:
+    - $R \ge 95\%$: Emerald badge (Mastered).
+    - $85\% \le R < 95\%$: Amber badge (Review recommended / Due).
+    - $0 < R < 85\%$: Warm Orange / Red badge (Critical lapse risk).
+    - New / Unreviewed: Slate / Neutral (Strictly distinguished from Mastered).
+  - [x] Comprehensive dashboard rollups:
     - Total memorized ayahs & pages.
     - Overall retention index.
     - Weakest Surahs and error hotspot clusters.
     - Due queue count breakdown.
-  - [ ] Interactive drilldown: clicking any heatmap cell opens the respective Ayah Memory Card and review history.
+  - [x] Interactive drilldown: clicking any heatmap cell opens the respective Ayah Memory Card and review history with direct voice recall launcher.
 
 ### Milestone 7: PWA & Full Offline Quality Assurance
 * **Goal:** Deliver offline service worker caching for application shell and ONNX weights, perform zero-leakage security audits, and verify end-to-end functionality.
