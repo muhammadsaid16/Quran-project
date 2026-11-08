@@ -1,7 +1,16 @@
 import { create } from 'zustand';
 
 export type RecallMode = 'acquisition' | 'retention' | 'transition';
-export type GhostTextLevel = 'hidden' | 'keywords' | 'initial_prompt' | 'visible';
+
+export type GhostTextLevel =
+  | 'level1_concealed'
+  | 'level2_first_words'
+  | 'level3_landmarks'
+  | 'visible'
+  // Backwards compatibility aliases
+  | 'hidden'
+  | 'initial_prompt'
+  | 'keywords';
 
 export interface AyahTarget {
   surahNumber: number;
@@ -13,6 +22,7 @@ export interface AyahTarget {
   textUthmani: string;
   keyWords?: string[];
   firstWord?: string;
+  dueReason?: string;
 }
 
 export interface TransitionTarget {
@@ -31,7 +41,14 @@ export interface TransitionTarget {
   isPageBoundary: boolean;
 }
 
-interface ActiveRecallState {
+export type AcquisitionStep =
+  | 'read' // Read & listen to original text
+  | 'ghost' // Engage Ghost Text
+  | 'recite' // Reciting into microphone
+  | 'review' // Reviewing errors
+  | 'mastered'; // 2 consecutive flawless recitations
+
+export interface ActiveRecallState {
   mode: RecallMode;
   ghostTextLevel: GhostTextLevel;
   activeAyahIndex: number;
@@ -39,43 +56,115 @@ interface ActiveRecallState {
   revealedWordIndices: Record<number, number[]>; // ayahId -> array of revealed word indices
   currentAyah: AyahTarget | null;
   transitionTarget: TransitionTarget | null;
+  transitionPauseDetected: boolean;
   isHintRevealed: boolean;
   recallSessionActive: boolean;
+
+  // Acquisition mode specifics
+  acquisitionStep: AcquisitionStep;
+  consecutiveFlawlessCount: number;
+
+  // Retention mode queue
+  retentionQueue: AyahTarget[];
+  retentionQueueIndex: number;
+
+  // Page turning animation state
+  pageTurnDirection: 'next' | 'prev' | null;
 
   // Actions
   setMode: (mode: RecallMode) => void;
   setGhostTextLevel: (level: GhostTextLevel) => void;
+  cycleGhostTextLevel: () => void;
   setCurrentAyah: (ayah: AyahTarget | null) => void;
   setTransitionTarget: (target: TransitionTarget | null) => void;
+  setTransitionPauseDetected: (detected: boolean) => void;
   toggleAyahVisibility: (ayahId: number) => void;
   revealWordHint: (ayahId: number, wordIndex: number) => void;
   revealFullHint: () => void;
   startRecallSession: (mode: RecallMode) => void;
   stopRecallSession: () => void;
   resetHints: () => void;
+
+  // Acquisition actions
+  setAcquisitionStep: (step: AcquisitionStep) => void;
+  recordAcquisitionResult: (isFlawless: boolean) => void;
+  resetFlawless: () => void;
+
+  // Retention actions
+  setRetentionQueue: (queue: AyahTarget[]) => void;
+  nextRetentionCard: () => void;
+  prevRetentionCard: () => void;
+
+  // Page animation
+  setPageTurnDirection: (direction: 'next' | 'prev' | null) => void;
 }
 
-export const useActiveRecallStore = create<ActiveRecallState>((set) => ({
+export function getGhostTierNumber(level: GhostTextLevel): 1 | 2 | 3 | 0 {
+  if (level === 'level1_concealed' || level === 'hidden') return 1;
+  if (level === 'level2_first_words' || level === 'initial_prompt') return 2;
+  if (level === 'level3_landmarks' || level === 'keywords') return 3;
+  return 0; // visible
+}
+
+export function getGhostTierLabel(level: GhostTextLevel): string {
+  const tier = getGhostTierNumber(level);
+  switch (tier) {
+    case 1:
+      return 'المستوى 1: إخفاء كامل';
+    case 2:
+      return 'المستوى 2: بدايات الآيات';
+    case 3:
+      return 'المستوى 3: معالم الآيات';
+    default:
+      return 'النص الكامل (دراسة)';
+  }
+}
+
+export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
   mode: 'acquisition',
-  ghostTextLevel: 'initial_prompt',
+  ghostTextLevel: 'level2_first_words',
   activeAyahIndex: 0,
   revealedAyahIds: [],
   revealedWordIndices: {},
   currentAyah: null,
   transitionTarget: null,
+  transitionPauseDetected: false,
   isHintRevealed: false,
   recallSessionActive: false,
 
+  acquisitionStep: 'read',
+  consecutiveFlawlessCount: 0,
+
+  retentionQueue: [],
+  retentionQueueIndex: 0,
+
+  pageTurnDirection: null,
+
   setMode: (mode) => set({ mode }),
   setGhostTextLevel: (ghostTextLevel) => set({ ghostTextLevel }),
+  cycleGhostTextLevel: () => {
+    const current = get().ghostTextLevel;
+    const tier = getGhostTierNumber(current);
+    let next: GhostTextLevel;
+    if (tier === 1) next = 'level2_first_words';
+    else if (tier === 2) next = 'level3_landmarks';
+    else if (tier === 3) next = 'visible';
+    else next = 'level1_concealed';
+    set({ ghostTextLevel: next });
+  },
+
   setCurrentAyah: (currentAyah) => set({ currentAyah, isHintRevealed: false }),
-  setTransitionTarget: (transitionTarget) => set({ transitionTarget, isHintRevealed: false }),
+  setTransitionTarget: (transitionTarget) =>
+    set({ transitionTarget, isHintRevealed: false, transitionPauseDetected: false }),
+  setTransitionPauseDetected: (transitionPauseDetected) => set({ transitionPauseDetected }),
+
   toggleAyahVisibility: (ayahId) =>
     set((state) => ({
       revealedAyahIds: state.revealedAyahIds.includes(ayahId)
         ? state.revealedAyahIds.filter((id) => id !== ayahId)
         : [...state.revealedAyahIds, ayahId],
     })),
+
   revealWordHint: (ayahId, wordIndex) =>
     set((state) => {
       const existing = state.revealedWordIndices[ayahId] || [];
@@ -87,7 +176,9 @@ export const useActiveRecallStore = create<ActiveRecallState>((set) => ({
         },
       };
     }),
+
   revealFullHint: () => set({ isHintRevealed: true }),
+
   startRecallSession: (mode) =>
     set({
       mode,
@@ -95,16 +186,78 @@ export const useActiveRecallStore = create<ActiveRecallState>((set) => ({
       revealedAyahIds: [],
       revealedWordIndices: {},
       isHintRevealed: false,
+      consecutiveFlawlessCount: 0,
+      acquisitionStep: mode === 'acquisition' ? 'read' : 'recite',
     }),
+
   stopRecallSession: () =>
     set({
       recallSessionActive: false,
       isHintRevealed: false,
     }),
+
   resetHints: () =>
     set({
       revealedAyahIds: [],
       revealedWordIndices: {},
       isHintRevealed: false,
     }),
+
+  setAcquisitionStep: (acquisitionStep) => set({ acquisitionStep }),
+
+  recordAcquisitionResult: (isFlawless) =>
+    set((state) => {
+      if (isFlawless) {
+        const newCount = state.consecutiveFlawlessCount + 1;
+        return {
+          consecutiveFlawlessCount: newCount,
+          acquisitionStep: newCount >= 2 ? 'mastered' : 'review',
+        };
+      }
+      return {
+        consecutiveFlawlessCount: 0,
+        acquisitionStep: 'review',
+      };
+    }),
+
+  resetFlawless: () => set({ consecutiveFlawlessCount: 0 }),
+
+  setRetentionQueue: (queue) =>
+    set({
+      retentionQueue: queue,
+      retentionQueueIndex: 0,
+      currentAyah: queue.length > 0 ? queue[0] : null,
+    }),
+
+  nextRetentionCard: () =>
+    set((state) => {
+      const nextIdx = state.retentionQueueIndex + 1;
+      if (nextIdx < state.retentionQueue.length) {
+        return {
+          retentionQueueIndex: nextIdx,
+          currentAyah: state.retentionQueue[nextIdx],
+          isHintRevealed: false,
+          revealedAyahIds: [],
+          revealedWordIndices: {},
+        };
+      }
+      return state;
+    }),
+
+  prevRetentionCard: () =>
+    set((state) => {
+      const prevIdx = state.retentionQueueIndex - 1;
+      if (prevIdx >= 0) {
+        return {
+          retentionQueueIndex: prevIdx,
+          currentAyah: state.retentionQueue[prevIdx],
+          isHintRevealed: false,
+          revealedAyahIds: [],
+          revealedWordIndices: {},
+        };
+      }
+      return state;
+    }),
+
+  setPageTurnDirection: (pageTurnDirection) => set({ pageTurnDirection }),
 }));

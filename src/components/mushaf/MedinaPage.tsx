@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MEDINA_PAGES, MedinaPageData } from '@/data/medina-pages';
 import { SurahHeader } from './SurahHeader';
 import { GhostAyah } from './GhostAyah';
 import { toArabicNumerals } from './AyahMarker';
+import { useActiveRecallStore } from '@/stores/active-recall-store';
 
 interface MedinaPageProps {
   pageNumber: number;
@@ -21,9 +22,30 @@ export const MedinaPage: React.FC<MedinaPageProps> = ({
   const arabicPageNum = toArabicNumerals(pageData.pageNumber);
   const arabicJuzNum = toArabicNumerals(pageData.juzNumber);
 
+  const { pageTurnDirection, setPageTurnDirection } = useActiveRecallStore();
+  const [turningClass, setTurningClass] = useState<string>('');
+
+  useEffect(() => {
+    if (pageTurnDirection) {
+      setTurningClass(
+        pageTurnDirection === 'next'
+          ? 'translate-x-2 opacity-90 transition-transform duration-200'
+          : '-translate-x-2 opacity-90 transition-transform duration-200'
+      );
+      const timer = setTimeout(() => {
+        setTurningClass('');
+        setPageTurnDirection(null);
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, [pageTurnDirection, pageNumber, setPageTurnDirection]);
+
   return (
     <div
-      className="w-full max-w-2xl mx-auto my-4 transition-all duration-300"
+      data-testid="medina-page"
+      data-page-number={pageData.pageNumber}
+      data-15-lines="true"
+      className={`w-full max-w-2xl mx-auto my-4 transition-all duration-300 ${turningClass}`}
       dir="rtl"
     >
       {/* Outer Mushaf Page Container */}
@@ -50,7 +72,10 @@ export const MedinaPage: React.FC<MedinaPageProps> = ({
             </div>
 
             {/* Exactly 15 Lines Grid */}
-            <div className="flex flex-col justify-between min-h-[640px] sm:min-h-[720px] md:min-h-[800px] gap-1 sm:gap-1.5">
+            <div
+              data-testid="mushaf-15-lines-grid"
+              className="flex flex-col justify-between min-h-[640px] sm:min-h-[720px] md:min-h-[800px] gap-1 sm:gap-1.5"
+            >
               {pageData.lines.map((line) => {
                 if (line.type === 'surah_header') {
                   return (
