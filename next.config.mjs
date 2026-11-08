@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
   reactStrictMode: true,
   swcMinify: true,
   // Support WebAssembly and AudioWorklet for on-device inference
@@ -18,23 +19,6 @@ const nextConfig = {
       };
     }
     return config;
-  },
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin',
-          },
-          {
-            key: 'Cross-Origin-Embedder-Policy',
-            value: 'credentialless',
-          },
-        ],
-      },
-    ];
   },
 };
 

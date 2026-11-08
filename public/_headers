@@ -1,0 +1,12 @@
+/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: credentialless
+
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/models/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/sherpa-wasm/*
+  Cache-Control: public, max-age=31536000, immutable
