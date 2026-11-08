@@ -30,7 +30,7 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
   const ghostTier = getGhostTierNumber(ghostTextLevel);
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-y-1 w-full text-justify [text-justify:inter-word] leading-[2.6rem] sm:leading-[3.2rem]">
+    <div className="flex flex-wrap items-center justify-center gap-x-1.5 sm:gap-x-2 md:gap-x-2.5 gap-y-1 w-full leading-[2.8rem] sm:leading-[3.4rem] md:leading-[3.8rem] text-center">
       {words.map((word) => {
         if (word.isAyahMarker) {
           return (

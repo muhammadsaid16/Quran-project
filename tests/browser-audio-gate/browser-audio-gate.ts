@@ -102,8 +102,9 @@ export async function runBrowserAudioGate(projectRoot: string): Promise<BrowserG
     fs.createReadStream(targetFile).pipe(res);
   });
 
-  const port = 9123;
-  await new Promise<void>((resolve) => server.listen(port, resolve));
+  await new Promise<void>((resolve) => server.listen(0, resolve));
+  const address = server.address();
+  const port = typeof address === 'object' && address ? address.port : 9123;
 
   const networkRequestsDuringAudio: string[] = [];
   let isAuditingAudio = false;

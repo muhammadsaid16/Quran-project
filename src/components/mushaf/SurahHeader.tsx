@@ -16,9 +16,18 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
   revelationType,
   ayahCount,
 }) => {
+  const cleanName = surahName.replace(/^(سُورَةُ\s*|سورة\s*)/, '');
+  const cleanRev =
+    revelationType === 'Meccan' ||
+    revelationType === 'مكية' ||
+    revelationType === 'مَكِّيَّة' ||
+    revelationType === 'مَكِّيَّةٌ'
+      ? 'مَكِّيَّةٌ'
+      : 'مَدَنِيَّةٌ';
+
   return (
     <div
-      className="my-3 w-full relative overflow-hidden rounded-md border-2 border-mushaf-border-ornate bg-gradient-to-r from-mushaf-gold-light via-mushaf-surface to-mushaf-gold-light dark:from-darkMushaf-card dark:via-darkMushaf-surface dark:to-darkMushaf-card py-2 px-4 shadow-sm select-none"
+      className="my-2 sm:my-3 w-full relative overflow-hidden rounded-md border-2 border-mushaf-gold/60 dark:border-darkMushaf-gold/50 bg-gradient-to-r from-mushaf-gold-light via-mushaf-surface to-mushaf-gold-light dark:from-darkMushaf-card dark:via-darkMushaf-surface dark:to-darkMushaf-card py-2 px-3 sm:px-4 shadow-sm select-none"
       dir="rtl"
     >
       {/* Decorative inner border */}
@@ -34,14 +43,14 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
         {/* Right Info: Revelation type */}
         <span className="flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-mushaf-emerald dark:bg-darkMushaf-emerald inline-block" />
-          <span>{revelationType}</span>
+          <span>{cleanRev}</span>
         </span>
 
         {/* Center Title: Surah Name in authentic ornate styling */}
         <div className="flex items-center gap-2">
           <span className="text-mushaf-gold dark:text-darkMushaf-gold font-serif text-sm">۞</span>
           <h2 className="font-uthmani text-xl sm:text-2xl font-bold text-mushaf-ink dark:text-darkMushaf-ink tracking-wide">
-            سُورَةُ {surahName}
+            سُورَةُ {cleanName}
           </h2>
           <span className="text-mushaf-gold dark:text-darkMushaf-gold font-serif text-sm">۞</span>
         </div>
