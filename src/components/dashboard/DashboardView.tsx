@@ -84,7 +84,7 @@ export const DashboardView: React.FC = () => {
               className="flex items-center gap-2 px-5 py-3 rounded-xl bg-mushaf-gold hover:bg-yellow-500 text-mushaf-ink font-arabic font-bold text-sm shadow-md transition-all active:scale-95"
             >
               <Repeat className="w-4 h-4" />
-              <span>بدء ورد المراجعة اليومي ({reviewDuePagesCount} صفحات مستحقة)</span>
+              <span suppressHydrationWarning>بدء ورد المراجعة اليومي ({reviewDuePagesCount} صفحات مستحقة)</span>
             </button>
 
             <button
@@ -112,14 +112,14 @@ export const DashboardView: React.FC = () => {
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="font-uthmani text-3xl font-bold text-mushaf-ink dark:text-darkMushaf-ink">
+            <span suppressHydrationWarning className="font-uthmani text-3xl font-bold text-mushaf-ink dark:text-darkMushaf-ink">
               {masteredPagesCount}
             </span>
             <span className="text-xs font-arabic text-emerald-600 font-semibold">
               ≥ 95% استرجاع
             </span>
           </div>
-          <p className="text-[11px] text-mushaf-ink-muted mt-1">من إجمالي {totalMemorizedPages} صفحة محفوظة</p>
+          <p suppressHydrationWarning className="text-[11px] text-mushaf-ink-muted mt-1">من إجمالي {totalMemorizedPages} صفحة محفوظة</p>
         </div>
 
         {/* Due Today Queue */}
@@ -133,7 +133,7 @@ export const DashboardView: React.FC = () => {
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="font-uthmani text-3xl font-bold text-amber-600 dark:text-amber-400">
+            <span suppressHydrationWarning className="font-uthmani text-3xl font-bold text-amber-600 dark:text-amber-400">
               {reviewDuePagesCount}
             </span>
             <span className="text-xs font-arabic text-amber-600 font-semibold">
@@ -154,7 +154,7 @@ export const DashboardView: React.FC = () => {
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="font-uthmani text-3xl font-bold text-red-600 dark:text-red-400">
+            <span suppressHydrationWarning className="font-uthmani text-3xl font-bold text-red-600 dark:text-red-400">
               {highRiskPagesCount}
             </span>
             <span className="text-xs font-arabic text-red-600 font-semibold">
@@ -175,14 +175,14 @@ export const DashboardView: React.FC = () => {
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="font-uthmani text-3xl font-bold text-orange-600 dark:text-orange-400">
+            <span suppressHydrationWarning className="font-uthmani text-3xl font-bold text-orange-600 dark:text-orange-400">
               {streakDays}
             </span>
             <span className="text-xs font-arabic text-orange-600 font-semibold">
               يومًا متواصلًا
             </span>
           </div>
-          <p className="text-[11px] text-mushaf-ink-muted mt-1">اليوم: {todayRecitedCount} / {dailyGoal} آية</p>
+          <p suppressHydrationWarning className="text-[11px] text-mushaf-ink-muted mt-1">اليوم: {todayRecitedCount} / {dailyGoal} آية</p>
         </div>
 
       </div>

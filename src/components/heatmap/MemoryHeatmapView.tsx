@@ -782,7 +782,7 @@ export const MemoryHeatmapView: React.FC = () => {
                           <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${ratingColors[log.rating]}`}>
                             {ratingNames[log.rating]}
                           </span>
-                          <span className="text-[10px] text-mushaf-ink-muted font-mono">
+                          <span suppressHydrationWarning className="text-[10px] text-mushaf-ink-muted font-mono">
                             {new Date(log.timestamp).toLocaleString('ar-EG')}
                           </span>
                         </div>

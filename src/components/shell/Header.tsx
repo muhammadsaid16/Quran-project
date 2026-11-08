@@ -110,7 +110,7 @@ export const Header: React.FC = () => {
                 {item.icon}
                 <span className="hidden sm:inline">{item.label}</span>
                 <span className="sm:hidden">{item.label.split(' ')[0]}</span>
-                {item.id === 'heatmap' && reviewDuePagesCount > 0 && (
+                {item.id === 'heatmap' && isMounted && reviewDuePagesCount > 0 && (
                   <span className="w-4 h-4 rounded-full bg-recall-warning text-white text-[10px] flex items-center justify-center font-bold">
                     {reviewDuePagesCount}
                   </span>
@@ -126,17 +126,19 @@ export const Header: React.FC = () => {
           {/* Streak Badge */}
           <div
             className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-500/20 text-xs font-semibold whitespace-nowrap"
-            title={`تتابع الإنجاز اليومي: ${streakDays} يومًا`}
+            title={isMounted ? `تتابع الإنجاز اليومي: ${streakDays} يومًا` : undefined}
           >
             <Flame className="w-3.5 h-3.5 fill-orange-500 text-orange-500" />
-            <span suppressHydrationWarning className="font-arabic">{streakDays} يومًا</span>
+            <span suppressHydrationWarning className="font-arabic">
+              {isMounted ? streakDays : 0} يومًا
+            </span>
           </div>
 
           {/* Daily Goal Progress */}
           <div className="hidden lg:flex items-center gap-1.5 text-xs text-mushaf-ink-muted dark:text-darkMushaf-ink-muted border-l border-r border-mushaf-border/60 dark:border-darkMushaf-border px-2.5 whitespace-nowrap">
             <span>الهدف:</span>
             <span suppressHydrationWarning className="font-bold text-mushaf-ink dark:text-darkMushaf-ink">
-              {todayRecitedCount}/{dailyGoal} آية
+              {isMounted ? `${todayRecitedCount}/${dailyGoal} آية` : `0/${dailyGoal} آية`}
             </span>
           </div>
 
@@ -177,9 +179,9 @@ export const Header: React.FC = () => {
           <div
             suppressHydrationWarning
             className="p-1.5 rounded-lg text-xs flex items-center text-mushaf-emerald dark:text-darkMushaf-emerald bg-mushaf-emerald/10 border border-mushaf-emerald/20 flex-shrink-0"
-            title={(!isMounted || isOnline) ? 'PWA جاهز للعمل بدون إنترنت (Local-First)' : 'أنت غير متصل (يعمل محليًا بالكامل)'}
+            title={isMounted && !isOnline ? 'أنت غير متصل (يعمل محليًا بالكامل)' : 'PWA جاهز للعمل بدون إنترنت (Local-First)'}
           >
-            {(!isMounted || isOnline) ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5 text-amber-500" />}
+            {isMounted && !isOnline ? <WifiOff className="w-3.5 h-3.5 text-amber-500" /> : <Wifi className="w-3.5 h-3.5" />}
           </div>
 
         </div>
