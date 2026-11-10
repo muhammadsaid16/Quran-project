@@ -5,7 +5,8 @@
 export interface StreamingTokenEvent {
   token: string;
   timestampMs: number;
-  confidence: number;
+  /** Present only when the decoder exposes a real probability (ys_probs). */
+  confidence?: number;
   index: number;
   isFinal?: boolean;
 }

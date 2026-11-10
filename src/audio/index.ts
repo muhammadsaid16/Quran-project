@@ -7,3 +7,5 @@ export * from './kaldi-fbank';
 export * from './audio-worklet-processor';
 export * from './recognition-worker';
 export * from './voice-recognition-engine';
+export * from './tasmee-engine';
+export * from './word-audio';

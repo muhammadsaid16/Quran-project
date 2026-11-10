@@ -271,7 +271,7 @@ describe('Milestone 4: Active Recall Interface (WHI-39)', () => {
         { wordIndex: 3, uthmaniText: 'أَحَدٌ', expectedPhonemes: 'a h a d', detectedPhonemes: 'a h a d', status: 'correct', confidence: 95 },
       ];
       recitation.setEvaluatedWords(flawlessWords, 112, 1);
-      recitation.setConfidenceScore(98);
+      recitation.setAlignmentAccuracy(98);
 
       const correctCount = flawlessWords.filter((w) => w.status === 'correct').length;
       expect(correctCount).toBe(4);
@@ -401,5 +401,75 @@ describe('Milestone 4: Active Recall Interface (WHI-39)', () => {
       recitation.setPauseDurationMs(0);
       expect(useRecitationStore.getState().isPauseExceeded).toBe(false);
     });
+
+    it('Tarteel UX: in-situ word hint reveals one word at a time without breaking concealment of the rest', () => {
+      const store = useActiveRecallStore.getState();
+      store.resetHints();
+
+      // Word 0 concealed
+      expect(useActiveRecallStore.getState().revealedWordIndices[1]).toBeUndefined();
+
+      // Tap hint -> word 0 revealed
+      store.revealWordHint(1, 0);
+      expect(useActiveRecallStore.getState().revealedWordIndices[1]).toEqual([0]);
+
+      // Tap hint again -> word 1 revealed
+      store.revealWordHint(1, 1);
+      expect(useActiveRecallStore.getState().revealedWordIndices[1]).toEqual([0, 1]);
+
+      // Reset
+      store.resetHints();
+      expect(useActiveRecallStore.getState().revealedWordIndices[1]).toBeUndefined();
+    });
+
+    it('Tarteel UX: multi-ayah continuous recitation stores word status per ayah without cross-ayah collision', () => {
+      const recitation = useRecitationStore.getState();
+      recitation.clearEvaluatedWords();
+
+      const multiAyahWords: WordAlignmentResult[] = [
+        // Ayah 1 words
+        { wordIndex: 0, uthmaniText: 'بِسْمِ', expectedPhonemes: 'b i s m', detectedPhonemes: 'b i s m', status: 'correct', ayahNumber: 1, surahNumber: 1 },
+        { wordIndex: 1, uthmaniText: 'ٱللَّهِ', expectedPhonemes: 'l l a h', detectedPhonemes: 'l l a h', status: 'correct', ayahNumber: 1, surahNumber: 1 },
+        { wordIndex: 2, uthmaniText: 'ٱلرَّحْمَـٰنِ', expectedPhonemes: 'r r a h m a n', detectedPhonemes: 'r r a h m a n', status: 'correct', ayahNumber: 1, surahNumber: 1 },
+        { wordIndex: 3, uthmaniText: 'ٱلرَّحِيمِ', expectedPhonemes: 'r r a h i m', detectedPhonemes: 'r r a h i m', status: 'correct', ayahNumber: 1, surahNumber: 1 },
+        // Ayah 2 words
+        { wordIndex: 0, uthmaniText: 'ٱلْحَمْدُ', expectedPhonemes: 'a l h a m d u', detectedPhonemes: 'a l h a m d u', status: 'correct', ayahNumber: 2, surahNumber: 1 },
+        { wordIndex: 1, uthmaniText: 'لِلَّهِ', expectedPhonemes: 'l i l l a h i', detectedPhonemes: 'l i l l a h i', status: 'correct', ayahNumber: 2, surahNumber: 1 },
+        { wordIndex: 2, uthmaniText: 'رَبِّ', expectedPhonemes: 'r a b b i', detectedPhonemes: 'r a b b i', status: 'correct', ayahNumber: 2, surahNumber: 1 },
+        { wordIndex: 3, uthmaniText: 'ٱلْعَـٰلَمِينَ', expectedPhonemes: 'a l a l a m i n', detectedPhonemes: '', status: 'omission', ayahNumber: 2, surahNumber: 1 },
+      ];
+
+      recitation.setEvaluatedWords(multiAyahWords, 1, 1);
+
+      const state = useRecitationStore.getState();
+      expect(state.evaluatedWords).toHaveLength(8);
+
+      // Ayah 1 lookup
+      expect(state.wordStatusMap['1:1:0']).toBe('correct');
+      expect(state.wordStatusMap['1:0']).toBe('correct');
+      expect(state.wordStatusMap['1:1:3']).toBe('correct');
+
+      // Ayah 2 lookup
+      expect(state.wordStatusMap['1:2:0']).toBe('correct');
+      expect(state.wordStatusMap['2:0']).toBe('correct');
+      expect(state.wordStatusMap['1:2:3']).toBe('omission');
+      expect(state.wordStatusMap['2:3']).toBe('omission');
+
+      // Ayah 3 was not recited; must not have any entry in wordStatusMap for its ayah keys
+      expect(state.wordStatusMap['1:3:0']).toBeUndefined();
+      expect(state.wordStatusMap['3:0']).toBeUndefined();
+    });
+
+    it('Tarteel UX: closing detailed review returns user smoothly to the Mushaf canvas', () => {
+      const recitation = useRecitationStore.getState();
+      recitation.setIsReviewOpen(true);
+      expect(useRecitationStore.getState().isReviewOpen).toBe(true);
+
+      // Dismiss review panel
+      recitation.setIsReviewOpen(false);
+      expect(useRecitationStore.getState().isReviewOpen).toBe(false);
+    });
   });
 });
+
+

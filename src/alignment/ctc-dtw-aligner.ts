@@ -23,7 +23,8 @@ export interface AlignerExecutionResult {
   insertions: number;
   per: number; // Phoneme Error Rate: (S + D + I) / N
   accuracy: number; // 1.0 - (S + D) / N
-  meanConfidence: number;
+  /** Mean over tokens that carry a real probability; undefined when none do. */
+  meanConfidence: number | undefined;
   latencyMs: number;
 }
 
@@ -45,12 +46,12 @@ export class CtcDtwAligner {
     // Normalize hypothesis tokens into structured tokens
     const hyp: StreamingPhonemeToken[] = hypothesisTokens.map((t, idx) => {
       if (typeof t === 'string') {
-        return { token: t, index: idx, confidence: 1.0, timestampMs: idx * 100 };
+        return { token: t, index: idx, timestampMs: idx * 100 };
       }
       return {
         token: t.token,
         index: t.index ?? idx,
-        confidence: t.confidence ?? 1.0,
+        confidence: t.confidence,
         timestampMs: t.timestampMs ?? idx * 100,
       };
     });
@@ -108,7 +109,7 @@ export class CtcDtwAligner {
         insertions: 0,
         per: 1.0,
         accuracy: 0.0,
-        meanConfidence: 0.0,
+        meanConfidence: undefined,
         latencyMs,
       };
     }
@@ -245,12 +246,16 @@ export class CtcDtwAligner {
     };
   }
 
-  private static calculateMeanConfidence(tokens: StreamingPhonemeToken[]): number {
-    if (tokens.length === 0) return 0.0;
+  private static calculateMeanConfidence(tokens: StreamingPhonemeToken[]): number | undefined {
     let sum = 0;
+    let samples = 0;
     for (const t of tokens) {
-      sum += t.confidence ?? 1.0;
+      if (t.confidence !== undefined && Number.isFinite(t.confidence)) {
+        sum += t.confidence;
+        samples++;
+      }
     }
-    return Math.round((sum / tokens.length) * 10000) / 10000;
+    if (samples === 0) return undefined;
+    return Math.round((sum / samples) * 10000) / 10000;
   }
 }

@@ -6,6 +6,7 @@ interface AyahMarkerProps {
   ayahNumber: number;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
+  onClick?: () => void;
 }
 
 // Convert English digits to Eastern Arabic (Arabic-Indic) numerals: 123 -> ١٢٣
@@ -22,6 +23,7 @@ export const AyahMarker: React.FC<AyahMarkerProps> = ({
   ayahNumber,
   className = '',
   size = 'md',
+  onClick,
 }) => {
   const arabicNum = toArabicNumerals(ayahNumber);
 
@@ -33,7 +35,8 @@ export const AyahMarker: React.FC<AyahMarkerProps> = ({
 
   return (
     <span
-      className={`inline-flex items-center justify-center align-middle select-none mx-0.5 sm:mx-1 font-bold relative text-mushaf-gold dark:text-darkMushaf-gold flex-shrink-0 ${sizeClasses[size]} ${className}`}
+      onClick={onClick}
+      className={`inline-flex items-center justify-center align-middle select-none font-bold relative text-mushaf-gold dark:text-darkMushaf-gold flex-shrink-0 ${sizeClasses[size]} ${className}`}
       title={`آية رقم ${ayahNumber}`}
     >
       {/* Authentic Ornate Quranic Ayah Rosette SVG */}

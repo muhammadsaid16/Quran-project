@@ -101,14 +101,18 @@ self.onmessage = async (event) => {
           for (let i = lastEmittedTokenIndex; i < result.tokens.length; i++) {
             const token = result.tokens[i];
             const timestamp = (result.timestamps && result.timestamps[i]) ?? 0;
-            const confidence = (result.ys_probs && result.ys_probs[i]) ?? 1.0;
+            const rawConfidence = result.ys_probs && result.ys_probs[i];
+            const confidence =
+              typeof rawConfidence === 'number' && Number.isFinite(rawConfidence)
+                ? Number(rawConfidence.toFixed(4))
+                : undefined;
 
             self.postMessage({
               type: 'token',
               payload: {
                 token,
                 timestampMs: Math.round(timestamp * 1000),
-                confidence: Number(confidence.toFixed(4)),
+                confidence,
                 index: i,
                 isFinal: false,
               },
@@ -188,12 +192,16 @@ function finishStream() {
   // Emit any remaining tokens
   if (finalRes.tokens && finalRes.tokens.length > lastEmittedTokenIndex) {
     for (let i = lastEmittedTokenIndex; i < finalRes.tokens.length; i++) {
+      const rawConfidence = finalRes.ys_probs && finalRes.ys_probs[i];
       self.postMessage({
         type: 'token',
         payload: {
           token: finalRes.tokens[i],
           timestampMs: Math.round(((finalRes.timestamps && finalRes.timestamps[i]) ?? 0) * 1000),
-          confidence: Number(((finalRes.ys_probs && finalRes.ys_probs[i]) ?? 1.0).toFixed(4)),
+          confidence:
+            typeof rawConfidence === 'number' && Number.isFinite(rawConfidence)
+              ? Number(rawConfidence.toFixed(4))
+              : undefined,
           index: i,
           isFinal: true,
         },

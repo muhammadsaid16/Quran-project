@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useHeatmapStore } from '@/stores/heatmap-store';
 import { useSessionStore } from '@/stores/session-store';
 import { useActiveRecallStore } from '@/stores/active-recall-store';
@@ -58,6 +58,30 @@ export const MemoryHeatmapView: React.FC = () => {
   const { startRecallSession, setCurrentAyah } = useActiveRecallStore();
 
   const [activeTab, setActiveTab] = useState<'pages' | 'surahs' | 'weakest'>('pages');
+  const [pageAyahFilter, setPageAyahFilter] = useState<'forgotten' | 'all'>('forgotten');
+  const [hoveredPage, setHoveredPage] = useState<number | null>(null);
+  const inspectorRef = useRef<HTMLDivElement>(null);
+
+  const handlePageClick = (pageNum: number) => {
+    selectPage(pageNum);
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      inspectorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  };
+
+  // Filter forgotten / at-risk / stumbled ayahs on the selected page
+  const forgottenAyahs = useMemo(() => {
+    if (!selectedPage) return [];
+    return selectedPage.ayahStatuses.filter(
+      (a) =>
+        a.lapses > 0 ||
+        a.status === 'high_risk' ||
+        a.status === 'review_due' ||
+        (a.hasCard && a.retrievability < 90)
+    );
+  }, [selectedPage]);
+
+  const displayedAyahs = pageAyahFilter === 'forgotten' ? forgottenAyahs : (selectedPage?.ayahStatuses || []);
 
   // Load live data from Dexie on mount
   useEffect(() => {
@@ -235,30 +259,30 @@ export const MemoryHeatmapView: React.FC = () => {
           <div className="flex items-center gap-1.5 p-1 bg-mushaf-parchment dark:bg-darkMushaf-surface rounded-xl border border-mushaf-border dark:border-darkMushaf-border text-xs font-arabic">
             <button
               onClick={() => setActiveTab('pages')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer active:scale-95 ${
                 activeTab === 'pages'
-                  ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald shadow-xs'
-                  : 'text-mushaf-ink-muted hover:text-mushaf-ink dark:hover:text-darkMushaf-ink'
+                  ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald shadow-xs font-bold'
+                  : 'text-mushaf-ink-muted hover:text-mushaf-ink hover:bg-mushaf-gold/15 dark:hover:text-darkMushaf-ink'
               }`}
             >
               مصفوفة الصفحات (604)
             </button>
             <button
               onClick={() => setActiveTab('surahs')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer active:scale-95 ${
                 activeTab === 'surahs'
-                  ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald shadow-xs'
-                  : 'text-mushaf-ink-muted hover:text-mushaf-ink dark:hover:text-darkMushaf-ink'
+                  ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald shadow-xs font-bold'
+                  : 'text-mushaf-ink-muted hover:text-mushaf-ink hover:bg-mushaf-gold/15 dark:hover:text-darkMushaf-ink'
               }`}
             >
               تحليلات السور (114)
             </button>
             <button
               onClick={() => setActiveTab('weakest')}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-all cursor-pointer active:scale-95 ${
                 activeTab === 'weakest'
-                  ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald shadow-xs'
-                  : 'text-mushaf-ink-muted hover:text-mushaf-ink dark:hover:text-darkMushaf-ink'
+                  ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald shadow-xs font-bold'
+                  : 'text-mushaf-ink-muted hover:text-mushaf-ink hover:bg-mushaf-gold/15 dark:hover:text-darkMushaf-ink'
               }`}
             >
               بؤر الضعف والتعثر
@@ -289,10 +313,10 @@ export const MemoryHeatmapView: React.FC = () => {
 
             <button
               onClick={() => setFilterJuz(null)}
-              className={`px-2.5 py-1 rounded-lg flex-shrink-0 text-xs font-medium transition-colors ${
+              className={`px-2.5 py-1 rounded-lg flex-shrink-0 text-xs font-medium transition-all cursor-pointer active:scale-95 ${
                 filterJuz === null
-                  ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald font-bold'
-                  : 'bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-gold/15 text-mushaf-ink dark:text-darkMushaf-ink border border-mushaf-border dark:border-darkMushaf-border'
+                  ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald font-bold shadow-xs'
+                  : 'bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-gold/20 text-mushaf-ink dark:text-darkMushaf-ink border border-mushaf-border dark:border-darkMushaf-border hover:border-mushaf-gold'
               }`}
             >
               كامل المصحف
@@ -304,10 +328,10 @@ export const MemoryHeatmapView: React.FC = () => {
                 <button
                   key={juz}
                   onClick={() => setFilterJuz(juz)}
-                  className={`px-2.5 py-1 rounded-lg flex-shrink-0 text-xs font-medium transition-colors ${
+                  className={`px-2.5 py-1 rounded-lg flex-shrink-0 text-xs font-medium transition-all cursor-pointer active:scale-95 ${
                     filterJuz === juz
-                      ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald font-bold'
-                      : 'bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-gold/15 text-mushaf-ink dark:text-darkMushaf-ink border border-mushaf-border dark:border-darkMushaf-border'
+                      ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald font-bold shadow-xs'
+                      : 'bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-gold/20 text-mushaf-ink dark:text-darkMushaf-ink border border-mushaf-border dark:border-darkMushaf-border hover:border-mushaf-gold'
                   }`}
                   title={jStat ? `الجزء ${juz}: ${jStat.masteredPagesCount} متقن • ${jStat.reviewDuePagesCount} مراجعة` : ''}
                 >
@@ -324,7 +348,7 @@ export const MemoryHeatmapView: React.FC = () => {
               <select
                 value={filterSurah ?? ''}
                 onChange={(e) => setFilterSurah(e.target.value ? Number(e.target.value) : null)}
-                className="text-xs font-arabic px-3 py-1.5 rounded-lg bg-mushaf-parchment dark:bg-darkMushaf-surface border border-mushaf-border dark:border-darkMushaf-border text-mushaf-ink dark:text-darkMushaf-ink focus:outline-none focus:ring-1 focus:ring-mushaf-emerald"
+                className="text-xs font-arabic px-3 py-1.5 rounded-lg bg-mushaf-parchment dark:bg-darkMushaf-surface border border-mushaf-border dark:border-darkMushaf-border text-mushaf-ink dark:text-darkMushaf-ink focus:outline-none focus:ring-1 focus:ring-mushaf-emerald cursor-pointer"
               >
                 <option value="">جميع السور (114)</option>
                 {SURAHS.map((s) => (
@@ -350,10 +374,10 @@ export const MemoryHeatmapView: React.FC = () => {
                   <button
                     key={st}
                     onClick={() => setFilterStatus(st)}
-                    className={`px-2 py-1 rounded-lg text-[11px] font-medium transition-colors ${
+                    className={`px-2 py-1 rounded-lg text-[11px] font-medium transition-all cursor-pointer active:scale-95 ${
                       filterStatus === st
-                        ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald'
-                        : 'bg-mushaf-parchment dark:bg-darkMushaf-surface text-mushaf-ink-muted border border-mushaf-border dark:border-darkMushaf-border'
+                        ? 'bg-mushaf-emerald text-white dark:bg-darkMushaf-emerald font-bold shadow-xs'
+                        : 'bg-mushaf-parchment dark:bg-darkMushaf-surface text-mushaf-ink-muted hover:text-mushaf-ink dark:hover:text-darkMushaf-ink hover:bg-mushaf-gold/15 border border-mushaf-border dark:border-darkMushaf-border hover:border-mushaf-gold'
                     }`}
                   >
                     {labels[st]}
@@ -372,39 +396,70 @@ export const MemoryHeatmapView: React.FC = () => {
           
           {/* The 604 Pages Visual Heatmap Matrix */}
           <div className="lg:col-span-8 bg-mushaf-surface dark:bg-darkMushaf-card border border-mushaf-border dark:border-darkMushaf-border rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
-            <div className="flex items-center justify-between text-xs font-arabic text-mushaf-ink-muted border-b border-mushaf-border/60 pb-2">
-              <span>عرض {toArabicNumerals(displayedPageNumbers.length)} صفحة من أصل ٦٠٤</span>
-              <span>انقر على أي صفحة لمعاينة تفاصيل آياتها وتاريخ المراجعة</span>
+            <div className="flex items-center justify-between text-xs font-arabic text-mushaf-ink-muted border-b border-mushaf-border/60 pb-2 min-h-[30px]">
+              {hoveredPage ? (
+                <div className="flex items-center gap-2 text-mushaf-ink dark:text-darkMushaf-ink animate-fadeIn">
+                  <span className="font-bold text-mushaf-emerald dark:text-emerald-400">
+                    صفحة {toArabicNumerals(hoveredPage)}
+                  </span>
+                  <span>•</span>
+                  <span>{pageStats[hoveredPage]?.surahNames.join('، ') || ''}</span>
+                  <span>•</span>
+                  <span>الجزء {toArabicNumerals(pageStats[hoveredPage]?.juzNumber || 1)}</span>
+                  <span>•</span>
+                  <span className="font-bold">
+                    {pageStats[hoveredPage]?.status === 'new'
+                      ? 'لم يبدأ'
+                      : `استرجاع ${pageStats[hoveredPage]?.retrievability}%`}
+                  </span>
+                </div>
+              ) : (
+                <span>عرض {toArabicNumerals(displayedPageNumbers.length)} صفحة من أصل ٦٠٤</span>
+              )}
+              <span className="text-[11px] text-mushaf-ink-muted hidden sm:inline">
+                انقر للمعاينة • انقر مرتين للفتح بالمصحف
+              </span>
             </div>
 
-            <div className="grid grid-cols-10 sm:grid-cols-15 md:grid-cols-20 gap-1 sm:gap-1.5 max-h-[620px] overflow-y-auto p-1 scrollbar-thin">
+            <div className="grid grid-cols-10 sm:grid-cols-15 md:grid-cols-20 gap-1 sm:gap-1.5 max-h-[620px] overflow-y-auto p-1.5 scrollbar-thin">
               {displayedPageNumbers.map((pageNum) => {
                 const stat = pageStats[pageNum];
                 const r = stat?.retrievability ?? 0;
                 const status = stat?.status ?? 'new';
+                const isSelected = selectedPage?.pageNumber === pageNum;
 
-                let bgColor = 'bg-slate-100 dark:bg-slate-800/80 text-slate-400 hover:border-slate-400 border border-transparent';
+                let colorClasses = '';
                 if (status === 'mastered') {
-                  bgColor =
+                  colorClasses =
                     'bg-emerald-500 text-white hover:bg-emerald-600 border border-emerald-600 shadow-xs';
                 } else if (status === 'review_due') {
-                  bgColor =
+                  colorClasses =
                     'bg-amber-500 text-white hover:bg-amber-600 border border-amber-600 shadow-xs';
                 } else if (status === 'high_risk') {
-                  bgColor =
+                  colorClasses =
                     'bg-red-500 text-white hover:bg-red-600 border border-red-600 shadow-xs';
+                } else {
+                  colorClasses =
+                    'bg-slate-100 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 hover:bg-amber-100 dark:hover:bg-slate-700 hover:text-mushaf-ink dark:hover:text-darkMushaf-ink border border-slate-200/80 dark:border-slate-700 hover:border-mushaf-gold';
                 }
 
-                const isSelected = selectedPage?.pageNumber === pageNum;
+                const selectedClasses = isSelected
+                  ? 'ring-2 ring-mushaf-gold ring-offset-1 scale-125 z-20 font-bold shadow-md !bg-mushaf-gold !text-white !border-mushaf-gold'
+                  : 'hover:scale-125 hover:z-20 hover:shadow-md';
 
                 return (
                   <button
                     key={pageNum}
-                    onClick={() => selectPage(pageNum)}
-                    className={`aspect-square rounded flex flex-col items-center justify-center text-[10px] sm:text-xs font-semibold transition-all duration-150 select-none ${bgColor} ${
-                      isSelected ? 'ring-2 ring-mushaf-gold ring-offset-2 scale-110 z-10' : ''
-                    }`}
-                    title={`صفحة ${pageNum} (الجزء ${stat?.juzNumber}) — استرجاع: ${r}% (${stat?.studiedAyahsCount}/${stat?.totalAyahs} آية)`}
+                    type="button"
+                    onClick={() => handlePageClick(pageNum)}
+                    onDoubleClick={() => {
+                      setCurrentPage(pageNum);
+                      setActiveView('mushaf');
+                    }}
+                    onMouseEnter={() => setHoveredPage(pageNum)}
+                    onMouseLeave={() => setHoveredPage(null)}
+                    className={`aspect-square rounded flex flex-col items-center justify-center text-[10px] sm:text-xs font-semibold cursor-pointer transition-all duration-150 select-none active:scale-90 ${colorClasses} ${selectedClasses}`}
+                    title={`صفحة ${pageNum} (الجزء ${stat?.juzNumber}) — استرجاع: ${r}% (${stat?.studiedAyahsCount}/${stat?.totalAyahs} آية) — انقر مرتين للفتح بالمصحف`}
                   >
                     <span>{pageNum}</span>
                   </button>
@@ -414,7 +469,7 @@ export const MemoryHeatmapView: React.FC = () => {
           </div>
 
           {/* Selected Page Inspector Card & Ayah Drilldown */}
-          <div className="lg:col-span-4 bg-mushaf-surface dark:bg-darkMushaf-card border-2 border-mushaf-border-ornate/80 dark:border-darkMushaf-gold/60 rounded-2xl p-5 shadow-md space-y-4">
+          <div ref={inspectorRef} className="lg:col-span-4 bg-mushaf-surface dark:bg-darkMushaf-card border-2 border-mushaf-border-ornate/80 dark:border-darkMushaf-gold/60 rounded-2xl p-5 shadow-md space-y-4">
             {selectedPage ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-mushaf-border/60 dark:border-darkMushaf-border">
@@ -519,58 +574,186 @@ export const MemoryHeatmapView: React.FC = () => {
                   </div>
                 )}
 
-                {/* Ayahs Drilldown List on Selected Page */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs font-arabic text-mushaf-ink-muted">
-                    <span>آيات الصفحة ({toArabicNumerals(selectedPage.ayahStatuses.length)}):</span>
-                    <span>انقر لمعاينة تاريخ التسميع والأخطاء</span>
+                {/* Ayahs Drilldown List on Selected Page - Dedicated to Forgotten/Stumbled Ayahs */}
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between gap-2 text-xs font-arabic">
+                    {/* Filter Toggle: Forgotten (Default) vs All */}
+                    <div className="flex items-center p-0.5 rounded-xl bg-mushaf-parchment dark:bg-darkMushaf-surface border border-mushaf-border dark:border-darkMushaf-border text-xs">
+                      <button
+                        type="button"
+                        onClick={() => setPageAyahFilter('forgotten')}
+                        className={`px-3 py-1 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                          pageAyahFilter === 'forgotten'
+                            ? 'bg-red-500/15 text-red-700 dark:text-red-400 shadow-xs'
+                            : 'text-mushaf-ink-muted hover:text-mushaf-ink dark:hover:text-darkMushaf-ink'
+                        }`}
+                      >
+                        <AlertTriangle className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
+                        <span>الآيات المنسية ({toArabicNumerals(forgottenAyahs.length)})</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPageAyahFilter('all')}
+                        className={`px-3 py-1 rounded-lg font-semibold transition-all ${
+                          pageAyahFilter === 'all'
+                            ? 'bg-mushaf-surface dark:bg-darkMushaf-card text-mushaf-ink dark:text-darkMushaf-ink shadow-xs font-bold'
+                            : 'text-mushaf-ink-muted hover:text-mushaf-ink dark:hover:text-darkMushaf-ink'
+                        }`}
+                      >
+                        <span>الكل ({toArabicNumerals(selectedPage.ayahStatuses.length)})</span>
+                      </button>
+                    </div>
+
+                    <span className="text-[11px] text-mushaf-ink-muted hidden sm:inline">
+                      انقر للمعاينة والتسميع
+                    </span>
                   </div>
 
-                  <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1 scrollbar-thin">
-                    {selectedPage.ayahStatuses.map((a) => {
-                      let badgeColor = 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300';
-                      if (a.status === 'mastered') badgeColor = 'bg-emerald-500 text-white';
-                      else if (a.status === 'review_due') badgeColor = 'bg-amber-500 text-white';
-                      else if (a.status === 'high_risk') badgeColor = 'bg-red-500 text-white';
+                  {pageAyahFilter === 'forgotten' && forgottenAyahs.length === 0 ? (
+                    <div className="p-4 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/30 text-center font-arabic space-y-2">
+                      <div className="flex items-center justify-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                        <span>ما شاء الله! لا توجد آيات منسية في هذه الصفحة</span>
+                      </div>
+                      <p className="text-[11px] text-mushaf-ink-muted dark:text-darkMushaf-ink-muted">
+                        حفظك متقن ومثبّت بنسبة 100% في صفحة {toArabicNumerals(selectedPage.pageNumber)} ولا توجد أي تعثرات مسجلة.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setPageAyahFilter('all')}
+                        className="text-[11px] text-mushaf-emerald dark:text-emerald-400 font-bold hover:underline inline-flex items-center gap-1"
+                      >
+                        <span>عرض جميع آيات الصفحة ({toArabicNumerals(selectedPage.ayahStatuses.length)})</span>
+                        <ChevronLeft className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-1.5 max-h-60 overflow-y-auto pr-1 scrollbar-thin">
+                      {displayedAyahs.map((a) => {
+                        const isStumbled = a.lapses > 0 || a.status === 'high_risk' || a.status === 'review_due';
 
-                      return (
-                        <div
-                          key={a.verseKey}
-                          onClick={() => selectAyah(a.verseKey)}
-                          className="p-2.5 rounded-xl bg-mushaf-parchment hover:bg-mushaf-gold/15 dark:bg-darkMushaf-surface border border-mushaf-border dark:border-darkMushaf-border cursor-pointer transition-all flex items-center justify-between gap-3 text-xs font-arabic"
-                        >
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-0.5">
-                              <span className="font-bold text-mushaf-ink dark:text-darkMushaf-ink">
-                                آية {toArabicNumerals(a.ayah)} ({a.verseKey})
-                              </span>
-                              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${badgeColor}`}>
-                                {a.status === 'new' ? 'جديد' : `${a.retrievability}%`}
-                              </span>
+                        return (
+                          <div
+                            key={a.verseKey}
+                            onClick={() => {
+                              setCurrentPage(a.page);
+                              setCurrentAyah({
+                                ayahNumber: a.ayah,
+                                globalAyahNumber: a.ayah,
+                                surahNumber: a.surah,
+                                surahNameArabic: SURAHS.find((s) => s.number === a.surah)?.nameArabic || `سورة ${a.surah}`,
+                                textUthmani: a.textUthmani,
+                                pageNumber: a.page,
+                                juzNumber: a.juz,
+                              });
+                              setActiveView('mushaf');
+                            }}
+                            title="انقر لفتح هذه الآية في المصحف الشريف"
+                            className={`p-2.5 rounded-xl border cursor-pointer transition-all flex items-center justify-between gap-3 text-xs font-arabic active:scale-[0.99] hover:shadow-md hover:border-mushaf-gold ${
+                              isStumbled
+                                ? 'bg-red-50/60 hover:bg-red-100/70 dark:bg-red-950/20 dark:hover:bg-red-950/40 border-red-500/30'
+                                : 'bg-mushaf-parchment hover:bg-mushaf-gold/15 dark:bg-darkMushaf-surface border-mushaf-border dark:border-darkMushaf-border'
+                            }`}
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                <span className="font-bold text-mushaf-ink dark:text-darkMushaf-ink">
+                                  آية {toArabicNumerals(a.ayah)} ({a.verseKey})
+                                </span>
+
+                                {a.lapses > 0 && (
+                                  <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-red-500/15 text-red-700 dark:text-red-400 border border-red-500/25">
+                                    {toArabicNumerals(a.lapses)} تعثر / نسيان
+                                  </span>
+                                )}
+
+                                {a.status === 'high_risk' && (
+                                  <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-red-500 text-white">
+                                    خطر نسيان ({a.retrievability}%)
+                                  </span>
+                                )}
+
+                                {a.status === 'review_due' && (
+                                  <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-500 text-white">
+                                    مستحقة للمراجعة ({a.retrievability}%)
+                                  </span>
+                                )}
+
+                                {a.status === 'mastered' && a.lapses === 0 && (
+                                  <span className="text-[10px] px-1.5 py-0.2 rounded-full font-bold bg-emerald-500 text-white">
+                                    متقن {a.retrievability}%
+                                  </span>
+                                )}
+
+                                {a.status === 'new' && (
+                                  <span className="text-[10px] px-1.5 py-0.2 rounded-full font-bold bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                                    جديد
+                                  </span>
+                                )}
+                              </div>
+
+                              <p className="font-uthmani text-sm text-mushaf-ink/90 dark:text-darkMushaf-ink/90 truncate">
+                                {a.textUthmani}
+                              </p>
                             </div>
-                            <p className="font-uthmani text-sm text-mushaf-ink/90 dark:text-darkMushaf-ink/90 truncate">
-                              {a.textUthmani}
-                            </p>
-                          </div>
 
-                          <div className="text-left flex-shrink-0 text-[10px] text-mushaf-ink-muted font-mono">
-                            <span>S: {a.stability}d</span>
+                            <div className="flex items-center gap-1.5 flex-shrink-0">
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  selectAyah(a.verseKey);
+                                }}
+                                title="معاينة سجل المراجعات وتاريخ الأخطاء"
+                                className="p-1.5 rounded-lg text-mushaf-ink-muted hover:text-mushaf-ink dark:hover:text-darkMushaf-ink hover:bg-mushaf-gold/20 transition-all cursor-pointer"
+                              >
+                                <Info className="w-3.5 h-3.5" />
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleLaunchAyahReview(a);
+                                }}
+                                title="بدء تسميع هذه الآية صوتياً"
+                                className="px-2.5 py-1 bg-mushaf-emerald hover:bg-emerald-700 text-white rounded-lg font-bold text-xs flex items-center gap-1 shadow-xs transition-all active:scale-95 cursor-pointer"
+                              >
+                                <Mic className="w-3 h-3" />
+                                <span>تسميع</span>
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
-                {/* Direct Page Review Trigger */}
-                <button
-                  onClick={() => handleLaunchPageReview(selectedPage.pageNumber)}
-                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-mushaf-emerald hover:bg-emerald-800 text-white font-arabic font-bold text-sm shadow-md transition-all active:scale-95"
-                >
-                  <Mic className="w-4 h-4" />
-                  <span>بدء تسميع صفحة {toArabicNumerals(selectedPage.pageNumber)} بالصوت</span>
-                  <ChevronLeft className="w-4 h-4" />
-                </button>
+                {/* Page Direct Action Controls */}
+                <div className="grid grid-cols-2 gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCurrentPage(selectedPage.pageNumber);
+                      setActiveView('mushaf');
+                    }}
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-mushaf-parchment hover:bg-mushaf-gold/20 dark:bg-darkMushaf-surface dark:hover:bg-darkMushaf-surface/80 border border-mushaf-border dark:border-darkMushaf-border text-mushaf-ink dark:text-darkMushaf-ink font-arabic font-bold text-xs shadow-xs transition-all active:scale-95 cursor-pointer hover:border-mushaf-gold"
+                  >
+                    <BookOpen className="w-4 h-4 text-mushaf-emerald" />
+                    <span>عرض بالمصحف</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleLaunchPageReview(selectedPage.pageNumber)}
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-mushaf-emerald hover:bg-emerald-800 text-white font-arabic font-bold text-xs shadow-md transition-all active:scale-95 cursor-pointer"
+                  >
+                    <Mic className="w-4 h-4" />
+                    <span>بدء التسميع</span>
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             ) : (
               <div className="py-12 text-center text-xs font-arabic text-mushaf-ink-muted">
@@ -790,7 +973,7 @@ export const MemoryHeatmapView: React.FC = () => {
                         <div className="flex items-center justify-between text-[11px] text-mushaf-ink-muted pt-1">
                           <span>مدة التسجيل: {(log.recording_duration_ms / 1000).toFixed(1)} ث</span>
                           <span>أخطاء: {log.error_count}</span>
-                          <span>ثقة التقاط الصوت: {Math.round(log.alignment_confidence * 100)}%</span>
+                          <span>دقة مطابقة الفونيمات: {Math.round(log.alignment_confidence * 100)}%</span>
                         </div>
                       </div>
                     );

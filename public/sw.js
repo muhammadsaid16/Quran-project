@@ -1,9 +1,13 @@
-const CACHE_NAME = 'quran-cognitive-os-v1';
+const CACHE_NAME = 'quran-cognitive-os-v2';
 const PRECACHE_ASSETS = [
   '/',
   '/manifest.webmanifest',
   '/icons/icon-192x192.svg',
   '/icons/icon-512x512.svg',
+  '/fonts/UthmanicHafs1_Ver09.woff2',
+  '/fonts/UthmanTN1_Ver10.woff2',
+  '/fonts/UthmanTN1B_Ver10.woff2',
+  '/fonts/AmiriQuran-Regular.woff2',
 ];
 
 self.addEventListener('install', (event) => {

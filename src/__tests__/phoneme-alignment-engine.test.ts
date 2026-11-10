@@ -490,5 +490,74 @@ describe('Milestone 3: Phoneme Alignment & Error Detection Engine', () => {
       expect(incResult.progressRatio).toBeGreaterThan(0.1);
       expect(incResult.words[0].detectedPhonemes).toBe('بِسمِ');
     });
+
+    it('strictly enforces sequential word progression and prevents jumping to future words when intermediate words are unsaid (e.g. Al-Fatiha 1:2)', () => {
+      // User says "الحمد لله" (words 0 and 1) in 1:2 ("ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَـٰلَمِينَ")
+      // Even if there are trailing spurious tokens that happen to match "العالمين",
+      // word 2 ("رب") was not recited, so activeWordIndex MUST NOT advance past word 1!
+      const ref = engine.getAyahReference('1:2')!;
+      const refTokens = PhonemeVocabulary.tokenize(ref.aya_phoneme);
+      const uthmaniWords = WordMapper.extractUthmaniWords(ref.aya_text);
+      const refToWord = WordMapper.buildPhonemeToWordMapping(
+        uthmaniWords,
+        refTokens,
+        ref.aya_phonemes_list
+      );
+
+      // Extract canonical tokens for words 0 and 1 ("ٱلْحَمْدُ" and "لِلَّهِ")
+      const streamingTokens = refTokens
+        .filter((_, idx) => refToWord[idx] === 0 || refToWord[idx] === 1)
+        .map((tok, idx) => ({
+          token: tok,
+          timestampMs: idx * 100,
+          confidence: 0.95,
+        }));
+
+      // Add a spurious trailing token that belongs to word 3 ("ٱلْعَـٰلَمِينَ")
+      const word3Token = refTokens.find((_, idx) => refToWord[idx] === 3);
+      if (word3Token) {
+        streamingTokens.push({
+          token: word3Token,
+          timestampMs: 9999,
+          confidence: 0.8,
+        });
+      }
+
+      const incResult = engine.alignIncremental('1:2', streamingTokens);
+      // Word 0 is "ٱلْحَمْدُ", Word 1 is "لِلَّهِ", Word 2 is "رَبِّ", Word 3 is "ٱلْعَـٰلَمِينَ"
+      // Must stop strictly at Word 1 (لِلَّهِ)!
+      expect(incResult.activeWordIndex).toBe(1);
+      expect(incResult.activeWordIndex).not.toBe(2);
+      expect(incResult.activeWordIndex).not.toBe(3);
+    });
+
+    it('verifies that short verses (e.g. Al-Fatiha 1:3) reach last word completion and transition smoothly into 1:4 without blocking', () => {
+      // Verse 1:3: "ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ" (2 words)
+      const ref1_3 = engine.getAyahReference('1:3')!;
+      const tokens1_3 = PhonemeVocabulary.tokenize(ref1_3.aya_phoneme).map((tok, idx) => ({
+        token: tok,
+        timestampMs: idx * 100,
+        confidence: 0.95,
+      }));
+
+      // Incremental alignment on 1:3
+      const inc1_3 = engine.alignIncremental('1:3', tokens1_3);
+      expect(inc1_3.words.length).toBe(2);
+      expect(inc1_3.activeWordIndex).toBe(1); // All words of 1:3 reached!
+
+      // Verse 1:4: "مَـٰلِكِ يَوْمِ ٱلدِّينِ" (3 words)
+      const ref1_4 = engine.getAyahReference('1:4')!;
+      const tokens1_4 = PhonemeVocabulary.tokenize(ref1_4.aya_phoneme).map((tok, idx) => ({
+        token: tok,
+        timestampMs: 1000 + idx * 100,
+        confidence: 0.95,
+      }));
+
+      // Candidate tokens for next ayah (1:4) starting with first 2 tokens ("مَ", "اا")
+      const candidateTokens = tokens1_4.slice(0, 2);
+      const inc1_4 = engine.alignIncremental('1:4', candidateTokens);
+      expect(inc1_4.words.length).toBe(3);
+      expect(inc1_4.activeWordIndex).toBe(0); // First word "مَـٰلِكِ" verified immediately!
+    });
   });
 });

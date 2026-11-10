@@ -9,3 +9,4 @@ export * from './ctc-dtw-aligner';
 export * from './error-classifier';
 export * from './word-mapper';
 export * from './phoneme-alignment-engine';
+export * from './phoneme-to-text';

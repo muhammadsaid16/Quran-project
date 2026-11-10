@@ -16,6 +16,7 @@ import {
   WifiOff,
   Download,
   HardDrive,
+  Trophy,
 } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -49,6 +50,7 @@ export const Header: React.FC = () => {
     { id: 'dashboard', label: 'لوحة التحكم', icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: 'mushaf', label: 'المصحف الشريف', icon: <BookOpen className="w-4 h-4" /> },
     { id: 'heatmap', label: 'خريطة الذاكرة', icon: <Activity className="w-4 h-4" /> },
+    { id: 'achievements', label: 'الإنجازات', icon: <Trophy className="w-4 h-4" /> },
   ];
 
   const handleCycleTheme = () => {

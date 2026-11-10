@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { WordAlignmentResult, WordRecitationStatus } from '@/alignment/types';
+import { useAchievementStore } from '@/stores/achievement-store';
 
 export type RecitationStatus =
   | 'idle'
@@ -13,7 +14,8 @@ export interface AlignedToken {
   token: string;
   phoneme: string;
   status: 'correct' | 'omission' | 'substitution' | 'uncertain';
-  confidence: number;
+  /** 0-100; absent when the decoder exposes no probability for this token. */
+  confidence?: number;
 }
 
 export interface RecitationError {
@@ -34,7 +36,10 @@ interface RecitationState {
   liveTranscript: string;
   alignedTokens: AlignedToken[];
   detectedErrors: RecitationError[];
-  confidenceScore: number; // 0 - 100
+  /** Phoneme alignment match rate, 0-100 (matches / reference tokens). NOT acoustic confidence. */
+  alignmentAccuracy: number;
+  /** Real acoustic recognition confidence 0-100, or null when the decoder exposes none. */
+  recognitionConfidence: number | null;
   lastFsrsRating: FSRSRating | null;
   errorMessage: string | null;
 
@@ -42,6 +47,10 @@ interface RecitationState {
   evaluatedWords: WordAlignmentResult[];
   wordStatusMap: Record<string, WordRecitationStatus>; // e.g. "surah:ayah:wordIndex" and "ayah:wordIndex"
   isReviewOpen: boolean;
+
+  // Voice Active Recall: Reference vs Recognized text
+  recognizedText: string;
+  referenceText: string;
 
   // Pacing and continuity tracking (e.g. for Transition mode >2.0s pauses)
   pauseDurationMs: number;
@@ -53,10 +62,13 @@ interface RecitationState {
   setAudioLevel: (level: number) => void;
   setWaveformLevels: (levels: number[]) => void;
   setLiveTranscript: (transcript: string) => void;
+  setRecognizedText: (text: string) => void;
+  setReferenceText: (text: string) => void;
   setAlignedTokens: (tokens: AlignedToken[]) => void;
   addAlignedToken: (token: AlignedToken) => void;
   addDetectedError: (error: RecitationError) => void;
-  setConfidenceScore: (score: number) => void;
+  setAlignmentAccuracy: (score: number) => void;
+  setRecognitionConfidence: (score: number | null) => void;
   setLastFsrsRating: (rating: FSRSRating | null) => void;
   setErrorMessage: (msg: string | null) => void;
 
@@ -67,6 +79,12 @@ interface RecitationState {
   ) => void;
   setIsReviewOpen: (open: boolean) => void;
   clearEvaluatedWords: () => void;
+  recordRecitationComplete: (
+    ayahCount?: number,
+    perfectAyahCount?: number,
+    durationMs?: number,
+    pages?: number[]
+  ) => void;
   setPauseDurationMs: (ms: number) => void;
   resetRecitation: () => void;
 }
@@ -79,13 +97,17 @@ export const useRecitationStore = create<RecitationState>((set) => ({
   liveTranscript: '',
   alignedTokens: [],
   detectedErrors: [],
-  confidenceScore: 0,
+  alignmentAccuracy: 0,
+  recognitionConfidence: null,
   lastFsrsRating: null,
   errorMessage: null,
 
   evaluatedWords: [],
   wordStatusMap: {},
   isReviewOpen: false,
+
+  recognizedText: '',
+  referenceText: '',
 
   pauseDurationMs: 0,
   isPauseExceeded: false,
@@ -95,12 +117,15 @@ export const useRecitationStore = create<RecitationState>((set) => ({
   setAudioLevel: (audioLevel) => set({ audioLevel }),
   setWaveformLevels: (waveformLevels) => set({ waveformLevels }),
   setLiveTranscript: (liveTranscript) => set({ liveTranscript }),
+  setRecognizedText: (recognizedText) => set({ recognizedText }),
+  setReferenceText: (referenceText) => set({ referenceText }),
   setAlignedTokens: (alignedTokens) => set({ alignedTokens }),
   addAlignedToken: (token) =>
     set((state) => ({ alignedTokens: [...state.alignedTokens, token] })),
   addDetectedError: (error) =>
     set((state) => ({ detectedErrors: [...state.detectedErrors, error] })),
-  setConfidenceScore: (confidenceScore) => set({ confidenceScore }),
+  setAlignmentAccuracy: (alignmentAccuracy) => set({ alignmentAccuracy }),
+  setRecognitionConfidence: (recognitionConfidence) => set({ recognitionConfidence }),
   setLastFsrsRating: (lastFsrsRating) => set({ lastFsrsRating }),
   setErrorMessage: (errorMessage) => set({ errorMessage }),
 
@@ -108,11 +133,12 @@ export const useRecitationStore = create<RecitationState>((set) => ({
     set((state) => {
       const map: Record<string, WordRecitationStatus> = { ...state.wordStatusMap };
       for (const w of words) {
-        // Map by wordIndex if ayah is given
-        if (ayahNumber !== undefined) {
-          map[`${ayahNumber}:${w.wordIndex}`] = w.status;
-          if (surahNumber !== undefined) {
-            map[`${surahNumber}:${ayahNumber}:${w.wordIndex}`] = w.status;
+        const aNum = w.ayahNumber ?? ayahNumber;
+        const sNum = w.surahNumber ?? surahNumber;
+        if (aNum !== undefined) {
+          map[`${aNum}:${w.wordIndex}`] = w.status;
+          if (sNum !== undefined) {
+            map[`${sNum}:${aNum}:${w.wordIndex}`] = w.status;
           }
         }
         map[`word:${w.wordIndex}`] = w.status;
@@ -130,8 +156,13 @@ export const useRecitationStore = create<RecitationState>((set) => ({
     set({
       evaluatedWords: [],
       wordStatusMap: {},
+      recognizedText: '',
+      referenceText: '',
       isReviewOpen: false,
     }),
+
+  recordRecitationComplete: (ayahCount = 1, perfectAyahCount = 0, durationMs?: number, pages: number[] = []) =>
+    useAchievementStore.getState().recordRecitation(ayahCount, perfectAyahCount, durationMs ? Math.round(durationMs / 1000) : 0, pages),
 
   setPauseDurationMs: (ms) =>
     set({
@@ -145,9 +176,12 @@ export const useRecitationStore = create<RecitationState>((set) => ({
       micActive: false,
       audioLevel: 0,
       liveTranscript: '',
+      recognizedText: '',
+      referenceText: '',
       alignedTokens: [],
       detectedErrors: [],
-      confidenceScore: 0,
+      alignmentAccuracy: 0,
+      recognitionConfidence: null,
       lastFsrsRating: null,
       errorMessage: null,
       evaluatedWords: [],

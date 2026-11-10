@@ -19,6 +19,10 @@ const MemoryHeatmapView = dynamic(
   () => import('@/components/heatmap/MemoryHeatmapView').then((mod) => mod.MemoryHeatmapView),
   { ssr: false }
 );
+const AchievementsView = dynamic(
+  () => import('@/components/achievements/AchievementsView').then((mod) => mod.AchievementsView),
+  { ssr: false }
+);
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
@@ -40,7 +44,9 @@ export default function Home() {
 
   return (
     <div className="w-full">
-      {activeView === 'dashboard' && <DashboardView />}
+      {activeView === 'achievements' ? (
+        <AchievementsView />
+      ) : activeView === 'dashboard' && <DashboardView />}
       {activeView === 'mushaf' && <MushafViewer />}
       {activeView === 'heatmap' && <MemoryHeatmapView />}
     </div>

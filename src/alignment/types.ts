@@ -41,11 +41,14 @@ export interface PhonemeAlignmentStep {
 
 export interface WordAlignmentResult {
   wordIndex: number;
+  ayahNumber?: number;
+  surahNumber?: number;
   uthmaniText: string;
   expectedPhonemes: string;
   detectedPhonemes: string;
   status: WordRecitationStatus;
-  confidence: number; // 0 to 100
+  /** 0-100, present only when real acoustic samples exist; absence means unknown, not failure. */
+  confidence?: number;
   startTimeMs?: number;
   endTimeMs?: number;
   errorDetails?: string;
@@ -68,7 +71,8 @@ export interface AyahAlignmentResult {
   allCategories: RecitationErrorCategory[];
   accuracy: number; // 0.0 - 1.0
   per: number; // Phoneme Error Rate: (S + D + I) / N
-  confidence: number; // Overall acoustic confidence (0.0 - 1.0)
+  /** Overall acoustic confidence (0.0 - 1.0); undefined when the decoder exposes no probabilities. */
+  confidence?: number;
   latencyMs: number; // Execution time of alignment algorithm in ms (< 100ms)
   referencePhonemes: string;
   hypothesisPhonemes: string;

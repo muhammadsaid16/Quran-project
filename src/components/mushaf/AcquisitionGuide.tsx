@@ -26,7 +26,7 @@ export const AcquisitionGuide: React.FC = () => {
     currentAyah,
   } = useActiveRecallStore();
 
-  const { status, confidenceScore, resetRecitation } = useRecitationStore();
+  const { status, resetRecitation } = useRecitationStore();
   const { currentPage } = useSessionStore();
 
   return (
@@ -46,7 +46,7 @@ export const AcquisitionGuide: React.FC = () => {
               مسار وضع الحفظ الجديد (Acquisition Flow)
             </h3>
             <p className="text-xs text-mushaf-ink-muted dark:text-darkMushaf-ink-muted">
-              حفظ متدرج: استماع ← إخفاء تدريجي ← تسميع صوتي ← شرط إتقان مرتين متتاليتين
+              حفظ متدرج: قراءة واستماع ← تسميع صوتي غيباً ← مراجعة وإتقان (مرتين متتاليتين)
             </p>
           </div>
         </div>
@@ -70,8 +70,8 @@ export const AcquisitionGuide: React.FC = () => {
         </div>
       </div>
 
-      {/* Step Sequence Pills */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
+      {/* Step Sequence Pills (3 Clear Steps) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
         {/* Step 1: Read */}
         <button
           onClick={() => {
@@ -91,44 +91,26 @@ export const AcquisitionGuide: React.FC = () => {
           </div>
         </button>
 
-        {/* Step 2: Ghost Text */}
+        {/* Step 2: Voice Recitation (Text Concealed) */}
         <button
           onClick={() => {
-            setAcquisitionStep('ghost');
-            if (ghostTextLevel === 'visible') {
-              setGhostTextLevel('level2_first_words');
-            }
+            setAcquisitionStep('recite');
+            setGhostTextLevel('level1_concealed');
           }}
           className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-arabic transition-all text-right ${
-            acquisitionStep === 'ghost'
-              ? 'bg-mushaf-emerald/15 border-mushaf-emerald text-mushaf-emerald font-bold shadow-sm'
-              : 'bg-mushaf-parchment dark:bg-darkMushaf-surface border-mushaf-border dark:border-darkMushaf-border text-mushaf-ink-muted'
-          }`}
-        >
-          <EyeOff className="w-4 h-4 flex-shrink-0" />
-          <div>
-            <span className="block font-bold">٢. تفعيل النص الشبح</span>
-            <span className="text-[10px] opacity-80">مستوى 1 أو 2 أو 3</span>
-          </div>
-        </button>
-
-        {/* Step 3: Recite */}
-        <button
-          onClick={() => setAcquisitionStep('recite')}
-          className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-arabic transition-all text-right ${
-            acquisitionStep === 'recite'
+            acquisitionStep === 'recite' || acquisitionStep === 'ghost'
               ? 'bg-mushaf-emerald/15 border-mushaf-emerald text-mushaf-emerald font-bold shadow-sm'
               : 'bg-mushaf-parchment dark:bg-darkMushaf-surface border-mushaf-border dark:border-darkMushaf-border text-mushaf-ink-muted'
           }`}
         >
           <Mic className="w-4 h-4 flex-shrink-0" />
           <div>
-            <span className="block font-bold">٣. التسميع الصوتي</span>
-            <span className="text-[10px] opacity-80">دون كتابة أو حروف</span>
+            <span className="block font-bold">٢. التسميع الصوتي غيباً</span>
+            <span className="text-[10px] opacity-80">النص مخفي والتسميع بالصوت</span>
           </div>
         </button>
 
-        {/* Step 4: Review / Mastered */}
+        {/* Step 3: Review / Mastered */}
         <div
           className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-arabic text-right ${
             acquisitionStep === 'mastered'
@@ -140,9 +122,9 @@ export const AcquisitionGuide: React.FC = () => {
         >
           <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
           <div>
-            <span className="block font-bold">٤. المراجعة والإتقان</span>
+            <span className="block font-bold">٣. المراجعة والإتقان</span>
             <span className="text-[10px] opacity-80">
-              {acquisitionStep === 'mastered' ? 'تم الحفظ بنجاح!' : 'فحص الأخطاء بالألوان'}
+              {acquisitionStep === 'mastered' ? 'تم الحفظ بنجاح!' : 'فحص الأخطاء وتثبيت الحفظ'}
             </span>
           </div>
         </div>
@@ -151,17 +133,14 @@ export const AcquisitionGuide: React.FC = () => {
       {/* Dynamic Step Advice */}
       <div className="flex items-center justify-between text-xs font-arabic text-mushaf-ink-muted dark:text-darkMushaf-ink-muted pt-1">
         {acquisitionStep === 'read' && (
-          <span>اقرأ الآية بتمعن في الرسم العثماني، ثم اضغط على «تفعيل النص الشبح» للبدء في استرجاعها.</span>
+          <span>اقرأ الآية بتمعن في الرسم العثماني، ثم اضغط على «إخفاء النص» للبدء في التسميع الصوتي غيباً.</span>
         )}
-        {acquisitionStep === 'ghost' && (
-          <span>تم إخفاء الكلمات تدريجيًا. استعن ببدايات الآيات ثم اضغط زر الميكروفون لبدء التسميع.</span>
-        )}
-        {acquisitionStep === 'recite' && (
-          <span>انطق بتؤدة وترتيل. الموديل يطابق الفونيمات الصوتية محليًا دون نقل أي صوت لخادم خارجي.</span>
+        {(acquisitionStep === 'recite' || acquisitionStep === 'ghost') && (
+          <span>تم إخفاء النص للتسميع غيباً. اضغط زر الميكروفون وابدأ القراءة بصوتك وترتيلك.</span>
         )}
         {acquisitionStep === 'review' && (
           <span className="text-amber-700 dark:text-amber-300">
-            راجع الأخطاء الملونة أدناه: الأحمر للحذف، والكهرماني للتعثر، والأخضر للصحيح.
+            راجع الأخطاء الملونة أدناه: الأحمر للنسيان، والكهرماني للتعثر والتبديل.
           </span>
         )}
         {acquisitionStep === 'mastered' && (

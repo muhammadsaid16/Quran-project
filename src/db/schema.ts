@@ -98,12 +98,50 @@ export interface MutashabihatGroup {
   notes?: string;
 }
 
+/** Tiers of achievement rarity */
+export type AchievementTier = 'bronze' | 'silver' | 'gold' | 'diamond';
+
+/** Categories of achievements */
+export type AchievementCategory =
+  | 'memorization'
+  | 'consistency'
+  | 'accuracy'
+  | 'completion'
+  | 'special';
+
+/** How the achievement's progress counter is tracked */
+export type AchievementProgressType = 'count' | 'total_minutes' | 'streak_days';
+
+export interface AchievementDefinition {
+  id: string; // unique slug, e.g. 'first-recitation'
+  key: string; // display key for translation-ready labels
+  tier: AchievementTier;
+  category: AchievementCategory;
+  title: string;
+  description: string;
+  icon: string; // lucide-react icon name
+  threshold: number; // value required to unlock
+  progressType: AchievementProgressType;
+  cumulative: boolean; // true = counts all-time, false = best single session
+}
+
+export interface UserAchievement {
+  achievementId: string;
+  unlockedAt: Date | string;
+  currentProgress: number; // current value of tracked stat
+  progressType: AchievementProgressType;
+  cumulative: boolean; // true = counts all-time, false = best single session
+  totalProgress: number; // lifetime total for non-cumulative counters
+}
+
+
 export class QuranCognitiveDB extends Dexie {
   quran_ayahs!: Table<QuranAyah, number>;
   memory_cards!: Table<MemoryCard, string>;
   transition_edges!: Table<TransitionEdge, string>;
   review_logs!: Table<ReviewLog, string>;
   mutashabihat_groups!: Table<MutashabihatGroup, string>;
+  achievements!: Table<UserAchievement, string>;
 
   constructor(databaseName = 'QuranCognitiveOS') {
     super(databaseName);
@@ -115,6 +153,7 @@ export class QuranCognitiveDB extends Dexie {
       transition_edges: 'edge_id, from_ayah_id, to_ayah_id, from_surah, to_surah, due, stability',
       review_logs: 'log_id, target_id, target_type, timestamp, rating, result_status',
       mutashabihat_groups: 'id, title, *ayah_keys, *surah_numbers',
+      achievements: 'achievementId, unlockedAt, currentProgress, totalProgress',
     });
   }
 }

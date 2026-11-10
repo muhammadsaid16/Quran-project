@@ -19,10 +19,11 @@ import {
 import { PhonemeVocabulary } from './phoneme-vocabulary';
 import { CtcDtwAligner } from './ctc-dtw-aligner';
 import { ErrorClassifier } from './error-classifier';
-import { WordMapper, AyahPhonemeData } from './word-mapper';
+import { WordMapper, AyahPhonemeData, WordTokenBlock } from './word-mapper';
 
 export class PhonemeAlignmentEngine {
   private phonemeDatabase: Map<string, AyahPhonemeData> = new Map();
+  private wordTokenBounds: Map<string, WordTokenBlock[]> = new Map();
   private isLoaded = false;
 
   constructor(preloadedData?: Record<string, AyahPhonemeData>) {
@@ -70,6 +71,7 @@ export class PhonemeAlignmentEngine {
                 for (const [key, val] of Object.entries(data)) {
                   this.phonemeDatabase.set(key, val as AyahPhonemeData);
                 }
+                this.loadBoundsNode(fs, path.join(path.dirname(p), 'word_token_bounds.json'));
                 this.isLoaded = true;
                 return;
               } catch {
@@ -90,6 +92,17 @@ export class PhonemeAlignmentEngine {
           for (const [key, val] of Object.entries(data)) {
             this.phonemeDatabase.set(key, val as AyahPhonemeData);
           }
+          try {
+            const boundsResponse = await fetch('/models/word_token_bounds.json');
+            if (boundsResponse.ok) {
+              const boundsData = await boundsResponse.json();
+              for (const [key, val] of Object.entries(boundsData)) {
+                this.wordTokenBounds.set(key, val as WordTokenBlock[]);
+              }
+            }
+          } catch {
+            // Bounds are optional; fall back to count-based mapping
+          }
           this.isLoaded = true;
           return;
         }
@@ -99,11 +112,26 @@ export class PhonemeAlignmentEngine {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private loadBoundsNode(fs: any, boundsPath: string): void {
+    try {
+      if (fs.existsSync(boundsPath)) {
+        const boundsData = JSON.parse(fs.readFileSync(boundsPath, 'utf-8'));
+        for (const [key, val] of Object.entries(boundsData)) {
+          this.wordTokenBounds.set(key, val as WordTokenBlock[]);
+        }
+      }
+    } catch {
+      // Bounds are optional; fall back to count-based mapping
+    }
+  }
+
   /**
    * Registers or overrides phoneme data for an ayah (e.g. for testing or dynamic loading).
    */
   public registerAyah(verseKey: string, data: AyahPhonemeData): void {
     this.phonemeDatabase.set(verseKey, data);
+    this.wordTokenBounds.delete(verseKey);
     this.isLoaded = true;
   }
 
@@ -166,6 +194,7 @@ export class PhonemeAlignmentEngine {
       alignResult.steps,
       classification.diagnostics,
       refData.aya_phonemes_list,
+      this.wordTokenBounds.get(targetAyahKey),
       alignmentOpts.acousticConfidence
     );
 
@@ -206,25 +235,57 @@ export class PhonemeAlignmentEngine {
     const refToWord = WordMapper.buildPhonemeToWordMapping(
       uthmaniWords,
       refTokens,
-      refData.aya_phonemes_list
+      refData.aya_phonemes_list,
+      this.wordTokenBounds.get(targetAyahKey)
     );
 
-    let activeWordIndex = 0;
-    let matchedCount = 0;
+    // Count reference phoneme tokens per word
+    const wordRefCounts: number[] = new Array(uthmaniWords.length).fill(0);
+    for (let t = 0; t < refTokens.length; t++) {
+      const w = refToWord[t] ?? 0;
+      if (w >= 0 && w < uthmaniWords.length) {
+        wordRefCounts[w]++;
+      }
+    }
 
+    // Count matched phonemes per word
+    const wordMatchCounts: number[] = new Array(uthmaniWords.length).fill(0);
     for (const step of alignResult.steps) {
-      if (step.op === 'match' && step.refIndex >= 0) {
-        matchedCount++;
+      if (step.op === 'match' && step.refIndex >= 0 && step.refIndex < refTokens.length) {
         const w = refToWord[step.refIndex] ?? 0;
-        if (w > activeWordIndex) {
-          activeWordIndex = w;
+        if (w >= 0 && w < uthmaniWords.length) {
+          wordMatchCounts[w]++;
         }
+      }
+    }
+
+    // STRICT SEQUENTIAL PROGRESSION (لا تقدم إلا كلمة كلمة بالترتيب من الأول):
+    // Word w is only verified if all preceding words 0..w-1 have been verified,
+    // and word w itself has sufficient matched phonemes.
+    let activeWordIndex = -1;
+    let sequentialMatchedCount = 0;
+
+    for (let w = 0; w < uthmaniWords.length; w++) {
+      const totalRef = wordRefCounts[w] || 1;
+      const matches = wordMatchCounts[w] || 0;
+      // Minimum phonemes needed to confirm word is recited:
+      // Very short words (<= 2 phonemes): at least 1 match.
+      // Longer words: at least 2 matches or 35% of the word's phonemes.
+      const minRequired = totalRef <= 2 ? 1 : Math.max(2, Math.floor(totalRef * 0.35));
+
+      if (matches >= minRequired) {
+        activeWordIndex = w;
+        sequentialMatchedCount += matches;
+      } else {
+        // If word w is not yet recited/matched, STOP!
+        // No future word (w+1, w+2, ...) can ever be considered active.
+        break;
       }
     }
 
     const progressRatio =
       refTokens.length > 0
-        ? Math.min(1.0, Math.round((matchedCount / refTokens.length) * 100) / 100)
+        ? Math.min(1.0, Math.round((sequentialMatchedCount / refTokens.length) * 100) / 100)
         : 0;
 
     const words = WordMapper.mapWords(
@@ -241,15 +302,16 @@ export class PhonemeAlignmentEngine {
         uncertainScore: 0,
       },
       refData.aya_phonemes_list,
+      this.wordTokenBounds.get(targetAyahKey),
       alignResult.meanConfidence
     );
 
-    const latestWord = words[activeWordIndex];
+    const latestWord = activeWordIndex >= 0 ? words[activeWordIndex] : words[0];
 
     return {
       verseKey: targetAyahKey,
       activeWordIndex,
-      matchedPhonemesCount: matchedCount,
+      matchedPhonemesCount: sequentialMatchedCount,
       totalReferencePhonemesCount: refTokens.length,
       progressRatio,
       words,

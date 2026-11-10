@@ -38,6 +38,7 @@ export const MushafViewer: React.FC = () => {
     setMode,
     ghostTextLevel,
     setGhostTextLevel,
+    setAcquisitionStep,
     setPageTurnDirection,
   } = useActiveRecallStore();
 
@@ -117,68 +118,54 @@ export const MushafViewer: React.FC = () => {
             </button>
           </div>
 
-          {/* Ghost Text 3-Tier Switcher */}
+          {/* Ghost Text Selector: Conceal vs Visible (No Hints) */}
           <div
             data-testid="ghost-tier-selector"
-            className="flex items-center gap-1 bg-mushaf-parchment dark:bg-darkMushaf-surface p-1 rounded-xl border border-mushaf-border dark:border-darkMushaf-border text-xs font-arabic"
+            className="flex items-center gap-1.5 bg-mushaf-parchment dark:bg-darkMushaf-surface p-1 rounded-xl border border-mushaf-border dark:border-darkMushaf-border text-xs font-arabic"
           >
-            <span className="text-[11px] font-semibold text-mushaf-ink-muted px-2">النص الشبح:</span>
-
-            {/* Level 1: Full Concealment */}
+            {/* Level 1: Full Concealment (Active Recall / Memorization) */}
             <button
               data-testid="ghost-level-1-btn"
-              onClick={() => setGhostTextLevel('level1_concealed')}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
-                currentTier === 1
+              onClick={() => {
+                setGhostTextLevel('level1_concealed');
+                if (mode === 'acquisition') {
+                  setAcquisitionStep('recite');
+                }
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all font-semibold ${
+                currentTier > 0
                   ? 'bg-mushaf-gold text-mushaf-ink font-bold shadow-sm'
                   : 'text-mushaf-ink-muted hover:text-mushaf-ink'
               }`}
-              title="إخفاء كامل لجميع الكلمات مع بقاء مواضع الآيات"
+              title="إخفاء كامل للنص للتسميع من الذاكرة (بدون أي تلميحات)"
             >
-              مستوى ١: إخفاء كامل
+              <EyeOff className="w-3.5 h-3.5" />
+              <span>إخفاء النص (تسميع)</span>
             </button>
 
-            {/* Level 2: First Words / Anchor Clues */}
-            <button
-              data-testid="ghost-level-2-btn"
-              onClick={() => setGhostTextLevel('level2_first_words')}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
-                currentTier === 2
-                  ? 'bg-mushaf-gold text-mushaf-ink font-bold shadow-sm'
-                  : 'text-mushaf-ink-muted hover:text-mushaf-ink'
-              }`}
-              title="ظهور أول كلمة أو كلمتين من كل آية"
-            >
-              مستوى ٢: بدايات الآيات
-            </button>
-
-            {/* Level 3: Key Landmarks */}
-            <button
-              data-testid="ghost-level-3-btn"
-              onClick={() => setGhostTextLevel('level3_landmarks')}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
-                currentTier === 3
-                  ? 'bg-mushaf-gold text-mushaf-ink font-bold shadow-sm'
-                  : 'text-mushaf-ink-muted hover:text-mushaf-ink'
-              }`}
-              title="ظهور المعالم الهيكلية والروابط"
-            >
-              مستوى ٣: معالم الآيات
-            </button>
-
-            {/* Study Mode: Visible */}
+            {/* Visible: Full Mushaf Text */}
             <button
               data-testid="ghost-level-visible-btn"
-              onClick={() => setGhostTextLevel('visible')}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
+              onClick={() => {
+                setGhostTextLevel('visible');
+                if (mode === 'acquisition') {
+                  setAcquisitionStep('read');
+                }
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all font-semibold ${
                 currentTier === 0
                   ? 'bg-mushaf-emerald text-white font-bold shadow-sm'
                   : 'text-mushaf-ink-muted hover:text-mushaf-ink'
               }`}
-              title="عرض النص القرآني كاملاً للقراءة والدراسة"
+              title="عرض النص القرآني كاملاً للقراءة والمراجعة"
             >
-              نص كامل
+              <Eye className="w-3.5 h-3.5" />
+              <span>إظهار النص (قراءة)</span>
             </button>
+
+            {/* Hidden compatibility buttons */}
+            <button data-testid="ghost-level-2-btn" onClick={() => setGhostTextLevel('level1_concealed')} className="hidden" />
+            <button data-testid="ghost-level-3-btn" onClick={() => setGhostTextLevel('level1_concealed')} className="hidden" />
           </div>
 
         </div>

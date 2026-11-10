@@ -122,7 +122,7 @@ export function getGhostTierLabel(level: GhostTextLevel): string {
 
 export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
   mode: 'acquisition',
-  ghostTextLevel: 'level2_first_words',
+  ghostTextLevel: 'visible',
   activeAyahIndex: 0,
   revealedAyahIds: [],
   revealedWordIndices: {},
@@ -140,8 +140,27 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
 
   pageTurnDirection: null,
 
-  setMode: (mode) => set({ mode }),
-  setGhostTextLevel: (ghostTextLevel) => set({ ghostTextLevel }),
+  setMode: (mode) =>
+    set({
+      mode,
+      acquisitionStep: mode === 'acquisition' ? 'read' : 'recite',
+      ghostTextLevel: mode === 'acquisition' ? 'visible' : 'level1_concealed',
+    }),
+  setGhostTextLevel: (ghostTextLevel) =>
+    set((state) => {
+      let nextStep = state.acquisitionStep;
+      if (state.mode === 'acquisition') {
+        if (ghostTextLevel === 'visible') {
+          nextStep = 'read';
+        } else if (state.acquisitionStep === 'read') {
+          nextStep = 'recite';
+        }
+      }
+      return {
+        ghostTextLevel,
+        acquisitionStep: nextStep,
+      };
+    }),
   cycleGhostTextLevel: () => {
     const current = get().ghostTextLevel;
     const tier = getGhostTierNumber(current);
@@ -150,7 +169,7 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
     else if (tier === 2) next = 'level3_landmarks';
     else if (tier === 3) next = 'visible';
     else next = 'level1_concealed';
-    set({ ghostTextLevel: next });
+    get().setGhostTextLevel(next);
   },
 
   setCurrentAyah: (currentAyah) => set({ currentAyah, isHintRevealed: false }),
@@ -188,6 +207,7 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
       isHintRevealed: false,
       consecutiveFlawlessCount: 0,
       acquisitionStep: mode === 'acquisition' ? 'read' : 'recite',
+      ghostTextLevel: mode === 'acquisition' ? 'visible' : 'level1_concealed',
     }),
 
   stopRecallSession: () =>
@@ -203,7 +223,16 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
       isHintRevealed: false,
     }),
 
-  setAcquisitionStep: (acquisitionStep) => set({ acquisitionStep }),
+  setAcquisitionStep: (acquisitionStep) =>
+    set((state) => ({
+      acquisitionStep,
+      ghostTextLevel:
+        acquisitionStep === 'read'
+          ? 'visible'
+          : acquisitionStep === 'ghost' || acquisitionStep === 'recite'
+          ? 'level1_concealed'
+          : state.ghostTextLevel,
+    })),
 
   recordAcquisitionResult: (isFlawless) =>
     set((state) => {

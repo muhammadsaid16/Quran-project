@@ -1,11 +1,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap');
 
+/* Authentic King Fahd Glorious Quran Printing Complex Fonts (مجمع الملك فهد لطباعة المصحف الشريف) */
+@font-face {
+  font-family: 'KFGQPC Uthmanic Script HAFS';
+  src: url('/fonts/UthmanicHafs1_Ver09.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KFGQPC Uthman Taha Naskh';
+  src: url('/fonts/UthmanTN1_Ver10.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'KFGQPC Uthman Taha Naskh';
+  src: url('/fonts/UthmanTN1B_Ver10.woff2') format('woff2');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Amiri Quran';
+  src: url('/fonts/AmiriQuran-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-uthmani: 'Amiri Quran', 'Scheherazade New', 'Traditional Arabic', serif;
+  --font-uthmani: 'KFGQPC Uthmanic Script HAFS', 'UthmanicHafs', 'KFGQPC Uthman Taha Naskh', 'Amiri Quran', 'Scheherazade New', 'Traditional Arabic', serif;
   --font-arabic: 'IBM Plex Sans Arabic', 'Cairo', system-ui, sans-serif;
 }
 
@@ -41,8 +74,11 @@ body {
 /* Medina Mushaf typography rules */
 .font-uthmani {
   font-family: var(--font-uthmani);
-  font-feature-settings: "cv01" on, "cv02" on;
-  word-spacing: 0.1em;
+  font-feature-settings: "cv01" on, "cv02" on, "liga" on, "calt" on, "mkmk" on, "mark" on;
+  font-variant-ligatures: common-ligatures contextual;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Custom scrollbars for clean UI */

@@ -17,6 +17,14 @@ export interface AyahPhonemeData {
   aya_phonemes_list?: string[];
 }
 
+/**
+ * One block of the offline word/group partition (scripts/build_word_token_bounds.py):
+ * words[ws..we) are covered by phoneme groups[gs..ge). Ends are exclusive.
+ * Fused blocks (we-ws > 1) mark tajweed assimilation; split blocks (ge-gs > 1)
+ * mark disconnected letters (الٓمٓ etc.).
+ */
+export type WordTokenBlock = [ws: number, we: number, gs: number, ge: number];
+
 export class WordMapper {
   /**
    * Cleans an Uthmani ayah text string into discrete words, preserving full
@@ -32,17 +40,62 @@ export class WordMapper {
   /**
    * Builds an index mapping each reference phoneme token to its corresponding
    * Uthmani word index in the ayah.
+   *
+   * Preferred path: the offline word/group partition (`blocks`), which resolves
+   * tajweed fusions and disconnected-letter splits exactly at block boundaries.
+   * Inside a fused block, tokens are distributed over the block's words weighted
+   * by base-letter count (never across block boundaries, so no drift).
+   * Without blocks, falls back to group-count matching, then proportional guessing.
    */
   public static buildPhonemeToWordMapping(
     uthmaniWords: string[],
     referenceTokens: string[],
-    phonemesList?: string[]
+    phonemesList?: string[],
+    blocks?: WordTokenBlock[]
   ): number[] {
     const mapping: number[] = new Array(referenceTokens.length).fill(0);
     const numWords = uthmaniWords.length;
     if (numWords === 0) return mapping;
 
-    // Case 1: Word count matches aya_phonemes_list count 1-to-1
+    if (blocks && blocks.length > 0 && phonemesList) {
+      let currentTokenIdx = 0;
+      for (const [ws, we, gs, ge] of blocks) {
+        const blockTokens: string[] = [];
+        for (let g = gs; g < ge; g++) {
+          blockTokens.push(...PhonemeVocabulary.tokenize(phonemesList[g] ?? ''));
+        }
+        const wordCount = we - ws;
+        if (wordCount <= 1) {
+          for (let k = 0; k < blockTokens.length && currentTokenIdx < referenceTokens.length; k++) {
+            mapping[currentTokenIdx++] = ws;
+          }
+          continue;
+        }
+        const weights: number[] = [];
+        let totalWeight = 0;
+        for (let w = ws; w < we; w++) {
+          const weight = this.countBaseLetters(uthmaniWords[w]);
+          weights.push(weight);
+          totalWeight += weight;
+        }
+        let cumulative = 0;
+        let wordOffset = 0;
+        for (let k = 0; k < blockTokens.length && currentTokenIdx < referenceTokens.length; k++) {
+          const target = ((k + 0.5) * totalWeight) / blockTokens.length;
+          while (wordOffset < wordCount - 1 && cumulative + weights[wordOffset] <= target) {
+            cumulative += weights[wordOffset];
+            wordOffset++;
+          }
+          mapping[currentTokenIdx++] = ws + wordOffset;
+        }
+      }
+      while (currentTokenIdx < referenceTokens.length) {
+        mapping[currentTokenIdx++] = numWords - 1;
+      }
+      return mapping;
+    }
+
+    // Fallback 1: Word count matches aya_phonemes_list count 1-to-1
     if (phonemesList && phonemesList.length === numWords) {
       let currentTokenIdx = 0;
       for (let w = 0; w < numWords; w++) {
@@ -62,8 +115,7 @@ export class WordMapper {
       return mapping;
     }
 
-    // Case 2: Multi-word Tajweed assimilation (e.g. 2 words joined into 1 phoneme group)
-    // Distribute phoneme tokens proportionally across Uthmani words
+    // Fallback 2 (last resort, unknown ayahs): proportional guessing
     const tokensPerWord = referenceTokens.length / numWords;
     for (let i = 0; i < referenceTokens.length; i++) {
       const estimatedWord = Math.min(numWords - 1, Math.floor(i / tokensPerWord));
@@ -71,6 +123,15 @@ export class WordMapper {
     }
 
     return mapping;
+  }
+
+  /** Counts letters after stripping harakat and orthographic markers (fusion weighting). */
+  private static countBaseLetters(word: string): number {
+    const stripped = word.replace(
+      /[\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06ED\u0640]/g,
+      ''
+    );
+    return Math.max(1, stripped.length);
   }
 
   /**
@@ -82,13 +143,15 @@ export class WordMapper {
     alignmentSteps: PhonemeAlignmentStep[],
     diagnostics: AlignmentDiagnostics,
     phonemesList?: string[],
-    acousticConfidence: number = 0.95
+    blocks?: WordTokenBlock[],
+    acousticConfidence?: number
   ): WordAlignmentResult[] {
     const uthmaniWords = this.extractUthmaniWords(ayaText);
     const refTokenToWord = this.buildPhonemeToWordMapping(
       uthmaniWords,
       referenceTokens,
-      phonemesList
+      phonemesList,
+      blocks
     );
 
     // Annotate alignment steps with wordIndex
@@ -167,8 +230,6 @@ export class WordMapper {
         confidenceSamples > 0
           ? confidenceSum / confidenceSamples
           : acousticConfidence;
-
-      // Determine word status
       let status: WordRecitationStatus = 'correct';
       let errorDetails: string | undefined;
 
@@ -190,7 +251,7 @@ export class WordMapper {
       } else if (isWordRepeated || insertionsCount > totalExpected) {
         status = 'repetition';
         errorDetails = `تكرار أو تعثر عند كلمة: "${wordText}"`;
-      } else if (meanConfidence < 0.65 || acousticConfidence < 0.65) {
+      } else if (meanConfidence !== undefined && meanConfidence < 0.65) {
         status = 'uncertain';
         errorDetails = `ثقة التقاط صوتي منخفضة عند كلمة: "${wordText}"`;
       } else if (deletionsCount > 0) {
@@ -209,7 +270,8 @@ export class WordMapper {
         expectedPhonemes: expectedTokens.join(''),
         detectedPhonemes: detectedTokens.join(''),
         status,
-        confidence: Math.round(meanConfidence * 100),
+        confidence:
+          meanConfidence !== undefined ? Math.round(meanConfidence * 100) : undefined,
         startTimeMs: startMs,
         endTimeMs: endMs,
         errorDetails,

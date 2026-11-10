@@ -47,6 +47,18 @@ export class VoiceRecognitionEngine {
   private lastTokenCount = 0;
   private streamStartTime = 0;
   private totalSamplesStreamed = 0;
+  private recordedAudioChunks: Float32Array[] = [];
+
+  public getRecordedAudio(): Float32Array {
+    const totalLength = this.recordedAudioChunks.reduce((acc, c) => acc + c.length, 0);
+    const result = new Float32Array(totalLength);
+    let offset = 0;
+    for (const chunk of this.recordedAudioChunks) {
+      result.set(chunk, offset);
+      offset += chunk.length;
+    }
+    return result;
+  }
 
   constructor(
     config: VoiceRecognitionEngineConfig = {},
@@ -226,6 +238,7 @@ export class VoiceRecognitionEngine {
       this.streamStartTime = Date.now();
       this.lastTokenCount = 0;
       this.totalSamplesStreamed = 0;
+      this.recordedAudioChunks = [];
 
       // 1. Request microphone access (Zero external network)
       this.mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -276,6 +289,7 @@ export class VoiceRecognitionEngine {
         const { type, pcm, rms, peak, sampleCount } = event.data;
         if (type === 'audio_chunk' && pcm) {
           this.totalSamplesStreamed += sampleCount || pcm.length;
+          this.recordedAudioChunks.push(new Float32Array(pcm));
 
           // Emit Audio Level & VAD Status
           const isSpeaking = rms > this.config.vadSilenceThreshold;
@@ -299,12 +313,16 @@ export class VoiceRecognitionEngine {
               for (let i = this.lastTokenCount; i < interim.tokens.length; i++) {
                 const token = interim.tokens[i];
                 const timestamp = (interim.timestamps && interim.timestamps[i]) ?? 0;
-                const confidence = (interim.ys_probs && interim.ys_probs[i]) ?? 1.0;
+                const rawConfidence = interim.ys_probs && interim.ys_probs[i];
+                const confidence =
+                  typeof rawConfidence === 'number' && Number.isFinite(rawConfidence)
+                    ? Number(rawConfidence.toFixed(4))
+                    : undefined;
 
                 this.callbacks.onToken?.({
                   token,
                   timestampMs: Math.round(timestamp * 1000),
-                  confidence: Number(confidence.toFixed(4)),
+                  confidence,
                   index: i,
                   isFinal: false,
                 });
@@ -389,6 +407,7 @@ export class VoiceRecognitionEngine {
     if (sampleRate !== 16000) {
       pcm16k = this.resampleBuffer(samples, sampleRate, 16000);
     }
+    this.recordedAudioChunks = [pcm16k];
 
     if (!this.nativeRecognizer) {
       throw new Error('Recognition backend is not initialized');
@@ -433,12 +452,16 @@ export class VoiceRecognitionEngine {
         for (let i = this.lastTokenCount; i < interim.tokens.length; i++) {
           const token = interim.tokens[i];
           const timestamp = (interim.timestamps && interim.timestamps[i]) ?? 0;
-          const confidence = (interim.ys_probs && interim.ys_probs[i]) ?? 1.0;
+          const rawConfidence = interim.ys_probs && interim.ys_probs[i];
+          const confidence =
+            typeof rawConfidence === 'number' && Number.isFinite(rawConfidence)
+              ? Number(rawConfidence.toFixed(4))
+              : undefined;
 
           this.callbacks.onToken?.({
             token,
             timestampMs: Math.round(timestamp * 1000),
-            confidence: Number(confidence.toFixed(4)),
+            confidence,
             index: i,
             isFinal: false,
           });
@@ -479,10 +502,14 @@ export class VoiceRecognitionEngine {
     // Emit any remaining tokens
     if (res.tokens && res.tokens.length > this.lastTokenCount) {
       for (let i = this.lastTokenCount; i < res.tokens.length; i++) {
+        const rawConfidence = res.ys_probs && res.ys_probs[i];
         this.callbacks.onToken?.({
           token: res.tokens[i],
           timestampMs: Math.round(((res.timestamps && res.timestamps[i]) ?? 0) * 1000),
-          confidence: Number(((res.ys_probs && res.ys_probs[i]) ?? 1.0).toFixed(4)),
+          confidence:
+            typeof rawConfidence === 'number' && Number.isFinite(rawConfidence)
+              ? Number(rawConfidence.toFixed(4))
+              : undefined,
           index: i,
           isFinal: true,
         });

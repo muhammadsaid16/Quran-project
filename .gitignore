@@ -25,6 +25,11 @@ yarn-error.log*
 .env*.local
 .env
 
+# Benchmark / eval outputs
+eval/
+models/fastconformer/
+models/word_token_bounds.json
+
 # System files
 .DS_Store
 *.pem
@@ -38,3 +43,8 @@ fixtures/*.mp3
 # TypeScript cache
 *.tsbuildinfo
 next-env.d.ts
+
+# Debug crash logs & python caches
+.reticle-setup-crash.log
+__pycache__/
+*.pyc

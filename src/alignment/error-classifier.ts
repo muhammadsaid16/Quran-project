@@ -43,9 +43,13 @@ export class ErrorClassifier {
     const uncertainThreshold =
       options?.uncertainThreshold ?? this.UNCERTAIN_CONFIDENCE_THRESHOLD;
 
-    // 1. Uncertain Check: Low acoustic confidence or empty audio
-    const uncertainScore = Math.round((1.0 - acousticConfidence) * 10000) / 10000;
-    if (acousticConfidence < uncertainThreshold) {
+    // 1. Uncertain Check: Low acoustic confidence or empty audio.
+    // Absence of confidence data is not evidence of uncertainty.
+    const uncertainScore =
+      acousticConfidence !== undefined
+        ? Math.round((1.0 - acousticConfidence) * 10000) / 10000
+        : 0;
+    if (acousticConfidence !== undefined && acousticConfidence < uncertainThreshold) {
       categories.push('Uncertain');
       uncertaintyReasons.push(
         `Acoustic confidence (${Math.round(acousticConfidence * 100)}%) is below required threshold (${Math.round(uncertainThreshold * 100)}%)`
@@ -85,14 +89,16 @@ export class ErrorClassifier {
       categories.push('Substitution');
     }
 
-    // 6. Correct Check: High confidence, low PER, zero omissions or substitutions, no sequence jump
+    // 6. Correct Check: Low PER, zero omissions or substitutions, no sequence jump,
+    // and no evidence of low confidence (missing confidence data is not a failure).
     const perThreshold = options?.perMatchThreshold ?? this.PER_CORRECT_THRESHOLD;
+    const confidenceOk = acousticConfidence === undefined || acousticConfidence >= 0.70;
     const isCleanMatch =
       alignment.deletions === 0 &&
       alignment.substitutions === 0 &&
       repetitions.length === 0 &&
       !isSequenceJump &&
-      acousticConfidence >= 0.70 &&
+      confidenceOk &&
       alignment.per <= perThreshold;
 
     if (isCleanMatch) {
@@ -101,9 +107,9 @@ export class ErrorClassifier {
 
     // If no categories were flagged (e.g. minor insertion or minor variance), resolve default
     if (categories.length === 0) {
-      if (alignment.per <= perThreshold && acousticConfidence >= 0.70) {
+      if (alignment.per <= perThreshold && confidenceOk) {
         categories.push('Correct');
-      } else if (acousticConfidence < uncertainThreshold) {
+      } else if (acousticConfidence !== undefined && acousticConfidence < uncertainThreshold) {
         categories.push('Uncertain');
       } else if (alignment.insertions > 0) {
         categories.push('Repetition');
@@ -116,7 +122,11 @@ export class ErrorClassifier {
     let primaryCategory: RecitationErrorCategory = 'Correct';
     if (categories.includes('Sequence Error')) {
       primaryCategory = 'Sequence Error';
-    } else if (categories.includes('Uncertain') && acousticConfidence < this.CRITICAL_UNCERTAIN_THRESHOLD) {
+    } else if (
+      categories.includes('Uncertain') &&
+      acousticConfidence !== undefined &&
+      acousticConfidence < this.CRITICAL_UNCERTAIN_THRESHOLD
+    ) {
       primaryCategory = 'Uncertain';
     } else if (categories.includes('Omission')) {
       primaryCategory = 'Omission';

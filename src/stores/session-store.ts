@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 export type ThemeMode = 'light' | 'dark' | 'sepia' | 'high-contrast';
-export type ViewMode = 'dashboard' | 'mushaf' | 'heatmap';
+export type ViewMode = 'dashboard' | 'mushaf' | 'heatmap' | 'achievements';
 export type MushafFontSize = 'compact' | 'standard' | 'large';
 
 interface SessionState {
@@ -40,6 +40,7 @@ export const useSessionStore = create<SessionState>((set) => ({
   dailyGoal: 20,
   todayRecitedCount: 0,
   streakDays: 0,
+  achievementBadgeVisible: false,
   audioSensitivity: 75,
   isOnline: true,
 

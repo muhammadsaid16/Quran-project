@@ -19,7 +19,9 @@ interface MedinaPageProps {
  */
 export function formatHizbQuarter(raw: string | number | undefined): string {
   if (!raw) return '';
-  const match = String(raw).match(/\d+/);
+  // Normalize Eastern Arabic-Indic digits (٠-٩) so parsing works for any data shape
+  const normalized = String(raw).replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)));
+  const match = normalized.match(/\d+/);
   if (!match) return String(raw);
   const quarter = parseInt(match[0], 10);
   if (isNaN(quarter) || quarter < 1 || quarter > 240) return String(raw);
@@ -299,11 +301,12 @@ export const MedinaPage: React.FC<MedinaPageProps> = ({
                 return (
                   <div
                     key={`text-${line.lineNumber}`}
-                    className="flex items-center justify-center w-full py-0.5 sm:py-1 hover:bg-mushaf-gold/5 transition-colors rounded px-0.5 sm:px-1 min-h-[40px] sm:min-h-[46px]"
+                    className="flex items-center justify-center w-full py-0.5 sm:py-1 hover:bg-mushaf-gold/5 transition-colors rounded px-0.5 sm:px-1 min-h-[44px] sm:min-h-[50px] md:min-h-[54px] whitespace-nowrap overflow-visible"
                   >
                     <GhostAyah
                       words={line.words}
                       isRecallModeActive={isRecallModeActive}
+                      isOpeningSpread={isOpeningSpread}
                     />
                   </div>
                 );
