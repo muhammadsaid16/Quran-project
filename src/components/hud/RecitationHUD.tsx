@@ -19,6 +19,14 @@ import {
 import { VisualReviewPanel } from './VisualReviewPanel';
 import { computeReviewStats, deriveSuggestedRating } from './review-stats';
 import { MEDINA_PAGES } from '@/data/medina-pages';
+import { SURAHS } from '@/data/surahs';
+import { AyahLocator, RecitationTarget } from '@/recitation/ayah-locator';
+import {
+  ayahStateKey,
+  buildAyahWordIndexMap,
+  getPageOfAyah,
+  getRenderedAyahWordsByPage,
+} from '@/data/mushaf-layout';
 import {
   Mic,
   MicOff,
@@ -127,6 +135,74 @@ export const RecitationHUD: React.FC = () => {
     return ayahs;
   }, [pageData]);
 
+  /**
+   * The ayahs the reciter may be on: every ayah of the given page, plus the
+   * FIRST ayah of the next page. Only that last candidate can advance the
+   * page — the reciter has to actually start the next page's first ayah.
+   */
+  const buildCandidates = (pageNumber: number): RecitationTarget[] => {
+    const page = MEDINA_PAGES[pageNumber];
+    if (!page) return [];
+
+    const candidates: RecitationTarget[] = [];
+    const seen = new Set<string>();
+    for (const line of page.lines) {
+      if (line.type !== 'text' || !line.words) continue;
+      for (const w of line.words) {
+        if (w.isAyahMarker) continue;
+        const key = `${w.surahNumber}:${w.ayahNumber}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        candidates.push({
+          surahNumber: w.surahNumber,
+          ayahNumber: w.ayahNumber,
+          pageNumber,
+        });
+      }
+    }
+
+    const nextPage = MEDINA_PAGES[pageNumber + 1];
+    if (nextPage) {
+      // The first ayah rendered on the next page (not necessarily startAyah:
+      // a page can open in the middle of a surah).
+      for (const line of nextPage.lines) {
+        if (line.type !== 'text' || !line.words) continue;
+        const word = line.words.find((w) => !w.isAyahMarker);
+        if (word) {
+          candidates.push({
+            surahNumber: word.surahNumber,
+            ayahNumber: word.ayahNumber,
+            pageNumber: pageNumber + 1,
+          });
+          break;
+        }
+      }
+    }
+
+    return candidates;
+  };
+
+  /** The Arabic name of a surah, for the target label. */
+  const surahNameFor = (surahNumber: number): string => {
+    const meta = SURAHS.find((s) => s.number === surahNumber);
+    return meta?.nameArabic || '';
+  };
+
+  /**
+   * Moves the Mushaf to another page and keeps the surah label in sync.
+   * The page only ever advances because the reciter started the first ayah of
+   * the next page.
+   */
+  const advanceToPage = (pageNumber: number) => {
+    if (pageNumber < 1 || pageNumber > 604 || pageNumber === currentPage) return;
+    const session = useSessionStore.getState();
+    session.setCurrentPage(pageNumber);
+    const nextPageData = MEDINA_PAGES[pageNumber];
+    if (nextPageData?.startSurah) {
+      session.setCurrentSurah(nextPageData.startSurah);
+    }
+  };
+
   const handleNextAyah = () => {
     resetRecitation();
 
@@ -148,7 +224,8 @@ export const RecitationHUD: React.FC = () => {
       const next = pageAyahs[currentIdx + 1];
       setCurrentAyah({
         surahNumber: next.surahNumber,
-        surahNameArabic: targetSurahName,
+        surahNameArabic:
+          next.surahNumber === targetSurahNum ? targetSurahName : surahNameFor(next.surahNumber),
         ayahNumber: next.ayahNumber,
         globalAyahNumber: 0,
         pageNumber: currentPage,
@@ -176,7 +253,6 @@ export const RecitationHUD: React.FC = () => {
   const handleRetryRecitation = () => {
     resetRecitation();
     resetHints();
-    finishedAtTokenRef.current = null;
     if (mode === 'acquisition') {
       setAcquisitionStep('recite');
       setGhostTextLevel('level1_concealed');
@@ -184,20 +260,19 @@ export const RecitationHUD: React.FC = () => {
   };
 
   const handleRevealHint = () => {
-    const wordsInTargetAyah: number[] = [];
-    for (const line of pageData.lines) {
-      if (line.type === 'text' && line.words) {
-        for (const w of line.words) {
-          if (w.ayahNumber === targetAyahNum && !w.isAyahMarker) {
-            wordsInTargetAyah.push(w.wordIndex);
-          }
-        }
-      }
-    }
-    const revealedSoFar = revealedWordIndices[targetAyahNum] || [];
+    // The RENDERED words of the target ayah: the page strips the prepended
+    // Basmalah of surahs greater than one, so the raw page data would point at
+    // words that are not on screen.
+    const wordsInTargetAyah = getRenderedAyahWordsByPage(
+      currentPage,
+      targetSurahNum,
+      targetAyahNum
+    ).map((w) => w.wordIndex);
+    const stateKey = ayahStateKey(targetSurahNum, targetAyahNum);
+    const revealedSoFar = revealedWordIndices[stateKey] || [];
     const nextWordToReveal = wordsInTargetAyah.find((idx) => !revealedSoFar.includes(idx));
     if (nextWordToReveal !== undefined) {
-      revealWordHint(targetAyahNum, nextWordToReveal);
+      revealWordHint(stateKey, nextWordToReveal);
     } else {
       revealFullHint();
     }
@@ -205,16 +280,18 @@ export const RecitationHUD: React.FC = () => {
 
   const engineRef = useRef<VoiceRecognitionEngine | null>(null);
   const alignmentEngineRef = useRef<PhonemeAlignmentEngine | null>(null);
+  const locatorRef = useRef<AyahLocator | null>(null);
   const accumulatedTokensRef = useRef<StreamingTokenEvent[]>([]);
   const silenceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const pauseStartRef = useRef<number | null>(null);
-  const currentAyahIdxRef = useRef<number>(0);
   const ayahsRecitedRef = useRef<Map<number, StreamingTokenEvent[]>>(new Map());
-  const finishedAtTokenRef = useRef<number | null>(null);
+  /** Tokens that arrived before the locator could name the ayah. */
+  const preAnchorTokensRef = useRef<StreamingTokenEvent[]>([]);
 
   useEffect(() => {
     alignmentEngineRef.current = new PhonemeAlignmentEngine();
     alignmentEngineRef.current.initialize().catch(() => {});
+    locatorRef.current = new AyahLocator(alignmentEngineRef.current);
 
     return () => {
       if (engineRef.current) {
@@ -232,6 +309,7 @@ export const RecitationHUD: React.FC = () => {
       }
     };
   }, []);
+
 
   // Hard guarantee: the microphone only ever listens inside the Mushaf view
   useEffect(() => {
@@ -282,12 +360,9 @@ export const RecitationHUD: React.FC = () => {
         pauseStartRef.current = null;
         setPauseDurationMs(0);
 
-        const startIdx = pageAyahs.findIndex(
-          (a) => a.surahNumber === targetSurahNum && a.ayahNumber === targetAyahNum
-        );
-        currentAyahIdxRef.current = Math.max(0, startIdx);
         ayahsRecitedRef.current = new Map<number, StreamingTokenEvent[]>();
-        finishedAtTokenRef.current = null;
+        preAnchorTokensRef.current = [];
+        locatorRef.current?.reset();
 
         if (!engineRef.current) {
           engineRef.current = new VoiceRecognitionEngine({
@@ -311,139 +386,60 @@ export const RecitationHUD: React.FC = () => {
             });
 
             // Live Voice-Driven Word Unveiling & Multi-Verse Continuous Tracking (Tarteel Style):
-            if (alignmentEngineRef.current && pageAyahs.length > 0) {
-              const activeTarget = pageAyahs[currentAyahIdxRef.current] || pageAyahs[0];
-              const targetNum = activeTarget.ayahNumber;
+            if (alignmentEngineRef.current && locatorRef.current) {
+              // The locator decides WHICH ayah the reciter is on. It works with a
+              // LOCAL alignment, so a reciter who starts mid-ayah (for example at
+              // "غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ" inside 1:7) is located correctly instead
+              // of locking the app onto the Basmala.
+              // The live page comes from the store, not from the render
+              // closure: a page advance must take effect on the very next token.
+              const livePage = useSessionStore.getState().currentPage;
+              const result = locatorRef.current.pushToken(
+                ev,
+                buildCandidates(livePage)
+              );
+              if (!result) preAnchorTokensRef.current.push(ev);
 
-              let currentTokens = ayahsRecitedRef.current.get(targetNum);
-              if (!currentTokens) {
-                currentTokens = [];
-                ayahsRecitedRef.current.set(targetNum, currentTokens);
-              }
-              currentTokens.push(ev);
+              if (result) {
+                const target = result.target;
+                const targetKey = ayahStateKey(target.surahNumber, target.ayahNumber);
 
-              // Auto-detect start verse if user starts reciting a different verse on the page (first 2-5 tokens)
-              if (currentTokens.length >= 2 && currentTokens.length <= 5) {
-                const verseKey = `${activeTarget.surahNumber}:${targetNum}`;
-                const currentInc = alignmentEngineRef.current.alignIncremental(verseKey, currentTokens);
-                if (currentInc.matchedPhonemesCount === 0) {
-                  for (let pIdx = 0; pIdx < pageAyahs.length; pIdx++) {
-                    if (pIdx === currentAyahIdxRef.current) continue;
-                    const cand = pageAyahs[pIdx];
-                    const candKey = `${cand.surahNumber}:${cand.ayahNumber}`;
-                    const candInc = alignmentEngineRef.current.alignIncremental(candKey, currentTokens);
-                    if (candInc.matchedPhonemesCount >= 2) {
-                      currentAyahIdxRef.current = pIdx;
-                      ayahsRecitedRef.current.delete(targetNum);
-                      ayahsRecitedRef.current.set(cand.ayahNumber, currentTokens);
-                      setCurrentAyah({
-                        surahNumber: cand.surahNumber,
-                        surahNameArabic: targetSurahName,
-                        ayahNumber: cand.ayahNumber,
-                        globalAyahNumber: 0,
-                        pageNumber: currentPage,
-                        juzNumber: pageData.juzNumber,
-                        textUthmani: '',
-                      });
-                      break;
-                    }
-                  }
-                }
-              }
+                // Tokens of the ayah the reciter is currently on. The tokens
+                // that arrived BEFORE the locator could name the ayah are added
+                // now, so the review does not lose the first words.
+                const tokensForTarget = ayahsRecitedRef.current.get(targetKey) ?? [];
+                tokensForTarget.push(...preAnchorTokensRef.current, ev);
+                ayahsRecitedRef.current.set(targetKey, tokensForTarget);
+                preAnchorTokensRef.current = [];
 
-              // Incremental alignment on active target
-              const currTarget = pageAyahs[currentAyahIdxRef.current] || activeTarget;
-              const currVerseKey = `${currTarget.surahNumber}:${currTarget.ayahNumber}`;
-              const activeTokens = ayahsRecitedRef.current.get(currTarget.ayahNumber) || currentTokens;
-
-              try {
-                const inc = alignmentEngineRef.current.alignIncremental(currVerseKey, activeTokens);
-                // Unveil words of current ayah in real time as spoken (strictly sequential)
-                if (inc.activeWordIndex >= 0) {
-                  for (let i = 0; i <= inc.activeWordIndex; i++) {
-                    const w = inc.words[i];
-                    if (w && (w.detectedPhonemes.length > 0 || w.status === 'correct')) {
-                      revealWordHint(currTarget.ayahNumber, w.wordIndex);
-                    }
-                  }
+                // Reveal the words that were recited (page word indices).
+                for (const pageIndex of result.revealPageWordIndices) {
+                  revealWordHint(targetKey, pageIndex);
                 }
 
-                // Seamless Multi-Verse Transition (Tarteel Style Continuous Recitation):
-                // 1. Mark completion point when reciter reaches the LAST word of current ayah
-                const isAtLastWord =
-                  inc.words.length > 0 &&
-                  inc.activeWordIndex === inc.words.length - 1;
-
-                if (isAtLastWord && finishedAtTokenRef.current === null) {
-                  finishedAtTokenRef.current = activeTokens.length;
-                }
-
-                // 2. When reciter speaks new tokens after completion, check for transition into next ayah
-                if (
-                  finishedAtTokenRef.current !== null &&
-                  currentAyahIdxRef.current < pageAyahs.length - 1
-                ) {
-                  const nextTarget = pageAyahs[currentAyahIdxRef.current + 1];
-                  const nextRef = alignmentEngineRef.current.getAyahReference(
-                    `${nextTarget.surahNumber}:${nextTarget.ayahNumber}`
-                  );
-                  const nextRefTokens = nextRef
-                    ? PhonemeVocabulary.tokenize(nextRef.aya_phoneme)
-                    : [];
-
-                  // Only consider new tokens that arrived after the current ayah reached completion
-                  const candidateTokens = activeTokens.slice(finishedAtTokenRef.current);
-
-                  let matchedTokenCount = 0;
-                  // Test trailing slices of new tokens to find match with start of next ayah (refIndex <= 1)
-                  for (let len = 1; len <= candidateTokens.length; len++) {
-                    const candidateSlice = candidateTokens.slice(-len);
-                    const alignRes = CtcDtwAligner.align(nextRefTokens, candidateSlice);
-                    const matchesStart = alignRes.steps.some(
-                      (s) => s.op === 'match' && s.refIndex <= 1
-                    );
-                    if (matchesStart) {
-                      matchedTokenCount = len;
-                    }
+                if (result.changed) {
+                  // The reciter moved to another ayah — update the app's target.
+                  if (target.pageNumber !== currentPage) {
+                    // The reciter started the FIRST ayah of the next page: the page
+                    // advances only now, and the surah follows the page.
+                    advanceToPage(target.pageNumber);
+                    locatorRef.current?.onPageChanged();
                   }
-
-                  if (matchedTokenCount > 0) {
-                    // Transfer matching tokens to next ayah
-                    const transferred = activeTokens.splice(-matchedTokenCount);
-                    ayahsRecitedRef.current.set(nextTarget.ayahNumber, transferred);
-
-                    // Advance active target to next verse and reset completion token tracker
-                    currentAyahIdxRef.current += 1;
-                    finishedAtTokenRef.current = null;
-
-                    setCurrentAyah({
-                      surahNumber: nextTarget.surahNumber,
-                      surahNameArabic: targetSurahName,
-                      ayahNumber: nextTarget.ayahNumber,
-                      globalAyahNumber: 0,
-                      pageNumber: currentPage,
-                      juzNumber: pageData.juzNumber,
-                      textUthmani: '',
-                    });
-
-                    // Immediately align next ayah and reveal its first word if matched
-                    const nextVerseKey = `${nextTarget.surahNumber}:${nextTarget.ayahNumber}`;
-                    const nextInc = alignmentEngineRef.current.alignIncremental(
-                      nextVerseKey,
-                      transferred
-                    );
-                    if (nextInc.activeWordIndex >= 0) {
-                      for (let i = 0; i <= nextInc.activeWordIndex; i++) {
-                        const nw = nextInc.words[i];
-                        if (nw && (nw.detectedPhonemes.length > 0 || nw.status === 'correct')) {
-                          revealWordHint(nextTarget.ayahNumber, nw.wordIndex);
-                        }
-                      }
-                    }
+                  // The surah label follows the ayah the reciter is on — a page
+                  // can hold more than one surah (page 604 holds three).
+                  if (target.surahNumber !== useSessionStore.getState().currentSurah) {
+                    useSessionStore.getState().setCurrentSurah(target.surahNumber);
                   }
+                  setCurrentAyah({
+                    surahNumber: target.surahNumber,
+                    surahNameArabic: surahNameFor(target.surahNumber),
+                    ayahNumber: target.ayahNumber,
+                    globalAyahNumber: 0,
+                    pageNumber: target.pageNumber,
+                    juzNumber: MEDINA_PAGES[target.pageNumber]?.juzNumber ?? 0,
+                    textUthmani: '',
+                  });
                 }
-              } catch {
-                // Ignore transient stream bounds errors
               }
             }
 
@@ -524,29 +520,29 @@ export const RecitationHUD: React.FC = () => {
               ? realConfidences.reduce((a, b) => a + b, 0) / realConfidences.length
               : undefined;
 
-          // Collect all ayahs that were recited during this session
+          // Collect all ayahs that were recited during this session. The key is
+          // the composite ayah key, because ayah numbers repeat in every surah.
           const recitedAyahsMap = ayahsRecitedRef.current;
-          let recitedAyahNumbers = Array.from(recitedAyahsMap.keys())
-            .filter((aNum) => (recitedAyahsMap.get(aNum) || []).length > 0)
+          let recitedKeys = Array.from(recitedAyahsMap.keys())
+            .filter((key) => (recitedAyahsMap.get(key) || []).length > 0)
             .sort((a, b) => a - b);
 
           // Fallback if map was somehow empty: use current target with accumulated tokens
-          if (recitedAyahNumbers.length === 0) {
-            recitedAyahNumbers = [targetAyahNum];
-            recitedAyahsMap.set(targetAyahNum, accumulatedTokensRef.current);
+          if (recitedKeys.length === 0) {
+            const fallbackKey = ayahStateKey(targetSurahNum, targetAyahNum);
+            recitedKeys = [fallbackKey];
+            recitedAyahsMap.set(fallbackKey, accumulatedTokensRef.current);
           }
 
           const allEvaluatedWords: WordAlignmentResult[] = [];
           const referenceTexts: string[] = [];
           const recognizedTexts: string[] = [];
 
-          for (const aNum of recitedAyahNumbers) {
-            const ayahTarget = pageAyahs.find((a) => a.ayahNumber === aNum) || {
-              surahNumber: targetSurahNum,
-              ayahNumber: aNum,
-            };
-            const vKey = `${ayahTarget.surahNumber}:${aNum}`;
-            const tokens = recitedAyahsMap.get(aNum) || [];
+          for (const key of recitedKeys) {
+            const aNum = key % 1000;
+            const sNum = Math.floor(key / 1000);
+            const vKey = `${sNum}:${aNum}`;
+            const tokens = recitedAyahsMap.get(key) || [];
 
             try {
               const alignResult = alignmentEngineRef.current.alignAyah(
@@ -555,16 +551,30 @@ export const RecitationHUD: React.FC = () => {
                 { acousticConfidence: meanConfidence }
               );
 
+              // Translate the reference word indices into the page word indices
+              // the Mushaf renders, so highlights land on the right word.
+              const referenceWords = alignmentEngineRef.current.getReferenceWords(vKey);
+              const renderedWords = getRenderedAyahWordsByPage(
+                getPageOfAyah(sNum, aNum) ?? currentPage,
+                sNum,
+                aNum
+              );
+              const pageIndexMap = buildAyahWordIndexMap(renderedWords, referenceWords);
+
               // Tag each word with its exact ayahNumber & surahNumber
               for (const w of alignResult.words) {
                 w.ayahNumber = aNum;
-                w.surahNumber = ayahTarget.surahNumber;
+                w.surahNumber = sNum;
+                const pageIndex = pageIndexMap[w.wordIndex];
+                if (pageIndex !== undefined && pageIndex >= 0) {
+                  w.pageWordIndex = pageIndex;
+                }
                 allEvaluatedWords.push(w);
               }
 
               // Reveal all words for this ayah so the verse is fully visible on the Mushaf
               for (const word of alignResult.words) {
-                revealWordHint(aNum, word.wordIndex);
+                revealWordHint(key, word.pageWordIndex ?? word.wordIndex);
               }
 
               // Canonical reference text
@@ -588,7 +598,7 @@ export const RecitationHUD: React.FC = () => {
                     descriptionAr: word.errorDetails || 'تعثر في التسميع',
                     wordExpected: word.uthmaniText,
                     wordDetected: word.detectedPhonemes,
-                    index: word.wordIndex,
+                    index: word.pageWordIndex ?? word.wordIndex,
                   });
                 }
               }
@@ -621,6 +631,7 @@ export const RecitationHUD: React.FC = () => {
           setAcquisitionStep('review');
         }
         setIsReviewOpen(false);
+        // Don't auto-advance; wait for user to recite first ayah of next page
       } catch (e) {
         console.error('Recitation processing error:', e);
         setStatus('completed');
@@ -659,10 +670,10 @@ export const RecitationHUD: React.FC = () => {
       {/* Tarteel-Style Sleek Floating Action Island */}
       <div
         data-testid="recitation-hud"
-        className="fixed bottom-6 inset-x-0 mx-auto w-fit max-w-[95vw] px-2 z-40 transition-all duration-300"
+        className="fixed bottom-6 inset-x-0 mx-auto w-fit max-w-[95vw] px-2 z-40 transition-[transform,opacity] duration-300"
         dir="rtl"
       >
-        <div className="bg-white/95 dark:bg-[#1a201c]/95 backdrop-blur-2xl border border-mushaf-gold/50 dark:border-darkMushaf-gold/40 rounded-full shadow-[0_12px_40px_-6px_rgba(0,0,0,0.22)] py-1.5 px-3 sm:px-4 flex items-center justify-center gap-3 sm:gap-4 select-none">
+        <div className="mushaf-material bg-white/72 dark:bg-[#1a201c]/72 backdrop-blur-2xl backdrop-saturate-150 border border-mushaf-gold/50 dark:border-darkMushaf-gold/40 rounded-full shadow-[0_12px_40px_-6px_rgba(0,0,0,0.22)] py-1.5 px-3 sm:px-4 flex items-center justify-center gap-3 sm:gap-4 select-none">
           
           {/* Right Flank: Current Ayah Context or Recitation Status */}
           <div className="flex items-center gap-2 shrink-0">
@@ -671,7 +682,7 @@ export const RecitationHUD: React.FC = () => {
                 {reviewStats && ((recognitionConfidence !== null && recognitionConfidence < 65) || reviewStats.evaluatedWords === 0) ? (
                   <button
                     onClick={() => setIsReviewOpen(true)}
-                    className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 text-xs font-bold font-arabic px-3 py-1.5 rounded-full bg-slate-500/15 hover:bg-slate-500/25 transition-all cursor-pointer border border-slate-500/25 shadow-sm"
+                    className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 text-xs font-bold font-arabic px-3 py-1.5 rounded-full bg-slate-500/15 hover:bg-slate-500/25 transition-colors duration-150 cursor-pointer border border-slate-500/25 shadow-sm"
                     title="اضغط لعرض تفاصيل المراجعة"
                   >
                     <HelpCircle className="w-3.5 h-3.5 text-slate-500" />
@@ -680,7 +691,7 @@ export const RecitationHUD: React.FC = () => {
                 ) : reviewStats && reviewStats.errorCount === 0 && (alignmentAccuracy >= 90 || reviewStats.recallAccuracy >= 90) ? (
                   <button
                     onClick={() => setIsReviewOpen(true)}
-                    className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300 text-xs font-bold font-arabic px-3 py-1.5 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 transition-all cursor-pointer border border-emerald-500/30 shadow-sm"
+                    className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300 text-xs font-bold font-arabic px-3 py-1.5 rounded-full bg-emerald-500/15 hover:bg-emerald-500/25 transition-colors duration-150 cursor-pointer border border-emerald-500/30 shadow-sm"
                     title="اضغط لعرض تفاصيل المراجعة"
                   >
                     <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
@@ -689,7 +700,7 @@ export const RecitationHUD: React.FC = () => {
                 ) : (
                   <button
                     onClick={() => setIsReviewOpen(true)}
-                    className="flex items-center gap-1.5 text-amber-900 dark:text-amber-200 text-xs font-bold font-arabic px-3 py-1.5 rounded-full bg-amber-500/15 hover:bg-amber-500/25 transition-all cursor-pointer border border-amber-500/30 shadow-sm"
+                    className="flex items-center gap-1.5 text-amber-900 dark:text-amber-200 text-xs font-bold font-arabic px-3 py-1.5 rounded-full bg-amber-500/15 hover:bg-amber-500/25 transition-colors duration-150 cursor-pointer border border-amber-500/30 shadow-sm"
                     title="اضغط لعرض تفاصيل المراجعة"
                   >
                     <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
@@ -721,7 +732,7 @@ export const RecitationHUD: React.FC = () => {
                 <button
                   data-testid="retry-recitation-btn"
                   onClick={handleRetryRecitation}
-                  className="w-10 h-10 rounded-full bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-gold/20 text-mushaf-ink border border-mushaf-border/80 flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-sm"
+                  className="w-10 h-10 rounded-full bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-gold/20 text-mushaf-ink border border-mushaf-border/80 flex items-center justify-center transition-[transform,background-color,box-shadow] duration-150 hover:scale-105 active:scale-95 shadow-sm"
                   title="إعادة التسميع"
                 >
                   <RotateCcw className="w-4 h-4 text-mushaf-gold" />
@@ -729,7 +740,7 @@ export const RecitationHUD: React.FC = () => {
                 <button
                   data-testid="mic-toggle-btn"
                   onClick={toggleMic}
-                  className="w-12 h-12 rounded-full bg-gradient-to-tr from-emerald-800 via-mushaf-emerald to-emerald-600 hover:from-emerald-700 hover:to-emerald-500 text-white shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95 ring-2 ring-emerald-500/20"
+                  className="w-12 h-12 rounded-full bg-gradient-to-tr from-emerald-800 via-mushaf-emerald to-emerald-600 hover:from-emerald-700 hover:to-emerald-500 text-white shadow-lg flex items-center justify-center transition-[transform,background-color,box-shadow] duration-150 hover:scale-105 active:scale-95 ring-2 ring-emerald-500/20"
                   title="تسميع جديد"
                 >
                   <Mic className="w-5 h-5" />
@@ -747,7 +758,7 @@ export const RecitationHUD: React.FC = () => {
                 <button
                   data-testid="mic-toggle-btn"
                   onClick={toggleMic}
-                  className={`relative w-13 h-13 sm:w-14 sm:h-14 rounded-full text-white shadow-xl flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 ${
+                  className={`relative w-13 h-13 sm:w-14 sm:h-14 rounded-full text-white shadow-xl flex items-center justify-center transition-[transform,background-color,box-shadow] duration-150 hover:scale-105 active:scale-95 ${
                     micActive
                       ? 'bg-gradient-to-tr from-red-600 to-rose-500 shadow-rose-500/40 animate-pulse ring-4 ring-red-500/25'
                       : 'bg-gradient-to-tr from-emerald-800 via-mushaf-emerald to-emerald-600 shadow-emerald-700/35 hover:shadow-emerald-700/50 ring-4 ring-emerald-600/15 hover:ring-emerald-600/30'
@@ -768,7 +779,7 @@ export const RecitationHUD: React.FC = () => {
                 <button
                   data-testid="next-ayah-btn"
                   onClick={handleNextAyah}
-                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-700 to-mushaf-emerald hover:from-emerald-800 hover:to-emerald-700 text-white font-arabic font-bold text-xs shadow-md transition-all hover:scale-105 active:scale-95"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-emerald-700 to-mushaf-emerald hover:from-emerald-800 hover:to-emerald-700 text-white font-arabic font-bold text-xs shadow-md transition-[transform,background-color,box-shadow] duration-150 hover:scale-105 active:scale-95"
                 >
                   <span>الآية التالية</span>
                   <ArrowLeft className="w-3.5 h-3.5" />
@@ -776,7 +787,7 @@ export const RecitationHUD: React.FC = () => {
                 <button
                   data-testid="open-visual-review-btn"
                   onClick={() => setIsReviewOpen(true)}
-                  className="p-1.5 rounded-full bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-gold/20 text-mushaf-ink border border-mushaf-border/80 transition-all hover:scale-105 active:scale-95 shadow-sm"
+                  className="p-1.5 rounded-full bg-mushaf-parchment dark:bg-darkMushaf-surface hover:bg-mushaf-gold/20 text-mushaf-ink border border-mushaf-border/80 transition-[transform,background-color,box-shadow] duration-150 hover:scale-105 active:scale-95 shadow-sm"
                   title="عرض المراجعة والتفاصيل"
                 >
                   <Sparkles className="w-4 h-4 text-mushaf-gold" />
@@ -791,7 +802,7 @@ export const RecitationHUD: React.FC = () => {
                 {animatedBars.slice(0, 7).map((level, i) => (
                   <span
                     key={i}
-                    className="w-1 bg-emerald-600 dark:bg-emerald-400 rounded-full transition-all duration-100"
+                    className="w-1 bg-emerald-600 dark:bg-emerald-400 rounded-full transition-[height] duration-100"
                     style={{ height: `${Math.max(6, Math.min(22, Math.round((level / 100) * 22)))}px` }}
                   />
                 ))}
@@ -812,7 +823,7 @@ export const RecitationHUD: React.FC = () => {
                     }
                   }
                 }}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-arabic font-bold transition-all shadow-sm active:scale-95 border ${
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-arabic font-bold transition-[transform,background-color,box-shadow] duration-150 shadow-sm active:scale-95 border ${
                   ghostTier > 0
                     ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border-emerald-500/30'
                     : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-900 dark:text-amber-200 border-amber-500/30'

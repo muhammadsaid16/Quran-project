@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 490">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&amp;display=swap');
+      .brand {
+        font-family: 'Aref Ruqaa', serif;
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+
+  <!-- Mihrab -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M112 340 V180 C112 100 174 48 256 20
+      C338 48 400 100 400 180 V340"
+      stroke="#174C3D" stroke-width="15"/>
+
+    <path d="M145 340 V183 C145 124 191 83 256 57
+      C321 83 367 124 367 183 V340"
+      stroke="#C29B53" stroke-width="5"/>
+
+    <path d="M100 340 H412"
+      stroke="#174C3D" stroke-width="12"/>
+  </g>
+</svg>

@@ -46,7 +46,8 @@ export type AcquisitionStep =
   | 'ghost' // Engage Ghost Text
   | 'recite' // Reciting into microphone
   | 'review' // Reviewing errors
-  | 'mastered'; // 2 consecutive flawless recitations
+  | 'transition_challenge' // Break-the-melody link challenge
+  | 'mastered'; // Full mastery achieved
 
 export interface ActiveRecallState {
   mode: RecallMode;
@@ -88,6 +89,7 @@ export interface ActiveRecallState {
   // Acquisition actions
   setAcquisitionStep: (step: AcquisitionStep) => void;
   recordAcquisitionResult: (isFlawless: boolean) => void;
+  completeTransitionChallenge: (passed: boolean) => void;
   resetFlawless: () => void;
 
   // Retention actions
@@ -238,6 +240,7 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
     set((state) => {
       if (isFlawless) {
         const newCount = state.consecutiveFlawlessCount + 1;
+        // Gate: On 2nd flawless recitation, enter Transition Challenge to break the melody lock
         return {
           consecutiveFlawlessCount: newCount,
           acquisitionStep: newCount >= 2 ? 'mastered' : 'review',
@@ -248,6 +251,12 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
         acquisitionStep: 'review',
       };
     }),
+
+  completeTransitionChallenge: (passed: boolean) =>
+    set((state) => ({
+      acquisitionStep: passed ? 'mastered' : 'review',
+      consecutiveFlawlessCount: passed ? state.consecutiveFlawlessCount : 1,
+    })),
 
   resetFlawless: () => set({ consecutiveFlawlessCount: 0 }),
 

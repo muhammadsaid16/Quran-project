@@ -38,6 +38,8 @@ export const DashboardView: React.FC = () => {
     isOnline,
     isInstallable,
     isStoragePersisted,
+    isOfflinePackageInstalled,
+    setInstallModalOpen,
     storageEstimate,
     promptInstall,
     requestPersistentStorage,
@@ -67,7 +69,7 @@ export const DashboardView: React.FC = () => {
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-mushaf-gold-light text-xs font-arabic mb-3">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>نظام الاسترجاع المعرفي للقرآن الكريم (V2.0)</span>
+            <span>نظام الاسترجاع المعرفي للقرآن الكريم (ع٢٫٠)</span>
           </div>
 
           <h1 className="font-arabic font-extrabold text-2xl sm:text-3xl lg:text-4xl leading-tight mb-2">
@@ -113,13 +115,13 @@ export const DashboardView: React.FC = () => {
           </div>
           <div className="flex items-baseline gap-2">
             <span suppressHydrationWarning className="font-uthmani text-3xl font-bold text-mushaf-ink dark:text-darkMushaf-ink">
-              {masteredPagesCount}
+              {typeof masteredPagesCount === 'number' ? masteredPagesCount.toLocaleString('ar-EG') : masteredPagesCount}
             </span>
             <span className="text-xs font-arabic text-emerald-600 font-semibold">
-              ≥ 95% استرجاع
+              ≥ ٩٥٪ استرجاع
             </span>
           </div>
-          <p suppressHydrationWarning className="text-[11px] text-mushaf-ink-muted mt-1">من إجمالي {totalMemorizedPages} صفحة محفوظة</p>
+          <p suppressHydrationWarning className="text-[11px] text-mushaf-ink-muted mt-1">من إجمالي {typeof totalMemorizedPages === 'number' ? totalMemorizedPages.toLocaleString('ar-EG') : totalMemorizedPages} صفحة محفوظة</p>
         </div>
 
         {/* Due Today Queue */}
@@ -134,7 +136,7 @@ export const DashboardView: React.FC = () => {
           </div>
           <div className="flex items-baseline gap-2">
             <span suppressHydrationWarning className="font-uthmani text-3xl font-bold text-amber-600 dark:text-amber-400">
-              {reviewDuePagesCount}
+              {typeof reviewDuePagesCount === 'number' ? reviewDuePagesCount.toLocaleString('ar-EG') : reviewDuePagesCount}
             </span>
             <span className="text-xs font-arabic text-amber-600 font-semibold">
               صفحة مستحقة
@@ -155,10 +157,10 @@ export const DashboardView: React.FC = () => {
           </div>
           <div className="flex items-baseline gap-2">
             <span suppressHydrationWarning className="font-uthmani text-3xl font-bold text-red-600 dark:text-red-400">
-              {highRiskPagesCount}
+              {typeof highRiskPagesCount === 'number' ? highRiskPagesCount.toLocaleString('ar-EG') : highRiskPagesCount}
             </span>
             <span className="text-xs font-arabic text-red-600 font-semibold">
-              &lt; 85% استرجاع
+              &lt; ٨٥٪ استرجاع
             </span>
           </div>
           <p className="text-[11px] text-mushaf-ink-muted mt-1">تحتوي على تعثرات أو نسيان سابق</p>
@@ -176,13 +178,13 @@ export const DashboardView: React.FC = () => {
           </div>
           <div className="flex items-baseline gap-2">
             <span suppressHydrationWarning className="font-uthmani text-3xl font-bold text-orange-600 dark:text-orange-400">
-              {streakDays}
+              {typeof streakDays === 'number' ? streakDays.toLocaleString('ar-EG') : streakDays}
             </span>
             <span className="text-xs font-arabic text-orange-600 font-semibold">
               يومًا متواصلًا
             </span>
           </div>
-          <p suppressHydrationWarning className="text-[11px] text-mushaf-ink-muted mt-1">اليوم: {todayRecitedCount} / {dailyGoal} آية</p>
+          <p suppressHydrationWarning className="text-[11px] text-mushaf-ink-muted mt-1">اليوم: {typeof todayRecitedCount === 'number' ? todayRecitedCount.toLocaleString('ar-EG') : todayRecitedCount} / {typeof dailyGoal === 'number' ? dailyGoal.toLocaleString('ar-EG') : dailyGoal} آية</p>
         </div>
 
       </div>
@@ -273,7 +275,7 @@ export const DashboardView: React.FC = () => {
             </div>
             <div>
               <h3 className="font-arabic font-bold text-sm text-mushaf-ink dark:text-darkMushaf-ink">
-                حالة التشغيل دون اتصال (100% Local-First Offline PWA)
+                حالة التشغيل دون اتصال (١٠٠٪ Local-First Offline PWA)
               </h3>
               <p className="font-arabic text-xs text-mushaf-ink-muted dark:text-darkMushaf-ink-muted">
                 يعمل نموذج الذكاء الاصطناعي (Zipformer INT8) ومحرك FSRS وقاعدة البيانات محلياً على جهازك دون إرسال أي صوت للخوادم.
@@ -282,13 +284,17 @@ export const DashboardView: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            {isMounted && isInstallable && (
+            {isMounted && (
               <button
-                onClick={promptInstall}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-mushaf-emerald hover:bg-emerald-700 text-white text-xs font-arabic font-bold transition-all shadow-xs"
+                onClick={() => setInstallModalOpen(true)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-arabic font-bold transition-all shadow-xs ${
+                  isOfflinePackageInstalled
+                    ? 'bg-emerald-600/15 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40 hover:bg-emerald-600/25'
+                    : 'bg-mushaf-emerald hover:bg-emerald-700 text-white animate-pulse'
+                }`}
               >
                 <Download className="w-3.5 h-3.5" />
-                <span>تثبيت التطبيق</span>
+                <span>{isOfflinePackageInstalled ? 'إدارة الموارد المحلية (أوفلاين)' : 'تثبيت التطبيق والموارد (~98MB)'}</span>
               </button>
             )}
 
@@ -309,7 +315,7 @@ export const DashboardView: React.FC = () => {
             <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
             <div>
               <span className="font-bold">الموديل الصوتي:</span>
-              <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">محفوظ في ذاكرة المتصفح (72.7MB INT8)</span>
+              <span className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">FastConformer (83MB) + WASM (13.3MB)</span>
             </div>
           </div>
 
@@ -333,7 +339,7 @@ export const DashboardView: React.FC = () => {
             <div>
               <span className="font-bold">الاتصال بالشبكة:</span>
               <span suppressHydrationWarning className="text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mr-1">
-                {(!isMounted || isOnline) ? 'متصل (يمكن التسميع بدون نت)' : 'غير متصل (يعمل 100% بكفاءة كاملة)'}
+                {(!isMounted || isOnline) ? 'متصل (يمكن التسميع بدون نت)' : 'غير متصل (يعمل ١٠٠٪ بكفاءة كاملة)'}
               </span>
             </div>
           </div>

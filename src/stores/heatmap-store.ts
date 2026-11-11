@@ -258,9 +258,15 @@ export const useHeatmapStore = create<HeatmapStoreState>((set, get) => ({
       rating,
       recordingDurationMs: metadata.recording_duration_ms,
       inferenceDurationMs: metadata.inference_duration_ms,
+      // Persist the REAL session facts (not just rating-derived zeros):
+      // error counts, word-level error positions, and uncertainty verdicts —
+      // achievement accuracy cards audit exactly these fields.
       metrics: {
         confidence: metadata.alignment_confidence,
+        errorCount: metadata.error_count,
+        errorPositions: metadata.error_positions,
       },
+      resultStatusOverride: metadata.result_status,
     });
 
     // Immediate reactive refresh of the heatmap

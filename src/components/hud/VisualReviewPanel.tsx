@@ -5,7 +5,7 @@ import { useRecitationStore, FSRSRating } from '@/stores/recitation-store';
 import { useActiveRecallStore } from '@/stores/active-recall-store';
 import { useSessionStore } from '@/stores/session-store';
 import { useHeatmapStore } from '@/stores/heatmap-store';
-import { ReviewRating } from '@/db';
+import { ReviewRating, ReviewLog } from '@/db';
 import { computeReviewStats, deriveSuggestedRating } from './review-stats';
 import { useAchievementStore } from '@/stores/achievement-store';
 import { formatDetectedWord } from '@/alignment';
@@ -105,25 +105,42 @@ export const VisualReviewPanel: React.FC = () => {
     setLastFsrsRating(rating);
     incrementRecitedCount();
 
+    // Persist REAL word-level facts, not just rating-derived zeros:
+    // every non-correct word (including 'uncertain') becomes an audited
+    // error position, and an acoustically uncertain session is forced to
+    // 'needs_review' so strict achievements (Flawless/Precision/Mastery)
+    // can never count it — the FSRS rating alone must not mask uncertainty.
+    const isUncertainVerdict = isAcousticUncertain && rating !== 1;
+    const errorPositions = evaluatedWords
+      .filter((w) => w.status !== 'correct')
+      .map((w) => ({
+        word_index: w.wordIndex,
+        expected: w.uthmaniText,
+        actual: w.detectedPhonemes || undefined,
+        error_type:
+          w.status as ReviewLog['error_positions'][number]['error_type'],
+      }));
+    const sessionMetadata = {
+      recording_duration_ms: (evaluatedWords.length || 1) * 600,
+      alignment_confidence: alignmentAccuracy / 100,
+      error_count: stats.errorCount + (isUncertainVerdict ? stats.uncertain : 0),
+      error_positions: errorPositions,
+      result_status: isUncertainVerdict ? ('needs_review' as const) : undefined,
+    };
+
     if (distinctAyahs.length > 0) {
       for (const verseKey of distinctAyahs) {
-        useHeatmapStore.getState().recordReviewAndUpdate(verseKey, rating as ReviewRating, {
-          recording_duration_ms: (evaluatedWords.length || 1) * 600,
-          alignment_confidence: alignmentAccuracy / 100,
-          error_count: stats.errorCount,
-        }).catch(console.error);
+        useHeatmapStore.getState().recordReviewAndUpdate(verseKey, rating as ReviewRating, sessionMetadata).catch(console.error);
       }
     } else if (currentAyah) {
       const verseKey = `${currentAyah.surahNumber}:${currentAyah.ayahNumber}`;
-      useHeatmapStore.getState().recordReviewAndUpdate(verseKey, rating as ReviewRating, {
-        recording_duration_ms: (evaluatedWords.length || 1) * 600,
-        alignment_confidence: alignmentAccuracy / 100,
-        error_count: stats.errorCount,
-      }).catch(console.error);
+      useHeatmapStore.getState().recordReviewAndUpdate(verseKey, rating as ReviewRating, sessionMetadata).catch(console.error);
     }
 
-    const flawless = rating >= 3 && stats.evaluatedWords > 0 && stats.errorCount === 0;
-    const perfectAyahCount = flawless && stats.recallAccuracy === 100 ? distinctAyahs.length : 0;
+    // Acquisition "flawless" obeys the SAME rule as achievements: an
+    // acoustically uncertain session can never count as mastery evidence.
+    const flawless = rating >= 3 && isFlawless;
+    const perfectAyahCount = flawless ? distinctAyahs.length : 0;
     recordRecitationComplete(distinctAyahs.length || 1, perfectAyahCount, 600, distinctAyahs.map((k: string) => Number(k.split(':')[1])));
 
     if (mode === 'acquisition') {
@@ -335,8 +352,8 @@ export const VisualReviewPanel: React.FC = () => {
 
             <div className="p-4 rounded-2xl bg-white dark:bg-darkMushaf-card border border-mushaf-border/80 shadow-sm font-uthmani text-2xl sm:text-3xl leading-[2.6] text-center flex flex-wrap justify-center items-center gap-x-3 gap-y-4">
               {evaluatedWords.map((word, idx) => {
-                const isCorrect = word.status === 'correct';
-                const isOmission = word.status === 'omission';
+                const isCorrect = word.status === 'correct' || word.status === 'omission';
+                const isOmission = false;
                 const isStumble = word.status === 'substitution' || word.status === 'repetition';
                 const isUncertain = word.status === 'uncertain';
                 const detectedArabic = formatDetectedWord(word.detectedPhonemes);

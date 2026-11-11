@@ -40,7 +40,16 @@ export interface PhonemeAlignmentStep {
 }
 
 export interface WordAlignmentResult {
+  /** Index of the word inside the reference (phoneme dataset) word list. */
   wordIndex: number;
+  /**
+   * Index of the word inside the rendered Mushaf page.
+   *
+   * The two spaces differ: the reference dataset numbers only the words of the
+   * ayah, while the Mushaf dataset also counts the prepended Basmalah and the
+   * standalone waqf marks. `undefined` when the word could not be placed.
+   */
+  pageWordIndex?: number;
   ayahNumber?: number;
   surahNumber?: number;
   uthmaniText: string;
@@ -97,4 +106,36 @@ export interface StreamingAlignmentResult {
   progressRatio: number; // 0.0 - 1.0
   words: WordAlignmentResult[];
   latestStatus: WordRecitationStatus;
+}
+
+/**
+ * Where inside an ayah a hypothesis matched, ignoring the strict
+ * word-by-word order. Used to detect that a reciter resumed mid-ayah.
+ */
+export interface AyahLocation {
+  verseKey: string;
+  /** Number of phoneme tokens that matched the reference exactly. */
+  matchedPhonemes: number;
+  /** Number of phoneme tokens aligned to the reference (match or near-miss). */
+  alignedPhonemes: number;
+  /** Reference word indices that received at least one match. */
+  matchedWordIndices: number[];
+  /** Reference word indices that received at least one aligned phoneme. */
+  alignedWordIndices: number[];
+  /** Index of the first matched reference word (-1 when nothing matched). */
+  firstMatchedWord: number;
+  /** Index of the first hypothesis token that matched (-1 when nothing matched). */
+  firstMatchedHypIndex: number;
+  /** Index of the FIRST hypothesis token of the matched segment (-1 when none). */
+  startHypothesisIndex: number;
+  /** Index of the last hypothesis token that matched (-1 when nothing matched). */
+  lastMatchedHypIndex: number;
+  /** Reference word the alignment ENDED on (-1 when nothing matched). */
+  endReferenceWord: number;
+  /** Reference word the alignment STARTED on (-1 when nothing matched). */
+  startReferenceWord: number;
+  /** Hypothesis tokens that fall inside the matched segment. */
+  coveredHypothesisTokens: number;
+  /** How many reference words matched. */
+  matchedWords: number;
 }

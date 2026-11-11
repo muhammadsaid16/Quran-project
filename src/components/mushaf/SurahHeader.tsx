@@ -49,7 +49,7 @@ export const SurahHeader: React.FC<SurahHeaderProps> = ({
         {/* Center Title: Surah Name in authentic ornate styling */}
         <div className="flex items-center gap-2">
           <span className="text-mushaf-gold dark:text-darkMushaf-gold font-serif text-sm">۞</span>
-          <h2 className="font-uthmani text-xl sm:text-2xl font-bold text-mushaf-ink dark:text-darkMushaf-ink tracking-wide">
+          <h2 className="font-uthmani text-xl sm:text-2xl font-bold text-mushaf-ink dark:text-darkMushaf-ink">
             سُورَةُ {cleanName}
           </h2>
           <span className="text-mushaf-gold dark:text-darkMushaf-gold font-serif text-sm">۞</span>

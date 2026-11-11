@@ -9,6 +9,13 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+import {
+  DownloadProgress,
+  isOfflinePackageCached,
+  downloadAndCacheOfflinePackage,
+  clearOfflinePackage,
+} from '@/lib/offline-installer';
+
 export interface PWAState {
   isOnline: boolean;
   isInstallable: boolean;
@@ -17,11 +24,22 @@ export interface PWAState {
   storageEstimate: { usageMB: number; quotaMB: number } | null;
   deferredPrompt: BeforeInstallPromptEvent | null;
 
+  // Offline Package Installation State
+  isInstallModalOpen: boolean;
+  isOfflinePackageInstalled: boolean;
+  downloadStatus: 'idle' | 'downloading' | 'completed' | 'error';
+  downloadProgress: DownloadProgress | null;
+  downloadError: string | null;
+
   // Actions
   setIsOnline: (online: boolean) => void;
+  setInstallModalOpen: (open: boolean) => void;
   initPWA: () => void;
   promptInstall: () => Promise<boolean>;
   requestPersistentStorage: () => Promise<boolean>;
+  checkOfflinePackageInstalled: () => Promise<boolean>;
+  startOfflineDownload: () => Promise<boolean>;
+  deleteOfflinePackage: () => Promise<void>;
 }
 
 export const usePWAStore = create<PWAState>((set, get) => ({
@@ -32,10 +50,20 @@ export const usePWAStore = create<PWAState>((set, get) => ({
   storageEstimate: null,
   deferredPrompt: null,
 
+  isInstallModalOpen: false,
+  isOfflinePackageInstalled: false,
+  downloadStatus: 'idle',
+  downloadProgress: null,
+  downloadError: null,
+
   setIsOnline: (isOnline) => set({ isOnline }),
+  setInstallModalOpen: (isInstallModalOpen) => set({ isInstallModalOpen }),
 
   initPWA: () => {
     if (typeof window === 'undefined') return;
+
+    // Check if offline package is already cached
+    get().checkOfflinePackageInstalled();
 
     // Initialize actual client online status after mount
     if (typeof navigator !== 'undefined') {
@@ -124,5 +152,64 @@ export const usePWAStore = create<PWAState>((set, get) => ({
       }
     }
     return false;
+  },
+
+  checkOfflinePackageInstalled: async () => {
+    try {
+      const cached = await isOfflinePackageCached();
+      set({ isOfflinePackageInstalled: cached });
+      return cached;
+    } catch {
+      return false;
+    }
+  },
+
+  startOfflineDownload: async () => {
+    set({
+      downloadStatus: 'downloading',
+      downloadError: null,
+      downloadProgress: null,
+    });
+
+    try {
+      // Trigger promptInstall concurrently if available
+      get().promptInstall().catch(() => {});
+
+      await downloadAndCacheOfflinePackage((progress) => {
+        set({ downloadProgress: progress });
+      });
+
+      set({
+        downloadStatus: 'completed',
+        isOfflinePackageInstalled: true,
+      });
+
+      // Update quota estimate after download
+      if (navigator.storage && navigator.storage.estimate) {
+        navigator.storage.estimate().then((estimate) => {
+          const usageMB = Math.round((estimate.usage || 0) / (1024 * 1024));
+          const quotaMB = Math.round((estimate.quota || 0) / (1024 * 1024));
+          set({ storageEstimate: { usageMB, quotaMB } });
+        }).catch(() => {});
+      }
+
+      return true;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'حدث خطأ أثناء تحميل حزمة الموارد';
+      set({
+        downloadStatus: 'error',
+        downloadError: msg,
+      });
+      return false;
+    }
+  },
+
+  deleteOfflinePackage: async () => {
+    await clearOfflinePackage();
+    set({
+      isOfflinePackageInstalled: false,
+      downloadStatus: 'idle',
+      downloadProgress: null,
+    });
   },
 }));

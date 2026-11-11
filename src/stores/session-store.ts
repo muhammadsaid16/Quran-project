@@ -40,7 +40,6 @@ export const useSessionStore = create<SessionState>((set) => ({
   dailyGoal: 20,
   todayRecitedCount: 0,
   streakDays: 0,
-  achievementBadgeVisible: false,
   audioSensitivity: 75,
   isOnline: true,
 

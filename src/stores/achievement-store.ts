@@ -1,9 +1,12 @@
 'use client';
 
 import { create } from 'zustand';
-import { QuranCognitiveDB, UserAchievement, ReviewRating } from '@/db/schema';
+import { UserAchievement } from '@/db/schema';
 import {
   evaluateAchievements,
+  isPerfectRecitation,
+  computeCurrentStreak,
+  computeLongestStreak,
   type AchievementUserProgress,
   type EvaluationResult,
 } from '@/db/achievement-engine';
@@ -54,7 +57,7 @@ export const useAchievementStore = create<AchievementState>((set, get) => ({
     const evaluations = evaluateAchievements(progress);
     const newlyUnlocked = evaluations.filter((e) => e.unlocked && !state.unlocked.some((u) => u.achievementId === e.definition.id));
     if (newlyUnlocked.length > 0) {
-      const tx = db.transaction('rw', db.achievements, async () => {
+      await db.transaction('rw', db.achievements, async () => {
         for (const e of newlyUnlocked) {
           await db.achievements.put({
             achievementId: e.definition.id,
@@ -114,84 +117,51 @@ async function computeProgressFromDB(): Promise<AchievementUserProgress> {
   const allLogs = await db.review_logs.toArray();
   const ayahLogs = allLogs.filter((l) => l.target_type === 'ayah');
 
+  // NOTE on wording: 'recitations' == completed review SESSIONS (any verdict),
+  // NOT distinct ayahs. The Quran has 6,236 ayahs, so the top memorization
+  // milestone (6,236 reviews) equals exactly one full pass over that count and
+  // is reached through SESSIONS/repeats — not by covering 6,236 distinct ayahs
+  // (that is what the separate Quran Coverage card measures).
   const totalRecitations = allLogs.length;
-  const perfectRecitations = allLogs.filter((l) => l.error_count === 0).length;
-
-  // Distinct ayahs ever recited (verse keys like "2:255")
-  const loggedKeys = [...new Set(ayahLogs.map((l) => l.target_id))];
-  const distinctAyahsRecited = loggedKeys.length;
+  const successfulRecitations = allLogs.filter((l) => l.result_status === 'passed').length;
+  // STRICT Flawless definition: passed verdict, zero errors, no flagged
+  // (incl. uncertain) words — confidence is never consulted (see engine).
+  const perfectRecitations = allLogs.filter(isPerfectRecitation).length;
+  // Anti-farming: DISTINCT verse keys only — repeating one ayah can never
+  // inflate Quran Coverage beyond 1.
+  const uniqueAyahsReviewed = new Set(ayahLogs.map((l) => l.target_id)).size;
 
   const studyStreak = computeCurrentStreak(allLogs);
   const longestStreak = computeLongestStreak(allLogs);
   const totalRecitationMinutes =
-    allLogs.reduce((acc, l) => acc + (l.recording_duration_ms || 0), 0) / 1000;
+    allLogs.reduce((acc, l) => acc + (l.recording_duration_ms || 0), 0) / 60000;
 
   // Resolve recited verse keys to Medina pages and Juz coverage rate
-  const rows = loggedKeys.length
-    ? await db.quran_ayahs.where('verse_key').anyOf(loggedKeys).toArray()
+  const verseKeys = [...new Set(ayahLogs.map((l) => l.target_id))];
+  const rows = verseKeys.length
+    ? await db.quran_ayahs.where('verse_key').anyOf(verseKeys).toArray()
     : [];
   const pagesTouched = [...new Set(rows.map((r) => r.page))].sort((a, b) => a - b);
 
   const juzCompleted: number[] = [];
-  for (const juz of [29, 30]) {
+  for (let juz = 1; juz <= 30; juz++) {
     const totalInJuz = await db.quran_ayahs.where('juz').equals(juz).count();
     if (totalInJuz === 0) continue;
+    // Coverage rule: EVERY ayah of the juz reviewed >= 1 time — sessions of
+    // uncertain verdict still prove exposure (coverage != mastery).
     const covered = rows.filter((r) => r.juz === juz).length;
     if (covered >= totalInJuz) juzCompleted.push(juz);
   }
 
   return {
     totalRecitations,
+    successfulRecitations,
+    uniqueAyahsReviewed,
     perfectRecitations,
     studyStreak,
     longestStreak,
     totalRecitationMinutes,
-    distinctAyahsRecited,
     pagesTouched,
     juzCompleted,
   };
-}
-
-function computeCurrentStreak(logs: { timestamp: Date | string }[]): number {
-  if (logs.length === 0) return 0;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayKey = today.toISOString().slice(0, 10);
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayKey = yesterday.toISOString().slice(0, 10);
-  let streak = 0;
-  for (const log of logs) {
-    const logDate = new Date(log.timestamp).toISOString().slice(0, 10);
-    if (logDate === todayKey || logDate === yesterdayKey) {
-      streak++;
-    } else if (streak > 0) {
-      break;
-    }
-  }
-  return streak;
-}
-
-function computeLongestStreak(logs: { timestamp: Date | string }[]): number {
-  if (logs.length === 0) return 0;
-  const byDay = new Map<string, number>();
-  for (const log of logs) {
-    const day = new Date(log.timestamp).toISOString().slice(0, 10);
-    byDay.set(day, (byDay.get(day) || 0) + 1);
-  }
-  const days = [...byDay.keys()].sort();
-  let longest = 1;
-  let current = 1;
-  for (let i = 1; i < days.length; i++) {
-    const prev = new Date(days[i - 1]);
-    const cur = new Date(days[i]);
-    const diff = (cur.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24);
-    if (diff === 1) {
-      current++;
-      longest = Math.max(longest, current);
-    } else {
-      current = 1;
-    }
-  }
-  return longest;
 }

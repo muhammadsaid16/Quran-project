@@ -46,5 +46,13 @@ next-env.d.ts
 
 # Debug crash logs & python caches
 .reticle-setup-crash.log
+.reticle/
 __pycache__/
 *.pyc
+
+# App packages & tunnels
+cloudflared
+*.apk
+*.aab
+*.zip
+Readme.html

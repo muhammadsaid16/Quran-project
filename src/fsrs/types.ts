@@ -15,6 +15,8 @@ export type FSRSState = 0 | 1 | 2 | 3; // New = 0, Learning = 1, Review = 2, Rel
 export type RatingLabel = 'Again' | 'Hard' | 'Good' | 'Easy';
 
 export interface RecitationEvaluationMetrics {
+  /** Total recorded errors for this session (omissions+substitutions+repetitions). */
+  errorCount?: number;
   omissionsCount?: number;
   substitutionsCount?: number;
   repetitionsCount?: number;
@@ -89,6 +91,13 @@ export interface RecordReviewInput {
   metrics?: RecitationEvaluationMetrics;
   recordingDurationMs?: number;
   inferenceDurationMs?: number;
+  /**
+   * Force the persisted verdict when the caller has better information than
+   * the rating alone — e.g. an acoustically UNCERTAIN session is stored as
+   * 'needs_review' so it can never count toward strict achievements,
+   * regardless of the FSRS rating chosen.
+   */
+  resultStatusOverride?: ReviewResultStatus;
 }
 
 export interface ReviewRecordResult {

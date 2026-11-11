@@ -142,6 +142,17 @@ export const useRecitationStore = create<RecitationState>((set) => ({
           }
         }
         map[`word:${w.wordIndex}`] = w.status;
+
+        // The Mushaf renders the word under its PAGE index, which differs from
+        // the reference index (Basmalah prefix, waqf marks). Store the status
+        // under the page index as well so the highlight lands on the right word.
+        if (w.pageWordIndex !== undefined && aNum !== undefined) {
+          map[`${aNum}:${w.pageWordIndex}`] = w.status;
+          if (sNum !== undefined) {
+            map[`${sNum}:${aNum}:${w.pageWordIndex}`] = w.status;
+          }
+          map[`word:${w.pageWordIndex}`] = w.status;
+        }
       }
       return {
         evaluatedWords: words,

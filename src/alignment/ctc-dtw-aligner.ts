@@ -28,6 +28,28 @@ export interface AlignerExecutionResult {
   latencyMs: number;
 }
 
+/**
+ * Result of a LOCAL alignment: the best matching segment of the reference.
+ */
+export interface LocalAlignmentResult {
+  steps: PhonemeAlignmentStep[];
+  /** Index of the first reference token of the matching segment (-1 when none). */
+  startReferenceIndex: number;
+  /** Index of the last reference token of the matching segment (-1 when none). */
+  endReferenceIndex: number;
+  /** Index of the first hypothesis token of the matching segment (-1 when none). */
+  startHypothesisIndex: number;
+  /** Index of the last hypothesis token of the matching segment (-1 when none). */
+  endHypothesisIndex: number;
+  matches: number;
+  substitutions: number;
+  deletions: number;
+  insertions: number;
+  /** Total score of the matching segment — how well the segment explains the speech. */
+  score: number;
+  latencyMs: number;
+}
+
 export class CtcDtwAligner {
   private static readonly INSERTION_COST = 1.0;
   private static readonly DELETION_COST = 1.0;
@@ -243,6 +265,209 @@ export class CtcDtwAligner {
       accuracy,
       meanConfidence,
       latencyMs,
+    };
+  }
+
+  /**
+   * Aligns a hypothesis against a reference with a LOCAL (Smith-Waterman)
+   * alignment: it finds the best matching SEGMENT of the reference instead of
+   * forcing the whole reference onto the speech.
+   *
+   * This is what makes a mid-ayah start work. A global alignment has to place
+   * every reference token somewhere, so a short mid-ayah excerpt is scattered
+   * across the ayah and matches words the reciter never said. A local
+   * alignment simply asks "which part of this ayah does this speech match?"
+   */
+  public static alignLocal(
+    referenceTokens: string[],
+    hypothesisTokens: (string | StreamingPhonemeToken)[]
+  ): LocalAlignmentResult {
+    const startTime = performance.now();
+
+    const hyp: StreamingPhonemeToken[] = hypothesisTokens.map((t, idx) => {
+      if (typeof t === 'string') {
+        return { token: t, index: idx, timestampMs: idx * 100 };
+      }
+      return {
+        token: t.token,
+        index: t.index ?? idx,
+        confidence: t.confidence,
+        timestampMs: t.timestampMs ?? idx * 100,
+      };
+    });
+
+    const n = referenceTokens.length;
+    const m = hyp.length;
+
+    if (n === 0 || m === 0) {
+      return {
+        steps: [],
+        startReferenceIndex: -1,
+        endReferenceIndex: -1,
+        startHypothesisIndex: -1,
+        endHypothesisIndex: -1,
+        matches: 0,
+        substitutions: 0,
+        deletions: 0,
+        insertions: 0,
+        score: 0,
+        latencyMs: performance.now() - startTime,
+      };
+    }
+
+    const width = m + 1;
+    const dp = new Float32Array((n + 1) * width);
+    const trace = new Uint8Array((n + 1) * width);
+
+    // Match scoring: an exact (or near-exact) token is worth +2, a near-miss
+    // (Madd / Ghunnah / Qalqalah / diacritic variance) +1, anything else -1.
+    // Gaps cost 1 so a segment never grows through empty space.
+    const MATCH_SCORE = 2;
+    const NEAR_MISS_SCORE = 1;
+    const MISMATCH_SCORE = -1;
+    const GAP_COST = 1;
+
+    let bestScore = 0;
+    let bestI = 0;
+    let bestJ = 0;
+
+    for (let i = 1; i <= n; i++) {
+      const rTok = referenceTokens[i - 1];
+      const rowOffset = i * width;
+      const prevRowOffset = (i - 1) * width;
+
+      for (let j = 1; j <= m; j++) {
+        const dist = PhonemeVocabulary.getPhonemeDistance(rTok, hyp[j - 1].token);
+        const diagScore =
+          dist <= this.MATCH_COST_THRESHOLD
+            ? MATCH_SCORE
+            : dist <= 0.5
+            ? NEAR_MISS_SCORE
+            : MISMATCH_SCORE;
+
+        const diag = dp[prevRowOffset + (j - 1)] + diagScore;
+        const up = dp[prevRowOffset + j] - GAP_COST;
+        const left = dp[rowOffset + (j - 1)] - GAP_COST;
+
+        // A local alignment may always restart at zero.
+        let cellValue = 0;
+        let cellTrace = 0;
+        if (diag > cellValue) {
+          cellValue = diag;
+          cellTrace = 0;
+        }
+        if (up > cellValue) {
+          cellValue = up;
+          cellTrace = 1;
+        }
+        if (left > cellValue) {
+          cellValue = left;
+          cellTrace = 2;
+        }
+
+        dp[rowOffset + j] = cellValue;
+        trace[rowOffset + j] = cellTrace;
+
+        if (cellValue > bestScore) {
+          bestScore = cellValue;
+          bestI = i;
+          bestJ = j;
+        }
+      }
+    }
+
+    if (bestScore <= 0) {
+      return {
+        steps: [],
+        startReferenceIndex: -1,
+        endReferenceIndex: -1,
+        startHypothesisIndex: -1,
+        endHypothesisIndex: -1,
+        matches: 0,
+        substitutions: 0,
+        deletions: 0,
+        insertions: 0,
+        score: 0,
+        latencyMs: performance.now() - startTime,
+      };
+    }
+
+    // Backtrack the best segment.
+    const steps: PhonemeAlignmentStep[] = [];
+    let matches = 0;
+    let substitutions = 0;
+    let deletions = 0;
+    let insertions = 0;
+    let i = bestI;
+    let j = bestJ;
+
+    while (i > 0 && j > 0 && dp[i * width + j] > 0) {
+      const action = trace[i * width + j];
+
+      if (action === 0) {
+        const rTok = referenceTokens[i - 1];
+        const hTok = hyp[j - 1];
+        const dist = PhonemeVocabulary.getPhonemeDistance(rTok, hTok.token);
+        const op: AlignmentOp = dist <= this.MATCH_COST_THRESHOLD ? 'match' : 'substitution';
+
+        steps.unshift({
+          refToken: rTok,
+          hypToken: hTok.token,
+          op,
+          cost: dist,
+          refIndex: i - 1,
+          hypIndex: j - 1,
+          timestampMs: hTok.timestampMs,
+          confidence: hTok.confidence,
+        });
+
+        if (op === 'match') matches++;
+        else substitutions++;
+
+        i--;
+        j--;
+      } else if (action === 1) {
+        steps.unshift({
+          refToken: referenceTokens[i - 1],
+          hypToken: null,
+          op: 'deletion',
+          cost: 1.0,
+          refIndex: i - 1,
+          hypIndex: j - 1,
+        });
+        deletions++;
+        i--;
+      } else {
+        steps.unshift({
+          refToken: null,
+          hypToken: hyp[j - 1].token,
+          op: 'insertion',
+          cost: 1.0,
+          refIndex: i - 1,
+          hypIndex: j - 1,
+          timestampMs: hyp[j - 1].timestampMs,
+          confidence: hyp[j - 1].confidence,
+        });
+        insertions++;
+        j--;
+      }
+    }
+
+    const firstStep = steps[0];
+    const lastStep = steps[steps.length - 1];
+
+    return {
+      steps,
+      startReferenceIndex: firstStep?.refIndex ?? -1,
+      endReferenceIndex: lastStep?.refIndex ?? -1,
+      startHypothesisIndex: firstStep?.hypIndex ?? -1,
+      endHypothesisIndex: lastStep?.hypIndex ?? -1,
+      matches,
+      substitutions,
+      deletions,
+      insertions,
+      score: bestScore,
+      latencyMs: performance.now() - startTime,
     };
   }
 

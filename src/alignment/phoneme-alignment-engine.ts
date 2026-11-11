@@ -12,6 +12,7 @@
 import {
   AyahAlignmentResult,
   AlignmentOptions,
+  AyahLocation,
   StreamingAlignmentResult,
   StreamingPhonemeToken,
   RecitationErrorCategory,
@@ -316,6 +317,160 @@ export class PhonemeAlignmentEngine {
       progressRatio,
       words,
       latestStatus: latestWord ? latestWord.status : 'correct',
+    };
+  }
+
+  /**
+   * Returns the reference words of an ayah in the same order the alignment
+   * engine enumerates them (waqf marks excluded).
+   *
+   * Callers that need to map a reference word onto the word the Mushaf
+   * renders must use this list, because the Mushaf dataset numbers its words
+   * differently (it counts the prepended Basmalah and standalone waqf marks).
+   */
+  public getReferenceWords(verseKey: string): string[] {
+    const refData = this.phonemeDatabase.get(verseKey);
+    if (!refData) return [];
+    return WordMapper.extractUthmaniWords(refData.aya_text);
+  }
+
+  /**
+   * Finds where inside an ayah a hypothesis best matches, WITHOUT requiring the
+   * hypothesis to start at the ayah's first word.
+   *
+   * A reciter often resumes mid-ayah (for example starting at
+   * "غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ" inside 1:7). The strictly sequential
+   * `alignIncremental` reports zero matches in that case, which makes the
+   * start-verse detection pick the wrong ayah entirely.
+   *
+   * This method aligns the hypothesis against the whole ayah and reports the
+   * words that were actually matched, so the caller can locate the reciter
+   * inside the ayah.
+   */
+  public locateInAyah(
+    verseKey: string,
+    hypothesisTokens: StreamingPhonemeToken[]
+  ): AyahLocation | null {
+    const refData = this.phonemeDatabase.get(verseKey);
+    if (!refData) return null;
+
+    const refTokens = PhonemeVocabulary.tokenize(refData.aya_phoneme);
+
+    // A LOCAL alignment finds the segment of the ayah that the speech matches.
+    // This is what makes a mid-ayah start detectable: a global alignment would
+    // scatter the excerpt across the whole ayah.
+    const local = CtcDtwAligner.alignLocal(refTokens, hypothesisTokens);
+    if (local.steps.length === 0) {
+      return {
+        verseKey,
+        matchedPhonemes: 0,
+        alignedPhonemes: 0,
+        matchedWordIndices: [],
+        alignedWordIndices: [],
+        firstMatchedWord: -1,
+        firstMatchedHypIndex: -1,
+        startHypothesisIndex: -1,
+        lastMatchedHypIndex: -1,
+        startReferenceWord: -1,
+        endReferenceWord: -1,
+        coveredHypothesisTokens: 0,
+        matchedWords: 0,
+      };
+    }
+
+    const uthmaniWords = WordMapper.extractUthmaniWords(refData.aya_text);
+    const refToWord = WordMapper.buildPhonemeToWordMapping(
+      uthmaniWords,
+      refTokens,
+      refData.aya_phonemes_list,
+      this.wordTokenBounds.get(verseKey)
+    );
+
+    // Count matched phonemes per reference word (no sequential gating).
+    const wordMatchCounts: number[] = new Array(uthmaniWords.length).fill(0);
+    const wordAlignedCounts: number[] = new Array(uthmaniWords.length).fill(0);
+    let matchedPhonemes = 0;
+    let alignedPhonemes = 0;
+    for (const step of local.steps) {
+      if (step.refIndex < 0 || step.refIndex >= refTokens.length) continue;
+      const w = refToWord[step.refIndex] ?? 0;
+      const inRange = w >= 0 && w < uthmaniWords.length;
+
+      if (step.op === 'match') {
+        matchedPhonemes++;
+        if (inRange) wordMatchCounts[w]++;
+      }
+      // A near-miss (Madd/Ghunnah/Qalqalah/diacritic variance) still proves
+      // that the reciter pronounced this position, so it counts as aligned.
+      if (step.op === 'match' || step.op === 'substitution') {
+        alignedPhonemes++;
+        if (inRange) wordAlignedCounts[w]++;
+      }
+    }
+
+    const matchedWordIndices: number[] = [];
+    const alignedWordIndices: number[] = [];
+    for (let w = 0; w < wordMatchCounts.length; w++) {
+      if (wordMatchCounts[w] > 0) matchedWordIndices.push(w);
+      if (wordAlignedCounts[w] > 0) alignedWordIndices.push(w);
+    }
+
+    // The reciter's entry point is the first matched word.
+    const firstMatchedWord =
+      matchedWordIndices.length > 0
+        ? matchedWordIndices[0]
+        : alignedWordIndices.length > 0
+        ? alignedWordIndices[0]
+        : -1;
+
+    // Index of the first hypothesis token that matched, so the caller can tell
+    // which part of the recorded speech belongs to this ayah.
+    let firstMatchedHypIndex = -1;
+    let lastMatchedHypIndex = -1;
+    let startHypothesisIndex = -1;
+    for (const step of local.steps) {
+      if (step.hypIndex < 0) continue;
+      if (startHypothesisIndex < 0) startHypothesisIndex = step.hypIndex;
+      if (firstMatchedHypIndex < 0) firstMatchedHypIndex = step.hypIndex;
+      lastMatchedHypIndex = step.hypIndex;
+    }
+
+    // The reference position the alignment STARTED on and ENDED on. These tell
+    // the caller whether the reciter entered the ayah in the middle and how
+    // far into the ayah they have reached.
+    let startReferenceWord = -1;
+    let endReferenceWord = -1;
+    for (const step of local.steps) {
+      if (step.refIndex < 0 || step.refIndex >= refTokens.length) continue;
+      const w = refToWord[step.refIndex] ?? 0;
+      if (w < 0 || w >= uthmaniWords.length) continue;
+      if (startReferenceWord < 0) startReferenceWord = w;
+      endReferenceWord = w;
+    }
+
+    // How many hypothesis tokens the matched segment actually explains. This
+    // is the fairest way to compare two candidate ayahs: it does not grow just
+    // because one ayah is longer.
+    let coveredHypothesisTokens = 0;
+    for (const step of local.steps) {
+      if (step.hypIndex < 0) continue;
+      if (step.op === 'match' || step.op === 'substitution') coveredHypothesisTokens++;
+    }
+
+    return {
+      verseKey,
+      matchedPhonemes,
+      alignedPhonemes,
+      matchedWordIndices,
+      alignedWordIndices,
+      firstMatchedWord,
+      firstMatchedHypIndex,
+      startHypothesisIndex,
+      lastMatchedHypIndex,
+      startReferenceWord,
+      endReferenceWord,
+      coveredHypothesisTokens,
+      matchedWords: matchedWordIndices.length,
     };
   }
 

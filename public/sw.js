@@ -62,6 +62,25 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Cache-first for Quran word-by-word pronunciation audio from audio.qurancdn.com
+  if (url.hostname === 'audio.qurancdn.com') {
+    event.respondWith(
+      caches.match(request).then((cachedResponse) => {
+        if (cachedResponse) return cachedResponse;
+        return fetch(request).then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+          }
+          return networkResponse;
+        }).catch(() => {
+          return new Response(new Uint8Array(0), { status: 404, statusText: 'Offline audio not cached' });
+        });
+      })
+    );
+    return;
+  }
+
   // Stale-while-revalidate for page navigation and API requests
   event.respondWith(
     caches.match(request).then((cached) => {

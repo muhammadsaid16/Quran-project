@@ -4,9 +4,9 @@ import { Header } from '@/components/shell/Header';
 import { ServiceWorkerRegistrar } from '@/components/shell/ServiceWorkerRegistrar';
 
 export const metadata: Metadata = {
-  title: 'Quran Cognitive OS — نظام تحفيظ القرآن المعرفي',
+  title: 'باب الإتقان — مصحف الحفظ والاسترجاع الذكي',
   description:
-    'Local-First Quran Memorization & Retention Platform with Active Recall, Voice Assessment & FSRS',
+    'منصة حفظ واسترجاع وتثبيت القرآن الكريم بالاسترجاع النشط والتسميع الصوتي المباشر وخوارزمية FSRS',
   manifest: '/manifest.webmanifest',
   icons: {
     icon: '/icons/icon-192x192.svg',
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'QuranOS',
+    title: 'باب الإتقان',
   },
 };
 
@@ -35,13 +35,12 @@ export default function RootLayout({
   // In dev, a stale SW can serve old HTML with old text and cause hydration
   // mismatches. This runs during HTML parsing, before the app bundle, so the
   // very first load already starts from clean caches (one guarded reload).
-  const isDev = process.env.NODE_ENV === 'development';
   const swCleanupScript = `
 (function () {
   try {
     if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
-    var KEEP = ${JSON.stringify(isDev ? '' : 'quran-cognitive-os-v2')};
-    var UNREGISTER_ALL = ${isDev ? 'true' : 'false'};
+    var KEEP = 'quran-cognitive-os-v2';
+    var UNREGISTER_ALL = false;
     var hadStale = false;
     var finish = function () {
       if (!hadStale) return;
@@ -76,6 +75,13 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/manifest.webmanifest" />
         <link rel="icon" href="/icons/icon-192x192.svg" type="image/svg+xml" />
+        <link
+          rel="preload"
+          href="/fonts/AmiriQuran-Regular.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <link
           rel="preload"
           href="/fonts/UthmanicHafs1_Ver09.woff2"

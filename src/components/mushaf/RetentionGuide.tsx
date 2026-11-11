@@ -24,7 +24,7 @@ const MOCK_DUE_QUEUE: AyahTarget[] = [
     juzNumber: 1,
     textUthmani: 'ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ',
     firstWord: 'ٱلْحَمْدُ',
-    dueReason: 'مستحقة للمراجعة اليوم (R = 86%)',
+    dueReason: 'مستحقة للمراجعة اليوم (R = ٨٦٪)',
   },
   {
     surahNumber: 2,
@@ -35,7 +35,7 @@ const MOCK_DUE_QUEUE: AyahTarget[] = [
     juzNumber: 1,
     textUthmani: 'أُو۟لَٰٓئِكَ عَلَىٰ هُدًۭى مِّن رَّبِّهِمْ ۖ وَأُو۟لَٰٓئِكَ هُمُ ٱلْمُفْلِحُونَ',
     firstWord: 'أُو۟لَٰٓئِكَ',
-    dueReason: 'مستحقة للمراجعة اليوم (R = 82%)',
+    dueReason: 'مستحقة للمراجعة اليوم (R = ٨٢٪)',
   },
   {
     surahNumber: 112,
@@ -46,7 +46,7 @@ const MOCK_DUE_QUEUE: AyahTarget[] = [
     juzNumber: 30,
     textUthmani: 'قُلْ هُوَ ٱللَّهُ أَحَدٌ',
     firstWord: 'قُلْ',
-    dueReason: 'تثبيت استقرار الذاكرة (R = 89%)',
+    dueReason: 'تثبيت استقرار الذاكرة (R = ٨٩٪)',
   },
 ];
 
@@ -166,7 +166,7 @@ export const RetentionGuide: React.FC = () => {
       {lastFsrsRating && (
         <div className="mt-2 text-xs font-arabic text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
           <CheckCircle2 className="w-3.5 h-3.5" />
-          <span>تم تسجيل التقييم (درجة {lastFsrsRating}) وتحديث استقرار FSRS في قاعدة البيانات المحلية.</span>
+          <span>تم تسجيل التقييم (درجة {typeof lastFsrsRating === 'number' ? lastFsrsRating.toLocaleString('ar-EG') : lastFsrsRating}) وتحديث استقرار FSRS في قاعدة البيانات المحلية.</span>
         </div>
       )}
     </div>

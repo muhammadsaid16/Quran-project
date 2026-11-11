@@ -60,6 +60,7 @@ export const MemoryHeatmapView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'pages' | 'surahs' | 'weakest'>('pages');
   const [pageAyahFilter, setPageAyahFilter] = useState<'forgotten' | 'all'>('forgotten');
   const [hoveredPage, setHoveredPage] = useState<number | null>(null);
+  const [hoveredSurah, setHoveredSurah] = useState<number | null>(null);
   const inspectorRef = useRef<HTMLDivElement>(null);
 
   const handlePageClick = (pageNum: number) => {
@@ -156,7 +157,7 @@ export const MemoryHeatmapView: React.FC = () => {
             </div>
             <h1 className="font-arabic font-bold text-xl sm:text-2xl text-mushaf-ink dark:text-darkMushaf-ink flex items-center gap-2">
               <Activity className="w-6 h-6 text-mushaf-emerald dark:text-darkMushaf-emerald" />
-              <span>مصحف الحفظ والاسترجاع (604 صفحات • 6,236 آية)</span>
+              <span>مصحف الحفظ والاسترجاع (٦٠٤ صفحات • ٦٬٢٣٦ آية)</span>
             </h1>
             <p className="font-arabic text-xs sm:text-sm text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mt-1">
               حساب احتمالية الاسترجاع R(t) وفق خوارزمية FSRS المعتمدة على الفترات الزمنية ومحرك التحليل الصوتي.
@@ -165,17 +166,17 @@ export const MemoryHeatmapView: React.FC = () => {
 
           {/* Color Legend with strict state isolation */}
           <div className="flex flex-wrap items-center gap-3 text-xs font-arabic bg-mushaf-parchment/60 dark:bg-darkMushaf-surface p-2.5 rounded-xl border border-mushaf-border dark:border-darkMushaf-border">
-            <span className="flex items-center gap-1.5" title="احتمالية الاسترجاع 95% فما فوق">
+            <span className="flex items-center gap-1.5" title="احتمالية الاسترجاع ٩٥% فما فوق">
               <span className="w-3.5 h-3.5 rounded bg-emerald-500 inline-block shadow-xs" />
-              <span className="font-medium text-emerald-800 dark:text-emerald-300">≥ 95% (متقن)</span>
+              <span className="font-medium text-emerald-800 dark:text-emerald-300">≥ ٩٥٪ (متقن)</span>
             </span>
-            <span className="flex items-center gap-1.5" title="احتمالية الاسترجاع بين 85% و 94% أو مستحق للمراجعة">
+            <span className="flex items-center gap-1.5" title="احتمالية الاسترجاع بين ٨٥% و ٩٤% أو مستحق للمراجعة">
               <span className="w-3.5 h-3.5 rounded bg-amber-500 inline-block shadow-xs" />
-              <span className="font-medium text-amber-800 dark:text-amber-300">85% - 94% (مراجعة)</span>
+              <span className="font-medium text-amber-800 dark:text-amber-300">%٨٥ - %٩٤ (مراجعة)</span>
             </span>
-            <span className="flex items-center gap-1.5" title="احتمالية الاسترجاع أقل من 85%">
+            <span className="flex items-center gap-1.5" title="احتمالية الاسترجاع أقل من ٨٥%">
               <span className="w-3.5 h-3.5 rounded bg-red-500 inline-block shadow-xs" />
-              <span className="font-medium text-red-800 dark:text-red-300">&lt; 85% (تعثر/معرض للنسيان)</span>
+              <span className="font-medium text-red-800 dark:text-red-300">&lt; %٨٥ (تعثر/معرض للنسيان)</span>
             </span>
             <span className="flex items-center gap-1.5" title="بطاقة جديدة لم يبدأ تسميعها بعد (ليست متقنة)">
               <span className="w-3.5 h-3.5 rounded bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 inline-block" />
@@ -193,8 +194,8 @@ export const MemoryHeatmapView: React.FC = () => {
               {toArabicNumerals(globalSummary.totalMemorizedAyahs)}
               <span className="text-xs font-normal text-mushaf-ink-muted mx-1">/ {toArabicNumerals(globalSummary.totalAyahs)}</span>
             </span>
-            <span className="text-[10px] font-mono text-mushaf-ink-muted block mt-0.5">
-              {Math.round((globalSummary.totalMemorizedAyahs / globalSummary.totalAyahs) * 100)}% إنجاز
+            <span className="text-[10px] font-arabic text-mushaf-ink-muted block mt-0.5">
+              %{toArabicNumerals(Math.round((globalSummary.totalMemorizedAyahs / globalSummary.totalAyahs) * 100))} إنجاز
             </span>
           </div>
 
@@ -202,7 +203,7 @@ export const MemoryHeatmapView: React.FC = () => {
           <div className="bg-mushaf-parchment dark:bg-darkMushaf-surface p-3.5 rounded-xl border border-mushaf-border dark:border-darkMushaf-border text-center">
             <span className="text-[11px] font-arabic text-mushaf-ink-muted block mb-1">مؤشر الاسترجاع العام</span>
             <span className="font-arabic font-extrabold text-xl text-mushaf-emerald dark:text-darkMushaf-emerald block">
-              {globalSummary.overallRetentionIndex}%
+              %{toArabicNumerals(globalSummary.overallRetentionIndex)}
             </span>
             <span className="text-[10px] font-arabic text-mushaf-ink-muted block mt-0.5">
               احتمالية الاسترجاع R(t)
@@ -216,7 +217,7 @@ export const MemoryHeatmapView: React.FC = () => {
               {toArabicNumerals(globalSummary.masteredPagesCount)}
             </span>
             <span className="text-[10px] font-arabic text-emerald-700/80 dark:text-emerald-300/80 block mt-0.5">
-              استرجاع ≥ 95%
+              استرجاع ≥ ٩٥٪
             </span>
           </div>
 
@@ -233,12 +234,12 @@ export const MemoryHeatmapView: React.FC = () => {
 
           {/* Card 5: High Risk / Lapses */}
           <div className="bg-red-500/10 dark:bg-red-500/15 p-3.5 rounded-xl border border-red-500/25 text-center">
-            <span className="text-[11px] font-arabic text-red-800 dark:text-red-300 block mb-1">بؤر تعثر معرضة للنسيان</span>
+            <span className="text-[11px] font-arabic text-red-800 dark:text-red-300 block mb-1">صفحات معرضة للنسيان</span>
             <span className="font-arabic font-extrabold text-xl text-red-600 dark:text-red-400 block">
-              {toArabicNumerals(globalSummary.highRiskPagesCount)}
+              {toArabicNumerals(globalSummary.highRiskPagesCount)} <span className="text-xs font-normal">صفحة</span>
             </span>
             <span className="text-[10px] font-arabic text-red-600/80 dark:text-red-400/80 block mt-0.5">
-              استرجاع &lt; 85%
+              استرجاع &lt; %٨٥
             </span>
           </div>
 
@@ -365,9 +366,9 @@ export const MemoryHeatmapView: React.FC = () => {
               {(['all', 'mastered', 'review_due', 'high_risk', 'new'] as const).map((st) => {
                 const labels = {
                   all: 'الكل',
-                  mastered: 'متقن (≥95%)',
+                  mastered: 'متقن (≥٩٥٪)',
                   review_due: 'مراجعة',
-                  high_risk: 'تعثر (<85%)',
+                  high_risk: 'تعثر (<%٨٥)',
                   new: 'لم يبدأ',
                 };
                 return (
@@ -444,8 +445,8 @@ export const MemoryHeatmapView: React.FC = () => {
                 }
 
                 const selectedClasses = isSelected
-                  ? 'ring-2 ring-mushaf-gold ring-offset-1 scale-125 z-20 font-bold shadow-md !bg-mushaf-gold !text-white !border-mushaf-gold'
-                  : 'hover:scale-125 hover:z-20 hover:shadow-md';
+                  ? 'ring-2 ring-mushaf-gold ring-offset-1 font-bold shadow-md !bg-mushaf-gold !text-white !border-mushaf-gold'
+                  : 'group-hover:shadow-md';
 
                 return (
                   <button
@@ -458,10 +459,16 @@ export const MemoryHeatmapView: React.FC = () => {
                     }}
                     onMouseEnter={() => setHoveredPage(pageNum)}
                     onMouseLeave={() => setHoveredPage(null)}
-                    className={`aspect-square rounded flex flex-col items-center justify-center text-[10px] sm:text-xs font-semibold cursor-pointer transition-all duration-150 select-none active:scale-90 ${colorClasses} ${selectedClasses}`}
+                    className={`group relative aspect-square cursor-pointer select-none ${
+                      isSelected ? 'z-20' : 'hover:z-20'
+                    }`}
                     title={`صفحة ${pageNum} (الجزء ${stat?.juzNumber}) — استرجاع: ${r}% (${stat?.studiedAyahsCount}/${stat?.totalAyahs} آية) — انقر مرتين للفتح بالمصحف`}
                   >
-                    <span>{pageNum}</span>
+                    <span
+                      className={`pointer-events-none absolute inset-0 rounded flex flex-col items-center justify-center text-[10px] sm:text-xs font-semibold transition-all duration-150 group-active:brightness-90 ${colorClasses} ${selectedClasses}`}
+                    >
+                      {pageNum}
+                    </span>
                   </button>
                 );
               })}
@@ -508,7 +515,7 @@ export const MemoryHeatmapView: React.FC = () => {
                           : 'text-slate-500'
                       }`}
                     >
-                      {selectedPage.status === 'new' ? 'لم يبدأ بعد (0%)' : `${selectedPage.retrievability}%`}
+                      {selectedPage.status === 'new' ? 'لم يبدأ بعد (%٠)' : `%${toArabicNumerals(selectedPage.retrievability)}`}
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-700 h-2.5 rounded-full overflow-hidden">
@@ -539,7 +546,7 @@ export const MemoryHeatmapView: React.FC = () => {
                   <div className="p-2.5 bg-mushaf-parchment dark:bg-darkMushaf-surface rounded-xl border border-mushaf-border dark:border-darkMushaf-border">
                     <span className="text-mushaf-ink-muted block text-[11px]">متوسط الثبات (S):</span>
                     <span className="font-bold text-sm text-mushaf-ink dark:text-darkMushaf-ink">
-                      {selectedPage.averageStability} يومًا
+                      {toArabicNumerals(selectedPage.averageStability)} يومًا
                     </span>
                   </div>
 
@@ -566,10 +573,10 @@ export const MemoryHeatmapView: React.FC = () => {
                         <LinkIcon className="w-3.5 h-3.5" />
                         <span>رابط نهاية الصفحة (Transition Link)</span>
                       </span>
-                      <span>{selectedPage.boundaryTransition.retrievability}%</span>
+                      <span>%{toArabicNumerals(selectedPage.boundaryTransition.retrievability)}</span>
                     </div>
                     <p className="text-[11px] text-amber-700/80 dark:text-amber-300/80">
-                      الربط بين الآية {selectedPage.boundaryTransition.fromAyah} والصفحة التالية ({selectedPage.boundaryTransition.toAyah})
+                      الربط بين الآية {toArabicNumerals(selectedPage.boundaryTransition.fromAyah)} والصفحة التالية ({toArabicNumerals(selectedPage.boundaryTransition.toAyah)})
                     </p>
                   </div>
                 )}
@@ -610,23 +617,43 @@ export const MemoryHeatmapView: React.FC = () => {
                   </div>
 
                   {pageAyahFilter === 'forgotten' && forgottenAyahs.length === 0 ? (
-                    <div className="p-4 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/30 text-center font-arabic space-y-2">
-                      <div className="flex items-center justify-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                        <span>ما شاء الله! لا توجد آيات منسية في هذه الصفحة</span>
+                    selectedPage.studiedAyahsCount === 0 ? (
+                      <div className="p-4 rounded-xl bg-mushaf-parchment dark:bg-darkMushaf-surface border border-mushaf-border dark:border-darkMushaf-border text-center font-arabic space-y-2">
+                        <div className="flex items-center justify-center gap-1.5 text-mushaf-ink-muted font-bold text-xs">
+                          <Info className="w-4 h-4 text-mushaf-gold" />
+                          <span>لم تبدأ حفظ هذه الصفحة بعد</span>
+                        </div>
+                        <p className="text-[11px] text-mushaf-ink-muted dark:text-darkMushaf-ink-muted">
+                          لا توجد آيات مدروسة في صفحة {toArabicNumerals(selectedPage.pageNumber)} حتى الآن، لذلك لا يمكن تقييم المنسي أو المتقن. ابدأ التسميع أولًا.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setPageAyahFilter('all')}
+                          className="text-[11px] text-mushaf-emerald dark:text-emerald-400 font-bold hover:underline inline-flex items-center gap-1"
+                        >
+                          <span>عرض جميع آيات الصفحة ({toArabicNumerals(selectedPage.ayahStatuses.length)})</span>
+                          <ChevronLeft className="w-3 h-3" />
+                        </button>
                       </div>
-                      <p className="text-[11px] text-mushaf-ink-muted dark:text-darkMushaf-ink-muted">
-                        حفظك متقن ومثبّت بنسبة 100% في صفحة {toArabicNumerals(selectedPage.pageNumber)} ولا توجد أي تعثرات مسجلة.
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => setPageAyahFilter('all')}
-                        className="text-[11px] text-mushaf-emerald dark:text-emerald-400 font-bold hover:underline inline-flex items-center gap-1"
-                      >
-                        <span>عرض جميع آيات الصفحة ({toArabicNumerals(selectedPage.ayahStatuses.length)})</span>
-                        <ChevronLeft className="w-3 h-3" />
-                      </button>
-                    </div>
+                    ) : (
+                      <div className="p-4 rounded-xl bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/30 text-center font-arabic space-y-2">
+                        <div className="flex items-center justify-center gap-1.5 text-emerald-700 dark:text-emerald-400 font-bold text-xs">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                          <span>ما شاء الله! لا توجد آيات منسية في هذه الصفحة</span>
+                        </div>
+                        <p className="text-[11px] text-mushaf-ink-muted dark:text-darkMushaf-ink-muted">
+                          لا توجد أي تعثرات مسجلة في صفحة {toArabicNumerals(selectedPage.pageNumber)} بين الآيات المدروسة.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setPageAyahFilter('all')}
+                          className="text-[11px] text-mushaf-emerald dark:text-emerald-400 font-bold hover:underline inline-flex items-center gap-1"
+                        >
+                          <span>عرض جميع آيات الصفحة ({toArabicNumerals(selectedPage.ayahStatuses.length)})</span>
+                          <ChevronLeft className="w-3 h-3" />
+                        </button>
+                      </div>
+                    )
                   ) : (
                     <div className="space-y-1.5 max-h-60 overflow-y-auto pr-1 scrollbar-thin">
                       {displayedAyahs.map((a) => {
@@ -658,7 +685,7 @@ export const MemoryHeatmapView: React.FC = () => {
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-1 flex-wrap">
                                 <span className="font-bold text-mushaf-ink dark:text-darkMushaf-ink">
-                                  آية {toArabicNumerals(a.ayah)} ({a.verseKey})
+                                  آية {toArabicNumerals(a.ayah)} ({toArabicNumerals(a.surah)}:{toArabicNumerals(a.ayah)})
                                 </span>
 
                                 {a.lapses > 0 && (
@@ -669,19 +696,19 @@ export const MemoryHeatmapView: React.FC = () => {
 
                                 {a.status === 'high_risk' && (
                                   <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-red-500 text-white">
-                                    خطر نسيان ({a.retrievability}%)
+                                    خطر نسيان (%{toArabicNumerals(a.retrievability)})
                                   </span>
                                 )}
 
                                 {a.status === 'review_due' && (
                                   <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-amber-500 text-white">
-                                    مستحقة للمراجعة ({a.retrievability}%)
+                                    مستحقة للمراجعة (%{toArabicNumerals(a.retrievability)})
                                   </span>
                                 )}
 
                                 {a.status === 'mastered' && a.lapses === 0 && (
                                   <span className="text-[10px] px-1.5 py-0.2 rounded-full font-bold bg-emerald-500 text-white">
-                                    متقن {a.retrievability}%
+                                    متقن %{toArabicNumerals(a.retrievability)}
                                   </span>
                                 )}
 
@@ -772,6 +799,86 @@ export const MemoryHeatmapView: React.FC = () => {
             تحليلات الحفظ والاسترجاع على مستوى السور (114 سورة)
           </h2>
 
+          {/* The 114 Surahs Visual Heatmap Matrix (mirrors the pages matrix) */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs font-arabic text-mushaf-ink-muted border-b border-mushaf-border/60 pb-2 min-h-[30px]">
+              {hoveredSurah ? (() => {
+                const hs = surahStats.find((x) => x.surahNumber === hoveredSurah);
+                if (!hs) return <span />;
+                return (
+                  <div className="flex items-center gap-2 text-mushaf-ink dark:text-darkMushaf-ink animate-fadeIn">
+                    <span className="font-bold text-mushaf-emerald dark:text-emerald-400">
+                      سورة {hs.nameArabic}
+                    </span>
+                    <span>•</span>
+                    <span>{toArabicNumerals(hs.studiedAyahsCount)} / {toArabicNumerals(hs.totalAyahs)} آية</span>
+                    <span>•</span>
+                    <span>صفحة {toArabicNumerals(hs.startPage)} - {toArabicNumerals(hs.endPage)}</span>
+                    <span>•</span>
+                    <span className="font-bold">
+                      {hs.status === 'new' ? 'لم يبدأ' : `استرجاع ${hs.retentionScore}%`}
+                    </span>
+                  </div>
+                );
+              })() : (
+                <span>عرض {toArabicNumerals(surahStats.length)} سورة من أصل ١١٤</span>
+              )}
+              <span className="text-[11px] text-mushaf-ink-muted hidden sm:inline">
+                انقر للانتقال إلى صفحات السورة
+              </span>
+            </div>
+
+            <div className="grid grid-cols-6 sm:grid-cols-10 md:grid-cols-12 gap-1 sm:gap-1.5 max-h-[420px] overflow-y-auto p-1.5 scrollbar-thin">
+              {surahStats.map((s) => {
+                let colorClasses = '';
+                if (s.status === 'mastered') {
+                  colorClasses =
+                    'bg-emerald-500 text-white hover:bg-emerald-600 border border-emerald-600 shadow-xs';
+                } else if (s.status === 'review_due') {
+                  colorClasses =
+                    'bg-amber-500 text-white hover:bg-amber-600 border border-amber-600 shadow-xs';
+                } else if (s.status === 'high_risk') {
+                  colorClasses =
+                    'bg-red-500 text-white hover:bg-red-600 border border-red-600 shadow-xs';
+                } else {
+                  colorClasses =
+                    'bg-slate-100 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 hover:bg-amber-100 dark:hover:bg-slate-700 hover:text-mushaf-ink dark:hover:text-darkMushaf-ink border border-slate-200/80 dark:border-slate-700 hover:border-mushaf-gold';
+                }
+
+                const isSelected = filterSurah === s.surahNumber;
+                const selectedClasses = isSelected
+                  ? 'ring-2 ring-mushaf-gold ring-offset-1 font-bold shadow-md !bg-mushaf-gold !text-white !border-mushaf-gold'
+                  : 'group-hover:shadow-md';
+
+                return (
+                  <button
+                    key={s.surahNumber}
+                    type="button"
+                    onClick={() => {
+                      setFilterSurah(s.surahNumber);
+                      setActiveTab('pages');
+                    }}
+                    onMouseEnter={() => setHoveredSurah(s.surahNumber)}
+                    onMouseLeave={() => setHoveredSurah(null)}
+                    className={`group relative aspect-square cursor-pointer select-none ${
+                      isSelected ? 'z-20' : 'hover:z-20'
+                    }`}
+                    title={`سورة ${s.nameArabic} (${toArabicNumerals(s.totalAyahs)} آية) — استرجاع: ${s.retentionScore}% (${toArabicNumerals(s.studiedAyahsCount)}/${toArabicNumerals(s.totalAyahs)}) — صفحة ${toArabicNumerals(s.startPage)}-${toArabicNumerals(s.endPage)}`}
+                  >
+                    <span
+                      className={`pointer-events-none absolute inset-0 rounded flex flex-col items-center justify-center leading-none transition-all duration-150 group-active:brightness-90 ${colorClasses} ${selectedClasses}`}
+                    >
+                      <span className="text-[10px] sm:text-xs font-bold">{toArabicNumerals(s.surahNumber)}</span>
+                      <span className="text-[7px] sm:text-[8px] font-arabic truncate max-w-full px-0.5 opacity-80">
+                        {s.nameArabic}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {surahStats.map((s) => {
               let statusBadge = 'bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300';
@@ -820,7 +927,7 @@ export const MemoryHeatmapView: React.FC = () => {
               <span>بؤر التعثر والآيات الأشد حاجة للتثبيت العاجل</span>
             </h2>
             <p className="text-xs font-arabic text-mushaf-ink-muted">
-              آيات وسور تم رصد تكرار الخطأ أو انخفاض احتمالية استرجاعها دون 85% وفق خوارزمية FSRS ومحرك CTC.
+              آيات وسور تم رصد تكرار الخطأ أو انخفاض احتمالية استرجاعها دون %٨٥ وفق خوارزمية FSRS ومحرك CTC.
             </p>
 
             {globalSummary.weakestAyahs.length > 0 ? (
@@ -832,10 +939,10 @@ export const MemoryHeatmapView: React.FC = () => {
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-red-800 dark:text-red-300">
-                        سورة {a.surah} • آية {a.ayah} (صفحة {a.page})
+                        سورة {toArabicNumerals(a.surah)} • آية {toArabicNumerals(a.ayah)} (صفحة {toArabicNumerals(a.page)})
                       </span>
                       <span className="font-bold text-red-700 bg-red-200 dark:bg-red-900/60 px-2 py-0.5 rounded">
-                        استرجاع: {a.retrievability}% • تعثر: {a.lapses}
+                        استرجاع: %{toArabicNumerals(a.retrievability)} • تعثر: {toArabicNumerals(a.lapses)}
                       </span>
                     </div>
 
@@ -864,7 +971,7 @@ export const MemoryHeatmapView: React.FC = () => {
             ) : (
               <div className="p-8 text-center bg-mushaf-parchment dark:bg-darkMushaf-surface rounded-xl border border-mushaf-border text-xs font-arabic text-mushaf-ink-muted">
                 <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
-                <span>لا توجد حالياً بؤر تعثر حرجة أقل من 85%. واصل التسميع المنتظم!</span>
+                <span>لا توجد حالياً بؤر تعثر حرجة أقل من %٨٥. واصل التسميع المنتظم!</span>
               </div>
             )}
           </div>
@@ -887,10 +994,10 @@ export const MemoryHeatmapView: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="font-arabic font-bold text-base text-mushaf-ink dark:text-darkMushaf-ink">
-                    بطاقة ذاكرة الآية ({selectedAyah.verseKey})
+                    بطاقة ذاكرة الآية ({toArabicNumerals(selectedAyah.surah)}:{toArabicNumerals(selectedAyah.ayah)})
                   </h3>
                   <span className="text-xs text-mushaf-ink-muted">
-                    سورة {selectedAyah.surah} • صفحة {selectedAyah.page} • الجزء {selectedAyah.juz}
+                    سورة {toArabicNumerals(selectedAyah.surah)} • صفحة {toArabicNumerals(selectedAyah.page)} • الجزء {toArabicNumerals(selectedAyah.juz)}
                   </span>
                 </div>
               </div>
@@ -915,21 +1022,21 @@ export const MemoryHeatmapView: React.FC = () => {
               <div className="p-2.5 rounded-xl bg-mushaf-parchment dark:bg-darkMushaf-surface border border-mushaf-border">
                 <span className="text-[11px] text-mushaf-ink-muted block">احتمالية الاسترجاع (R)</span>
                 <span className="font-extrabold text-base text-mushaf-emerald dark:text-darkMushaf-emerald block">
-                  {selectedAyah.status === 'new' ? 'لم تبدأ' : `${selectedAyah.retrievability}%`}
+                  {selectedAyah.status === 'new' ? 'لم تبدأ' : `%${toArabicNumerals(selectedAyah.retrievability)}`}
                 </span>
               </div>
 
               <div className="p-2.5 rounded-xl bg-mushaf-parchment dark:bg-darkMushaf-surface border border-mushaf-border">
                 <span className="text-[11px] text-mushaf-ink-muted block">ثبات الذاكرة (S)</span>
                 <span className="font-extrabold text-base text-mushaf-ink dark:text-darkMushaf-ink block">
-                  {selectedAyah.stability} يومًا
+                  {toArabicNumerals(selectedAyah.stability)} يومًا
                 </span>
               </div>
 
               <div className="p-2.5 rounded-xl bg-mushaf-parchment dark:bg-darkMushaf-surface border border-mushaf-border">
                 <span className="text-[11px] text-mushaf-ink-muted block">مرات التعثر (Lapses)</span>
                 <span className="font-extrabold text-base text-red-600 block">
-                  {selectedAyah.lapses}
+                  {toArabicNumerals(selectedAyah.lapses)}
                 </span>
               </div>
             </div>
@@ -971,9 +1078,9 @@ export const MemoryHeatmapView: React.FC = () => {
                         </div>
 
                         <div className="flex items-center justify-between text-[11px] text-mushaf-ink-muted pt-1">
-                          <span>مدة التسجيل: {(log.recording_duration_ms / 1000).toFixed(1)} ث</span>
-                          <span>أخطاء: {log.error_count}</span>
-                          <span>دقة مطابقة الفونيمات: {Math.round(log.alignment_confidence * 100)}%</span>
+                          <span>مدة التسجيل: {toArabicNumerals((log.recording_duration_ms / 1000).toFixed(1))} ث</span>
+                          <span>أخطاء: {toArabicNumerals(log.error_count)}</span>
+                          <span>دقة مطابقة الفونيمات: %{toArabicNumerals(Math.round(log.alignment_confidence * 100))}</span>
                         </div>
                       </div>
                     );

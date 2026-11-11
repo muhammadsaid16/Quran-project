@@ -1,8 +1,11 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { QuranWord } from '@/data/medina-pages';
 import { AyahMarker } from './AyahMarker';
+import { ayahStateKey } from '@/data/mushaf-layout';
+import { CRITICAL, runSpring, SpringHandle } from '@/lib/spring';
+import { useReducedMotion } from '@/hooks/useMediaQuery';
 import { useActiveRecallStore, getGhostTierNumber } from '@/stores/active-recall-store';
 import { useRecitationStore } from '@/stores/recitation-store';
 import { useSessionStore } from '@/stores/session-store';
@@ -46,6 +49,18 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
 
   const [activeTooltipWordId, setActiveTooltipWordId] = useState<string | null>(null);
   const [playingWordId, setPlayingWordId] = useState<string | null>(null);
+  /**
+   * The concealment state of every word on the PREVIOUS render.
+   *
+   * It is captured after the render (never during it), so React's double
+   * render cannot consume the concealed -> visible transition before the
+   * materialize animation gets a chance to play.
+   */
+  const previousGhostState = useRef<Map<string, boolean>>(new Map());
+  /** The element of each word, so a reveal can animate it. */
+  const wordElements = useRef<Map<string, HTMLSpanElement>>(new Map());
+  /** The materialize spring of each word, so it can be interrupted. */
+  const materializeSprings = useRef<Map<string, SpringHandle>>(new Map());
 
   const handlePlayWordAudio = (word: QuranWord, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
@@ -78,6 +93,7 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
   }, [activeTooltipWordId]);
 
   const ghostTier = getGhostTierNumber(ghostTextLevel);
+  const reducedMotion = useReducedMotion();
 
   const lineRef = useRef<HTMLDivElement | null>(null);
 
@@ -89,14 +105,20 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
 
     const fit = () => {
       const base = isOpeningSpread ? getBaseFontSize() * 1.15 : getBaseFontSize();
-      let scale = 1;
+      // Max scale-up factor: opening spread stays at base; standard pages can grow
+      // up to 1.15× to fill the line width naturally (Mushaf-style full justification
+      // achieved via font-size, not stretched inter-word gaps).
+      const maxScale = isOpeningSpread ? 1.0 : 1.15;
       el.style.fontSize = `${base}px`;
-      // Iterate: font metrics are not perfectly linear with size
-      for (let i = 0; i < 6; i++) {
+      let scale = 1;
+      for (let i = 0; i < 8; i++) {
         const avail = el.clientWidth;
         const need = el.scrollWidth;
-        if (avail <= 0 || need <= avail) break;
-        scale *= avail / need;
+        if (avail <= 0 || need <= 0) break;
+        const ratio = avail / need;
+        const next = Math.min(scale * ratio, maxScale);
+        if (Math.abs(next - scale) < 0.005) break;
+        scale = next;
         el.style.fontSize = `${base * scale}px`;
       }
     };
@@ -121,20 +143,81 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
   }, [words, wordStatusMap, ghostTextLevel, revealedWordIndices, isHintRevealed, revealedAyahIds, isRecallModeActive, isOpeningSpread]);
 
   // Medina Mushaf line justification:
-  // Short lines (<= 5 words, e.g. opening spreads or end of Surahs) are centered
-  // with natural Quranic word spacing. Full lines (> 5 words) are distributed across
-  // the Medina page frame with balanced inter-word spacing.
+  // ALL lines use justify-center with a natural gap — the auto-fit ResizeObserver
+  // scales the font-size so the line fills the available width without stretching gaps.
+  // Opening spreads and short lines get a slightly larger gap for visual breathing room.
   const isShortLine = words.length <= 5;
-  const isCentered = isOpeningSpread || isShortLine;
+  const lineGap = isOpeningSpread
+    ? 'gap-3 sm:gap-4 md:gap-5'
+    : isShortLine
+    ? 'gap-2.5 sm:gap-3 md:gap-4'
+    : 'gap-1.5 sm:gap-2 md:gap-2.5';
+
+  // The concealment state of this render, published to the previous-render
+  // map after the render completes.
+  const ghostStateThisRender = new Map<string, boolean>();
+
+  useEffect(() => {
+    previousGhostState.current = ghostStateThisRender;
+  });
+
+  /**
+   * Materializes a word that has just been recited: it sharpens out of a blur
+   * and settles into place.
+   *
+   * The motion is driven by the spring engine rather than a CSS animation, so
+   * it can be interrupted, carries its velocity, and never leaves the word
+   * stranded mid-fade if the browser's animation timeline is throttled.
+   */
+  const materialize = useCallback((wordId: string) => {
+    const element = wordElements.current.get(wordId);
+    if (!element) return;
+
+    // A second reveal of the same word does not restart the animation.
+    if (materializeSprings.current.has(wordId)) return;
+
+    // Reduced motion is not the absence of feedback — the word simply
+    // appears, without sharpening out of a blur.
+    if (reducedMotion) return;
+
+    const handle = runSpring({
+      from: 0,
+      to: 1,
+      config: {
+        stiffness: (2 * Math.PI / CRITICAL.response) ** 2,
+        damping: 2 * CRITICAL.damping * Math.sqrt((2 * Math.PI / CRITICAL.response) ** 2),
+        mass: 1,
+      },
+      onUpdate: (progress) => {
+        element.style.opacity = String(progress);
+        element.style.filter = progress >= 1 ? '' : `blur(${(7 * (1 - progress)).toFixed(2)}px)`;
+        element.style.transform =
+          progress >= 1 ? '' : `scale(${(0.94 + 0.06 * progress).toFixed(3)})`;
+      },
+      onRest: () => {
+        element.style.opacity = '';
+        element.style.filter = '';
+        element.style.transform = '';
+        materializeSprings.current.delete(wordId);
+      },
+    });
+
+    materializeSprings.current.set(wordId, handle);
+  }, [reducedMotion]);
+
+  // Stop every animation when the line unmounts.
+  useEffect(() => {
+    const springs = materializeSprings.current;
+    return () => {
+      springs.forEach((spring) => spring.stop());
+      springs.clear();
+    };
+  }, []);
 
   return (
     <div
       ref={lineRef}
-      className={`w-full flex items-center flex-nowrap whitespace-nowrap ${
-        isCentered
-          ? 'justify-center gap-2 sm:gap-2.5 md:gap-3.5 lg:gap-4 text-[18px] sm:text-[21px] md:text-[24px] lg:text-[26px]'
-          : 'justify-between gap-1 sm:gap-1.5 text-[16px] sm:text-[19px] md:text-[22px] lg:text-[24px]'
-      }`}
+      className={`mushaf-verse-text w-full flex items-center justify-center flex-nowrap whitespace-nowrap ${lineGap} ${!isOpeningSpread ? 'h-full' : ''}`}
     >
       {words.map((word) => {
         if (word.isAyahMarker) {
@@ -160,10 +243,15 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
           );
         }
 
+        // Reveal state is keyed by a COMPOSITE ayah key (surah * 1000 + ayah):
+        // ayah numbers repeat in every surah, so a bare ayah number would let
+        // revealing 113:1 also reveal 112:1 and 114:1 on the same page.
+        const ayahKey = ayahStateKey(word.surahNumber, word.ayahNumber);
+
         const isAyahRevealed =
-          revealedAyahIds.includes(word.ayahNumber) || isHintRevealed;
+          revealedAyahIds.includes(ayahKey) || isHintRevealed;
         const wordRevealed =
-          revealedWordIndices[word.ayahNumber]?.includes(word.wordIndex) ?? false;
+          revealedWordIndices[ayahKey]?.includes(word.wordIndex) ?? false;
 
         // Determine word visibility based on ghost level (tier 1, 2, 3 or 0=visible)
         let isVisible = true;
@@ -191,18 +279,11 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
         let statusStyles = '';
         let statusBadge = '';
 
-        if (evalStatus === 'correct') {
-          // Words recited correctly appear as authentic, dignified Quran text (no green background or border)
+        if (evalStatus === 'correct' || evalStatus === 'omission') {
+          // Words recited correctly (or passed) appear as authentic, dignified Quran text
           statusStyles = '';
           statusBadge = '';
           isVisible = true; // Always show during review
-          isGhost = false;
-        } else if (evalStatus === 'omission') {
-          // Clear Red for Omissions (Tarteel style: missed words flagged in red)
-          statusStyles =
-            'bg-red-500/20 text-red-800 dark:text-red-300 border-b-2 border-red-500 underline decoration-red-600 decoration-2 font-bold px-1.5 py-0.5 rounded shadow-sm';
-          statusBadge = 'كلمة منسية (لم تُقرأ) ✗';
-          isVisible = true;
           isGhost = false;
         } else if (
           evalStatus === 'substitution' ||
@@ -222,6 +303,13 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
           isVisible = true;
           isGhost = false;
         }
+
+        // The word arrived: it was concealed a moment ago and is visible now.
+        // The materialize animation plays once, on that transition only.
+        const wasGhost = previousGhostState.current.get(word.id) ?? false;
+        const justRevealed = wasGhost && isVisible && !isGhost;
+        ghostStateThisRender.set(word.id, isGhost);
+        if (justRevealed) materialize(word.id);
 
         const isTooltipOpen = activeTooltipWordId === word.id;
 
@@ -245,16 +333,24 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
                 }
               }
             }}
-            className={`relative font-uthmani transition-[background-color,color,filter,box-shadow,transform,opacity] duration-200 select-none whitespace-nowrap leading-relaxed py-0.5 inline-flex items-center ${
-              (evalStatus || isVisible) ? 'cursor-pointer' : ''
+            ref={(el) => {
+              if (el) wordElements.current.set(word.id, el);
+              else wordElements.current.delete(word.id);
+            }}
+            className={`relative font-uthmani select-none whitespace-nowrap leading-relaxed py-0.5 inline-flex items-center ${
+              isGhost
+                ? 'opacity-0 transition-opacity duration-300'
+                : 'transition-[background-color,color] duration-300'
+            } ${
+              word.text.includes('\u06DE') ? 'quran-ornament' : ''
+            } ${
+              (evalStatus || isVisible) ? 'cursor-pointer' : 'pointer-events-none'
             } ${
               statusStyles
                 ? statusStyles
                 : isVisible
-                ? wordRevealed
-                  ? 'text-mushaf-ink dark:text-darkMushaf-ink bg-mushaf-gold/15 ring-1 ring-mushaf-gold/40 rounded px-1'
-                  : 'text-mushaf-ink dark:text-darkMushaf-ink'
-                : 'text-transparent bg-mushaf-ink/10 dark:bg-darkMushaf-ink/10 blur-[5px] rounded px-1 cursor-default select-none'
+                ? 'text-mushaf-ink dark:text-darkMushaf-ink'
+                : 'cursor-default select-none'
             }`}
             title={
               statusBadge
@@ -262,8 +358,8 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
                 : undefined
             }
           >
-            {/* Tarteel In-Situ Floating Popover with Voice Pronunciation */}
-            {isTooltipOpen && (evalStatus || isVisible) && (
+            {/* Tarteel In-Situ Floating Popover — only shown for visible/evaluated words */}
+            {isTooltipOpen && isVisible && (evalStatus || isVisible) && (
               <span
                 onClick={(e) => e.stopPropagation()}
                 className="absolute bottom-full mb-2 right-1/2 translate-x-1/2 z-50 whitespace-nowrap px-3 py-1.5 rounded-xl text-xs font-arabic font-bold shadow-2xl animate-fade-in pointer-events-auto bg-mushaf-surface dark:bg-darkMushaf-card border-2 border-mushaf-gold/50 text-mushaf-ink dark:text-darkMushaf-ink flex items-center gap-2"
@@ -312,7 +408,7 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
 
             <span>{word.text}</span>
             {word.waqfMark && (
-              <span className="text-[0.5em] text-mushaf-gold dark:text-darkMushaf-gold align-super mx-0.5 select-none font-uthmani font-normal">
+              <span className="waqf-mark text-[0.55em] align-super mx-0.5 select-none font-uthmani font-normal">
                 {word.waqfMark}
               </span>
             )}

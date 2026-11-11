@@ -1,4 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Aref+Ruqaa:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Readex+Pro:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Scheherazade+New:wght@400;700&display=swap');
+
+/* Uthmanic Hafs — Uthman Taha script (King Fahd Complex Madinah Mushaf)
+   GPOS-patched: U+06DF and U+06ED anchors added to eliminate dotted-circle rendering */
+@font-face {
+  font-family: 'UthmanicHafs';
+  src: url('/fonts/UthmanicHafs1_Ver09_fixed.woff2') format('woff2'),
+       url('/fonts/UthmanicHafs1_Ver09.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* Authentic King Fahd Glorious Quran Printing Complex Fonts (مجمع الملك فهد لطباعة المصحف الشريف) */
 @font-face {
@@ -38,8 +49,14 @@
 @tailwind utilities;
 
 :root {
-  --font-uthmani: 'KFGQPC Uthmanic Script HAFS', 'UthmanicHafs', 'KFGQPC Uthman Taha Naskh', 'Amiri Quran', 'Scheherazade New', 'Traditional Arabic', serif;
-  --font-arabic: 'IBM Plex Sans Arabic', 'Cairo', system-ui, sans-serif;
+  /*
+   * Amiri Quran MUST be first: it has 4 MarkToMark GPOS lookups that correctly
+   * stack Uthmanic tajweed signs (U+06D6–U+06ED) which appear after other marks.
+   * UthmanicHafs only has 1 MarkToMark lookup and is missing U+06ED in Mark1,
+   * causing dotted-circle (◌) to appear in هُدًۭى / أُو۟لَٰٓئِكَ etc.
+   */
+  --font-uthmani: 'Amiri Quran', 'UthmanicHafs', 'KFGQPC Uthman Taha Naskh', 'KFGQPC Uthmanic Script HAFS', 'Scheherazade New', 'Traditional Arabic', serif;
+  --font-arabic: 'IBM Plex Sans Arabic', 'Readex Pro', 'Cairo', system-ui, sans-serif;
 }
 
 /* High Contrast Mode Tokens */
@@ -74,11 +91,53 @@ body {
 /* Medina Mushaf typography rules */
 .font-uthmani {
   font-family: var(--font-uthmani);
-  font-feature-settings: "cv01" on, "cv02" on, "liga" on, "calt" on, "mkmk" on, "mark" on;
+  font-feature-settings: "kern" 1, "liga" 1, "clig" 1, "calt" 1, "ccmp" 1, "mark" 1, "mkmk" 1;
   font-variant-ligatures: common-ligatures contextual;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/*
+ * Dedicated container for the Uthmani verse text.
+ * - letter-spacing MUST stay 0: tracking breaks Arabic cursive joins.
+ * - line-height 2.35 leaves vertical room for harakat, maddah and waqf marks
+ *   so they are never clipped by overflow/nowrap lines.
+ */
+.mushaf-verse-text {
+  font-family: var(--font-uthmani);
+  direction: rtl;
+  font-size: clamp(1.6rem, 2.5vw, 2.25rem);
+  line-height: 2.35;
+  letter-spacing: 0 !important;
+  font-feature-settings: "kern" 1, "liga" 1, "clig" 1, "calt" 1, "ccmp" 1, "mark" 1, "mkmk" 1;
+  font-variant-ligatures: common-ligatures contextual;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Rub-el-Hizb ornament (۞) that some ayahs carry at their start. */
+.quran-ornament {
+  color: #c29b38;
+  font-size: 0.9em;
+  line-height: 1;
+  vertical-align: -0.08em;
+}
+
+.dark .quran-ornament {
+  color: #e0ba53;
+}
+
+/* Waqf / tajweed pause marks (ۛ ۚ ۖ ۗ ۙ ۘ ۜ) rendered above words.
+ * Darker amber-brown gives better contrast against the parchment background
+ * without competing with the verse text. Dark mode uses a warm mid-gold. */
+.waqf-mark {
+  color: #7A5C10;
+}
+
+.dark .waqf-mark {
+  color: #C8A84B;
 }
 
 /* Custom scrollbars for clean UI */
@@ -98,4 +157,47 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(194, 155, 56, 0.6);
+}
+
+/*
+ * ── Fluid interactions ──────────────────────────────────────────────
+ * Reduced motion is not the absence of feedback — it is a gentler
+ * equivalent of it. Slides and springs become short cross-fades, and
+ * translucent surfaces frost over instead of blurring.
+ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .mushaf-material {
+    background: #FFFDF9 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .dark .mushaf-material {
+    background: #131924 !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .mushaf-material {
+    background: #FFFFFF !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-color: currentColor !important;
+  }
+
+  .dark .mushaf-material {
+    background: #0B0F17 !important;
+  }
 }

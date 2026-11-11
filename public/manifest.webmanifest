@@ -1,27 +1,64 @@
 {
-  "name": "Quran Cognitive OS",
-  "short_name": "QuranOS",
-  "description": "Local-First Quran Memorization & Retention Platform with Active Recall & FSRS",
-  "start_url": "/",
+  "name": "باب الإتقان — مصحف الحفظ والاسترجاع الذكي",
+  "short_name": "باب الإتقان",
+  "description": "منصة حفظ واسترجاع القرآن الكريم بالاسترجاع النشط والتسميع الصوتي المباشر وخوارزمية FSRS",
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "background_color": "#FAF8F2",
-  "theme_color": "#11654C",
-  "orientation": "portrait",
+  "theme_color": "#174C3D",
+  "orientation": "portrait-primary",
   "dir": "rtl",
   "lang": "ar",
   "icons": [
     {
-      "src": "/icons/icon-192x192.svg",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512x512.svg",
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/mihrab-logo.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
-      "purpose": "maskable"
+      "purpose": "any"
     }
   ],
-  "categories": ["education", "books", "utilities"]
+  "screenshots": [
+    {
+      "src": "/icons/screenshot-mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "شاشة التسميع والحفظ على الهاتف"
+    },
+    {
+      "src": "/icons/screenshot-desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "واجهة المصحف الشريف وخريطة الذاكرة"
+    }
+  ],
+  "categories": ["education", "books", "utilities"],
+  "prefer_related_applications": false
 }

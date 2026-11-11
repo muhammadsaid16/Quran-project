@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSessionStore } from '@/stores/session-store';
 import {
   useActiveRecallStore,
@@ -10,11 +10,12 @@ import {
   getGhostTierLabel,
 } from '@/stores/active-recall-store';
 import { SURAHS } from '@/data/surahs';
-import { MedinaPage } from './MedinaPage';
+import { MushafSpread } from './MushafSpread';
 import { AcquisitionGuide } from './AcquisitionGuide';
 import { RetentionGuide } from './RetentionGuide';
-import { TransitionGuide } from './TransitionGuide';
+import { RandomAyahTestView } from './RandomAyahTestView';
 import { RecitationHUD } from '@/components/hud/RecitationHUD';
+import { MEDINA_PAGES } from '@/data/medina-pages';
 import {
   ChevronRight,
   ChevronLeft,
@@ -23,6 +24,7 @@ import {
   Brain,
   Repeat,
   ArrowRightLeft,
+  Shuffle,
   Eye,
   EyeOff,
   BookOpen,
@@ -42,17 +44,34 @@ export const MushafViewer: React.FC = () => {
     setPageTurnDirection,
   } = useActiveRecallStore();
 
+  useEffect(() => {
+    const pageData = MEDINA_PAGES[currentPage];
+    if (pageData && pageData.startSurah && pageData.startSurah !== currentSurah) {
+      setCurrentSurah(pageData.startSurah);
+    }
+  }, [currentPage, currentSurah, setCurrentSurah]);
+
   const handleNextPage = () => {
     if (currentPage < 604) {
       setPageTurnDirection('next');
-      setCurrentPage(currentPage + 1);
+      const nextPage = currentPage + 1;
+      setCurrentPage(nextPage);
+      const pageData = MEDINA_PAGES[nextPage];
+      if (pageData && pageData.startSurah) {
+        setCurrentSurah(pageData.startSurah);
+      }
     }
   };
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setPageTurnDirection('prev');
-      setCurrentPage(currentPage - 1);
+      const prevPage = currentPage - 1;
+      setCurrentPage(prevPage);
+      const pageData = MEDINA_PAGES[prevPage];
+      if (pageData && pageData.startSurah) {
+        setCurrentSurah(pageData.startSurah);
+      }
     }
   };
 
@@ -60,6 +79,10 @@ export const MushafViewer: React.FC = () => {
     const target = Math.max(1, Math.min(604, currentPage + delta));
     setPageTurnDirection(delta > 0 ? 'next' : 'prev');
     setCurrentPage(target);
+    const pageData = MEDINA_PAGES[target];
+    if (pageData && pageData.startSurah) {
+      setCurrentSurah(pageData.startSurah);
+    }
   };
 
   const currentTier = getGhostTierNumber(ghostTextLevel);
@@ -71,7 +94,7 @@ export const MushafViewer: React.FC = () => {
       dir="rtl"
     >
       {/* Top Mushaf Controls Bar: Navigation & Ghost Text Tier Controls */}
-      <div className="bg-mushaf-surface dark:bg-darkMushaf-card border border-mushaf-border dark:border-darkMushaf-border rounded-xl p-3 mb-4 shadow-sm space-y-3">
+      <div className="mushaf-material bg-mushaf-surface/80 dark:bg-darkMushaf-card/75 backdrop-blur-xl backdrop-saturate-150 border border-mushaf-border/70 dark:border-darkMushaf-border/70 rounded-xl p-3 mb-4 shadow-page space-y-3">
         
         {/* Row 1: Mode Switcher & Ghost Text Tiers */}
         <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-mushaf-border/60 dark:border-darkMushaf-border">
@@ -81,7 +104,7 @@ export const MushafViewer: React.FC = () => {
             <button
               data-testid="mode-tab-acquisition"
               onClick={() => setMode('acquisition')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-arabic transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-arabic transition-[transform,background-color,color,box-shadow] duration-150 ${
                 mode === 'acquisition'
                   ? 'bg-mushaf-emerald text-white font-bold shadow-sm'
                   : 'text-mushaf-ink-muted hover:text-mushaf-ink'
@@ -94,7 +117,7 @@ export const MushafViewer: React.FC = () => {
             <button
               data-testid="mode-tab-retention"
               onClick={() => setMode('retention')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-arabic transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-arabic transition-[transform,background-color,color,box-shadow] duration-150 ${
                 mode === 'retention'
                   ? 'bg-mushaf-emerald text-white font-bold shadow-sm'
                   : 'text-mushaf-ink-muted hover:text-mushaf-ink'
@@ -107,66 +130,68 @@ export const MushafViewer: React.FC = () => {
             <button
               data-testid="mode-tab-transition"
               onClick={() => setMode('transition')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-arabic transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-arabic transition-[transform,background-color,color,box-shadow] duration-150 cursor-pointer ${
                 mode === 'transition'
                   ? 'bg-mushaf-emerald text-white font-bold shadow-sm'
                   : 'text-mushaf-ink-muted hover:text-mushaf-ink'
               }`}
             >
-              <ArrowRightLeft className="w-3.5 h-3.5" />
-              <span>اختبار الروابط (Transition)</span>
+              <Shuffle className="w-3.5 h-3.5" />
+              <span>اختبار عشوائي (السابق والتالي)</span>
             </button>
           </div>
 
-          {/* Ghost Text Selector: Conceal vs Visible (No Hints) */}
-          <div
-            data-testid="ghost-tier-selector"
-            className="flex items-center gap-1.5 bg-mushaf-parchment dark:bg-darkMushaf-surface p-1 rounded-xl border border-mushaf-border dark:border-darkMushaf-border text-xs font-arabic"
-          >
-            {/* Level 1: Full Concealment (Active Recall / Memorization) */}
-            <button
-              data-testid="ghost-level-1-btn"
-              onClick={() => {
-                setGhostTextLevel('level1_concealed');
-                if (mode === 'acquisition') {
-                  setAcquisitionStep('recite');
-                }
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all font-semibold ${
-                currentTier > 0
-                  ? 'bg-mushaf-gold text-mushaf-ink font-bold shadow-sm'
-                  : 'text-mushaf-ink-muted hover:text-mushaf-ink'
-              }`}
-              title="إخفاء كامل للنص للتسميع من الذاكرة (بدون أي تلميحات)"
+          {/* Ghost Text Selector: Conceal vs Visible (No Hints) - only in acquisition/retention */}
+          {mode !== 'transition' && (
+            <div
+              data-testid="ghost-tier-selector"
+              className="flex items-center gap-1.5 bg-mushaf-parchment dark:bg-darkMushaf-surface p-1 rounded-xl border border-mushaf-border dark:border-darkMushaf-border text-xs font-arabic"
             >
-              <EyeOff className="w-3.5 h-3.5" />
-              <span>إخفاء النص (تسميع)</span>
-            </button>
+              {/* Level 1: Full Concealment (Active Recall / Memorization) */}
+              <button
+                data-testid="ghost-level-1-btn"
+                onClick={() => {
+                  setGhostTextLevel('level1_concealed');
+                  if (mode === 'acquisition') {
+                    setAcquisitionStep('recite');
+                  }
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-[transform,background-color,color,box-shadow] duration-150 font-semibold cursor-pointer ${
+                  currentTier > 0
+                    ? 'bg-mushaf-gold text-mushaf-ink font-bold shadow-sm'
+                    : 'text-mushaf-ink-muted hover:text-mushaf-ink'
+                }`}
+                title="إخفاء كامل للنص للتسميع من الذاكرة (بدون أي تلميحات)"
+              >
+                <EyeOff className="w-3.5 h-3.5" />
+                <span>إخفاء النص (تسميع)</span>
+              </button>
 
-            {/* Visible: Full Mushaf Text */}
-            <button
-              data-testid="ghost-level-visible-btn"
-              onClick={() => {
-                setGhostTextLevel('visible');
-                if (mode === 'acquisition') {
-                  setAcquisitionStep('read');
-                }
-              }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all font-semibold ${
-                currentTier === 0
-                  ? 'bg-mushaf-emerald text-white font-bold shadow-sm'
-                  : 'text-mushaf-ink-muted hover:text-mushaf-ink'
-              }`}
-              title="عرض النص القرآني كاملاً للقراءة والمراجعة"
-            >
-              <Eye className="w-3.5 h-3.5" />
-              <span>إظهار النص (قراءة)</span>
-            </button>
+              {/* Visible: Full Mushaf Text */}
+              <button
+                data-testid="ghost-level-visible-btn"
+                onClick={() => {
+                  setGhostTextLevel('visible');
+                  if (mode === 'acquisition') {
+                    setAcquisitionStep('read');
+                  }
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-[transform,background-color,color,box-shadow] duration-150 font-semibold cursor-pointer ${
+                  currentTier === 0
+                    ? 'bg-mushaf-emerald text-white font-bold shadow-sm'
+                    : 'text-mushaf-ink-muted hover:text-mushaf-ink'
+                }`}
+                title="عرض النص القرآني كاملاً للقراءة والمراجعة"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                <span>إظهار النص (قراءة)</span>
+              </button>
 
-            {/* Hidden compatibility buttons */}
-            <button data-testid="ghost-level-2-btn" onClick={() => setGhostTextLevel('level1_concealed')} className="hidden" />
-            <button data-testid="ghost-level-3-btn" onClick={() => setGhostTextLevel('level1_concealed')} className="hidden" />
-          </div>
+              {/* Hidden compatibility buttons */}
+              <button data-testid="ghost-level-2-btn" onClick={() => setGhostTextLevel('level1_concealed')} className="hidden" />
+              <button data-testid="ghost-level-3-btn" onClick={() => setGhostTextLevel('level1_concealed')} className="hidden" />
+            </div>
+          )}
 
         </div>
 
@@ -212,6 +237,10 @@ export const MushafViewer: React.FC = () => {
                   if (!isNaN(p)) {
                     setPageTurnDirection(p > currentPage ? 'next' : 'prev');
                     setCurrentPage(p);
+                    const pageData = MEDINA_PAGES[p];
+                    if (pageData && pageData.startSurah) {
+                      setCurrentSurah(pageData.startSurah);
+                    }
                   }
                 }}
                 className="bg-mushaf-parchment dark:bg-darkMushaf-surface border border-mushaf-border dark:border-darkMushaf-border text-mushaf-ink dark:text-darkMushaf-ink rounded-lg px-2.5 py-1.5 font-bold focus:outline-none focus:ring-1 focus:ring-mushaf-gold cursor-pointer"
@@ -292,18 +321,17 @@ export const MushafViewer: React.FC = () => {
       {/* Mode-Specific Interaction Guides */}
       {mode === 'acquisition' && <AcquisitionGuide />}
       {mode === 'retention' && <RetentionGuide />}
-      {mode === 'transition' && <TransitionGuide />}
+      {mode === 'transition' && <RandomAyahTestView />}
 
-      {/* Medina 15-Line Mushaf Page Container */}
-      <div className="flex justify-center">
-        <MedinaPage
-          pageNumber={currentPage}
-          isRecallModeActive={currentTier > 0 || recallSessionActive}
-        />
-      </div>
+      {/* Medina 15-Line Mushaf Page Container (Only visible in normal reading/recitation modes) */}
+      {mode !== 'transition' && (
+        <div className="flex justify-center">
+          <MushafSpread isRecallModeActive={currentTier > 0 || recallSessionActive} />
+        </div>
+      )}
 
       {/* Floating Recitation HUD (strictly active in Mushaf View) */}
-      <RecitationHUD />
+      {mode !== 'transition' && <RecitationHUD />}
     </div>
   );
 };

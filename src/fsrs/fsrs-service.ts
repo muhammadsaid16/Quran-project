@@ -55,12 +55,16 @@ export class FSRSService {
       defaultFsrsEngine
     );
 
-    // 4. Determine result status
+    // 4. Determine result status (caller override wins: e.g. acoustic-uncertain
+    // sessions are forced to 'needs_review' so they can never look 'passed')
     let resultStatus: ReviewResultStatus = 'passed';
     if (ratingResult.rating === 1) {
       resultStatus = 'failed';
     } else if (ratingResult.rating === 2) {
       resultStatus = 'needs_review';
+    }
+    if (input.resultStatusOverride) {
+      resultStatus = input.resultStatusOverride;
     }
 
     // Extract error positions if present
@@ -99,7 +103,9 @@ export class FSRSService {
       inference_duration_ms: input.inferenceDurationMs ?? 0,
       alignment_confidence:
         input.alignmentResult?.confidence ?? input.metrics?.confidence ?? 1.0,
-      error_count: ratingResult.metrics.omissions + ratingResult.metrics.substitutions,
+      error_count:
+        input.metrics?.errorCount ??
+        ratingResult.metrics.omissions + ratingResult.metrics.substitutions,
       error_positions: errorPositions,
       result_status: resultStatus,
     };
