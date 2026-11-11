@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   Share2,
@@ -53,6 +54,11 @@ export const AchievementCelebrationModal: React.FC<AchievementCelebrationModalPr
   const [isGenerating, setIsGenerating] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const isUnlocked = Boolean(data);
 
@@ -201,17 +207,19 @@ export const AchievementCelebrationModal: React.FC<AchievementCelebrationModalPr
     Math.round(((currentProgress || 0) / definition.threshold) * 100)
   );
 
-  return (
+  if (!isMounted) return null;
+
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-40 flex items-center justify-center p-3 sm:p-4 pt-20 pb-6 bg-black/75 backdrop-blur-md animate-fade-in overflow-y-auto"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto"
       dir="rtl"
     >
-      <div className="relative w-full max-w-lg my-auto max-h-[calc(100vh-6.5rem)] overflow-y-auto bg-mushaf-surface dark:bg-darkMushaf-card border-2 border-mushaf-gold/40 dark:border-darkMushaf-gold/50 rounded-3xl shadow-2xl font-arabic transition-all scrollbar-thin">
+      <div className="relative w-full max-w-lg my-auto max-h-[90vh] overflow-y-auto bg-mushaf-surface dark:bg-darkMushaf-card border-2 border-mushaf-gold/40 dark:border-darkMushaf-gold/50 rounded-3xl shadow-2xl font-arabic transition-all scrollbar-thin">
         
         {/* Toast Notification */}
         {toastMessage && (
@@ -476,6 +484,7 @@ export const AchievementCelebrationModal: React.FC<AchievementCelebrationModalPr
 
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

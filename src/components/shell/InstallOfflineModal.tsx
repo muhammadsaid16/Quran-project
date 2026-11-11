@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { usePWAStore } from '@/stores/pwa-store';
 import {
   OFFLINE_PACKAGE_CATEGORIES,
@@ -47,7 +48,13 @@ export const InstallOfflineModal: React.FC<InstallOfflineModalProps> = ({
     requestPersistentStorage,
   } = usePWAStore();
 
-  if (!isOpen) return null;
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isOpen || !isMounted) return null;
 
   const isDownloading = downloadStatus === 'downloading';
   const isCompleted = isOfflinePackageInstalled || downloadStatus === 'completed';
@@ -73,7 +80,7 @@ export const InstallOfflineModal: React.FC<InstallOfflineModalProps> = ({
     }
   };
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
@@ -82,10 +89,10 @@ export const InstallOfflineModal: React.FC<InstallOfflineModalProps> = ({
           onClose();
         }
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 pt-16 sm:pt-20 pb-6 bg-black/75 backdrop-blur-md animate-fade-in overflow-y-auto"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto"
       dir="rtl"
     >
-      <div className="relative w-full max-w-2xl my-auto max-h-[calc(100vh-5rem)] overflow-y-auto bg-mushaf-surface dark:bg-darkMushaf-card border-2 border-mushaf-gold/40 dark:border-darkMushaf-gold/50 rounded-3xl shadow-2xl font-arabic transition-all scrollbar-thin">
+      <div className="relative w-full max-w-2xl my-auto max-h-[90vh] overflow-y-auto bg-mushaf-surface dark:bg-darkMushaf-card border-2 border-mushaf-gold/40 dark:border-darkMushaf-gold/50 rounded-3xl shadow-2xl font-arabic transition-all scrollbar-thin">
         
         {/* Close Button */}
         <button
@@ -401,6 +408,7 @@ export const InstallOfflineModal: React.FC<InstallOfflineModalProps> = ({
         </div>
 
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
