@@ -342,7 +342,23 @@ export const RecitationHUD: React.FC = () => {
 
   const toggleMic = async () => {
     if (!micActive) {
+      let stream: MediaStream | null = null;
       try {
+        // 1. Immediately request microphone access directly in the user click gesture
+        if (typeof window !== 'undefined') {
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            throw new Error('المتصفح الحالي لا يدعم تسجيل الصوت عبر الميكروفون');
+          }
+          stream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+              channelCount: 1,
+              echoCancellation: true,
+              noiseSuppression: true,
+              autoGainControl: true,
+            },
+          });
+        }
+
         setMicActive(true);
         setStatus('listening');
         if (mode === 'acquisition') {
@@ -387,12 +403,6 @@ export const RecitationHUD: React.FC = () => {
 
             // Live Voice-Driven Word Unveiling & Multi-Verse Continuous Tracking (Tarteel Style):
             if (alignmentEngineRef.current && locatorRef.current) {
-              // The locator decides WHICH ayah the reciter is on. It works with a
-              // LOCAL alignment, so a reciter who starts mid-ayah (for example at
-              // "غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ" inside 1:7) is located correctly instead
-              // of locking the app onto the Basmala.
-              // The live page comes from the store, not from the render
-              // closure: a page advance must take effect on the very next token.
               const livePage = useSessionStore.getState().currentPage;
               const result = locatorRef.current.pushToken(
                 ev,
@@ -404,29 +414,20 @@ export const RecitationHUD: React.FC = () => {
                 const target = result.target;
                 const targetKey = ayahStateKey(target.surahNumber, target.ayahNumber);
 
-                // Tokens of the ayah the reciter is currently on. The tokens
-                // that arrived BEFORE the locator could name the ayah are added
-                // now, so the review does not lose the first words.
                 const tokensForTarget = ayahsRecitedRef.current.get(targetKey) ?? [];
                 tokensForTarget.push(...preAnchorTokensRef.current, ev);
                 ayahsRecitedRef.current.set(targetKey, tokensForTarget);
                 preAnchorTokensRef.current = [];
 
-                // Reveal the words that were recited (page word indices).
                 for (const pageIndex of result.revealPageWordIndices) {
                   revealWordHint(targetKey, pageIndex);
                 }
 
                 if (result.changed) {
-                  // The reciter moved to another ayah — update the app's target.
                   if (target.pageNumber !== currentPage) {
-                    // The reciter started the FIRST ayah of the next page: the page
-                    // advances only now, and the surah follows the page.
                     advanceToPage(target.pageNumber);
                     locatorRef.current?.onPageChanged();
                   }
-                  // The surah label follows the ayah the reciter is on — a page
-                  // can hold more than one surah (page 604 holds three).
                   if (target.surahNumber !== useSessionStore.getState().currentSurah) {
                     useSessionStore.getState().setCurrentSurah(target.surahNumber);
                   }
@@ -448,14 +449,12 @@ export const RecitationHUD: React.FC = () => {
             setPauseDurationMs(0);
           },
           onPartial: (p) => {
-            // Live voice tracking: show decoded recognized text in the HUD
             if (p.text) {
               setLiveTranscript(phonemesToText(p.text));
             }
           },
           onAudioLevel: (lvl) => {
             setAudioLevel(lvl.rmsLevel);
-            // Monitor pauses for Transition mode
             if (lvl.rmsLevel < 10) {
               if (pauseStartRef.current === null) {
                 pauseStartRef.current = Date.now();
@@ -475,11 +474,22 @@ export const RecitationHUD: React.FC = () => {
           },
         });
 
-        await engineRef.current.startRecording();
+        await engineRef.current.startRecording(stream || undefined);
       } catch (err: unknown) {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+        }
         console.error('Microphone capture error:', err);
-        const errMsg = err instanceof Error ? err.message : String(err);
-        setErrorMessage(`تعذر الوصول إلى الميكروفون: ${errMsg}`);
+        const errObj = err as { name?: string; message?: string };
+        let userFriendlyMsg = 'تعذر الوصول إلى الميكروفون';
+        if (errObj?.name === 'NotAllowedError' || errObj?.name === 'PermissionDeniedError') {
+          userFriendlyMsg = 'تم رفض الإذن بالوصول للميكروفون. يُرجى السماح به من إعدادات المتصفح لبدء التسميع.';
+        } else if (errObj?.name === 'NotFoundError' || errObj?.name === 'DevicesNotFoundError') {
+          userFriendlyMsg = 'لم يتم العثور على ميكروفون متصل بجهازك. يُرجى التحقق من توصيل الميكروفون.';
+        } else if (errObj?.message) {
+          userFriendlyMsg = `تعذر الوصول إلى الميكروفون: ${errObj.message}`;
+        }
+        setErrorMessage(userFriendlyMsg);
         setStatus('error');
         setMicActive(false);
       }

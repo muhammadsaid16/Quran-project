@@ -223,14 +223,33 @@ export class VoiceRecognitionEngine {
 
   /**
    * Start live microphone recording via AudioWorklet
+   * Can accept an existing MediaStream already requested directly by user gesture
    */
-  public async startRecording(): Promise<void> {
-    if (this.status !== 'ready' && this.status !== 'stopped') {
-      await this.initialize();
-    }
-
+  public async startRecording(existingStream?: MediaStream): Promise<void> {
     if (typeof window === 'undefined' || !navigator.mediaDevices) {
       throw new Error('Microphone recording is only available in a browser environment');
+    }
+
+    // 1. Immediately request/bind microphone access within active user gesture
+    let stream = existingStream;
+    if (!stream) {
+      stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
+    }
+
+    if (this.status !== 'ready' && this.status !== 'stopped') {
+      try {
+        await this.initialize();
+      } catch (err) {
+        stream.getTracks().forEach((track) => track.stop());
+        throw err;
+      }
     }
 
     try {
@@ -239,16 +258,7 @@ export class VoiceRecognitionEngine {
       this.lastTokenCount = 0;
       this.totalSamplesStreamed = 0;
       this.recordedAudioChunks = [];
-
-      // 1. Request microphone access (Zero external network)
-      this.mediaStream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          channelCount: 1,
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        },
-      });
+      this.mediaStream = stream;
 
       // 2. Initialize AudioContext
       const AudioCtxClass =
