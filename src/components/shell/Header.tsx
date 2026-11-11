@@ -17,6 +17,7 @@ import {
   Download,
   HardDrive,
   Trophy,
+  Smartphone,
 } from 'lucide-react';
 
 import { InstallOfflineModal } from './InstallOfflineModal';
@@ -187,6 +188,20 @@ export const Header: React.FC = () => {
           >
             {getThemeIcon()}
           </button>
+
+          {/* Android APK Download Button */}
+          {isMounted && (
+            <a
+              href="/babalitqan.apk"
+              download="باب الإتقان.apk"
+              className="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-500/15 dark:bg-amber-500/20 text-amber-800 dark:text-amber-200 border border-amber-500/30 hover:bg-amber-500/25 transition-all whitespace-nowrap shadow-xs"
+              title="تحميل تطبيق أندرويد المستقل (APK - 1.2MB)"
+            >
+              <Smartphone className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              <span className="hidden sm:inline">أندرويد APK</span>
+              <span className="sm:hidden">APK</span>
+            </a>
+          )}
 
           {/* PWA & Offline Package Install Button */}
           {isMounted && (

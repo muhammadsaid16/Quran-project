@@ -158,6 +158,32 @@ export const InstallOfflineModal: React.FC<InstallOfflineModalProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Android APK Direct Download Banner */}
+          <div className="mt-5 p-4 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-amber-500/10 border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
+                <Smartphone className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="text-sm font-bold text-mushaf-ink dark:text-darkMushaf-ink flex items-center gap-2">
+                  <span>تطبيق أندرويد المستقل (APK)</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-600/20 text-emerald-800 dark:text-emerald-300 font-bold">1.2 MB</span>
+                </div>
+                <p className="text-xs text-mushaf-ink-muted dark:text-darkMushaf-ink-muted mt-0.5">
+                  ثبّت التطبيق كبرنامج أصلي على هاتفك يعمل بأعلى سرعة وتوافق دون الحاجة لمتجر Google Play.
+                </p>
+              </div>
+            </div>
+            <a
+              href="/babalitqan.apk"
+              download="باب الإتقان.apk"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all whitespace-nowrap active:scale-95"
+            >
+              <Download className="w-4 h-4" />
+              <span>تحميل ملف APK</span>
+            </a>
+          </div>
         </div>
 
         {/* Package Contents Breakdown */}

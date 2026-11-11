@@ -53,6 +53,7 @@ __pycache__/
 # App packages & tunnels
 cloudflared
 *.apk
+!public/babalitqan.apk
 *.aab
 *.zip
 Readme.html

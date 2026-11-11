@@ -22,6 +22,7 @@ import {
   Download,
   Wifi,
   WifiOff,
+  Smartphone,
 } from 'lucide-react';
 
 export const DashboardView: React.FC = () => {
@@ -283,7 +284,19 @@ export const DashboardView: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {isMounted && (
+              <a
+                href="/babalitqan.apk"
+                download="باب الإتقان.apk"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-arabic font-bold bg-amber-500/15 dark:bg-amber-500/20 text-amber-800 dark:text-amber-200 border border-amber-500/40 hover:bg-amber-500/25 transition-all shadow-xs"
+                title="تحميل تطبيق أندرويد المستقل (APK - 1.2MB)"
+              >
+                <Smartphone className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                <span>تحميل تطبيق أندرويد (APK)</span>
+              </a>
+            )}
+
             {isMounted && (
               <button
                 onClick={() => setInstallModalOpen(true)}
