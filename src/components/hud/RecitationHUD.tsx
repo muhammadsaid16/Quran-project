@@ -43,6 +43,7 @@ import {
   ChevronDown,
   ChevronUp,
   ArrowLeft,
+  Loader2,
 } from 'lucide-react';
 
 export const RecitationHUD: React.FC = () => {
@@ -67,6 +68,7 @@ export const RecitationHUD: React.FC = () => {
     setAlignedTokens,
     addAlignedToken,
     setAudioLevel,
+    errorMessage,
     setErrorMessage,
     setAlignmentAccuracy,
     setRecognitionConfidence,
@@ -360,7 +362,8 @@ export const RecitationHUD: React.FC = () => {
         }
 
         setMicActive(true);
-        setStatus('listening');
+        setStatus('initializing');
+        setErrorMessage(null);
         if (mode === 'acquisition') {
           setAcquisitionStep('recite');
           if (ghostTier === 0) {
@@ -475,6 +478,7 @@ export const RecitationHUD: React.FC = () => {
         });
 
         await engineRef.current.startRecording(stream || undefined);
+        setStatus('listening');
       } catch (err: unknown) {
         if (stream) {
           stream.getTracks().forEach((track) => track.stop());
@@ -718,11 +722,22 @@ export const RecitationHUD: React.FC = () => {
                   </button>
                 )}
               </div>
+            ) : status === 'initializing' ? (
+              <div data-testid="recitation-status-badge" className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/15 text-blue-700 dark:text-blue-300 text-xs font-bold font-arabic border border-blue-500/30 shadow-sm animate-pulse">
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600 dark:text-blue-400" />
+                <span className="hidden sm:inline">جاري تهيئة نموذج الذكاء الاصطناعي...</span>
+                <span className="sm:hidden">جاري التهيئة...</span>
+              </div>
             ) : status === 'listening' ? (
               <div data-testid="recitation-status-badge" className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 text-red-700 dark:text-red-300 text-xs font-bold font-arabic border border-red-500/25 shadow-sm">
                 <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
                 <span className="hidden sm:inline">جاري الاستماع...</span>
                 <span className="sm:hidden">استماع...</span>
+              </div>
+            ) : errorMessage ? (
+              <div data-testid="recitation-status-badge" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-500/15 text-rose-700 dark:text-rose-300 text-xs font-bold font-arabic border border-rose-500/30 shadow-sm max-w-[200px] sm:max-w-xs" title={errorMessage}>
+                <AlertTriangle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400 shrink-0" />
+                <span className="truncate">{errorMessage}</span>
               </div>
             ) : (
               <span
@@ -768,15 +783,24 @@ export const RecitationHUD: React.FC = () => {
                 <button
                   data-testid="mic-toggle-btn"
                   onClick={toggleMic}
-                  className={`relative w-13 h-13 sm:w-14 sm:h-14 rounded-full text-white shadow-xl flex items-center justify-center transition-[transform,background-color,box-shadow] duration-150 hover:scale-105 active:scale-95 ${
-                    micActive
+                  disabled={status === 'initializing'}
+                  className={`relative w-13 h-13 sm:w-14 sm:h-14 rounded-full text-white shadow-xl flex items-center justify-center transition-[transform,background-color,box-shadow] duration-150 hover:scale-105 active:scale-95 disabled:opacity-85 ${
+                    status === 'initializing'
+                      ? 'bg-blue-600 shadow-blue-500/40 ring-4 ring-blue-500/25'
+                      : micActive
                       ? 'bg-gradient-to-tr from-red-600 to-rose-500 shadow-rose-500/40 animate-pulse ring-4 ring-red-500/25'
                       : 'bg-gradient-to-tr from-emerald-800 via-mushaf-emerald to-emerald-600 shadow-emerald-700/35 hover:shadow-emerald-700/50 ring-4 ring-emerald-600/15 hover:ring-emerald-600/30'
                   }`}
-                  title={micActive ? 'إنهاء التسميع والتحليل' : 'بدء التسميع الصوتي'}
-                  aria-label={micActive ? 'إنهاء التسميع والتحليل' : 'بدء التسميع الصوتي'}
+                  title={status === 'initializing' ? 'جاري تهيئة نموذج الذكاء الاصطناعي...' : micActive ? 'إنهاء التسميع والتحليل' : 'بدء التسميع الصوتي'}
+                  aria-label={status === 'initializing' ? 'جاري تهيئة نموذج الذكاء الاصطناعي...' : micActive ? 'إنهاء التسميع والتحليل' : 'بدء التسميع الصوتي'}
                 >
-                  {micActive ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
+                  {status === 'initializing' ? (
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                  ) : micActive ? (
+                    <MicOff className="w-6 h-6" />
+                  ) : (
+                    <Mic className="w-6 h-6" />
+                  )}
                 </button>
               </div>
             )}

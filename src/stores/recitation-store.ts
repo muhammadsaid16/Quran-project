@@ -4,6 +4,7 @@ import { useAchievementStore } from '@/stores/achievement-store';
 
 export type RecitationStatus =
   | 'idle'
+  | 'initializing'
   | 'listening'
   | 'processing'
   | 'evaluating'

@@ -184,15 +184,76 @@ export class VoiceRecognitionEngine {
       ? this.config.tokensPath
       : `/${this.config.tokensPath}`;
 
+    const CDN_FALLBACK_MODEL =
+      'https://huggingface.co/Ahmedhodzic/zipformer_p-arabic-v3-web/resolve/main/zipformer_p_arabic_v3.1.int8.onnx';
+    const CDN_FALLBACK_TOKENS =
+      'https://huggingface.co/Ahmedhodzic/zipformer_p-arabic-v3-web/raw/main/tokens.txt';
+
+    const fetchBinary = async (primary: string, fallback: string): Promise<ArrayBuffer> => {
+      // 1. Try CacheStorage first
+      if (typeof caches !== 'undefined') {
+        try {
+          const cache = await caches.open('quran-models-cache-v1');
+          const hit = await cache.match(primary);
+          if (hit) {
+            const buf = await hit.arrayBuffer();
+            if (buf.byteLength > 1000000) return buf;
+          }
+        } catch {}
+      }
+
+      // 2. Try primary URL (verify not SPA text/html 404)
+      try {
+        const resp = await fetch(primary);
+        const ct = resp.headers.get('content-type') || '';
+        if (resp.ok && !ct.includes('text/html')) {
+          const buf = await resp.arrayBuffer();
+          if (buf.byteLength > 1000000) {
+            if (typeof caches !== 'undefined') {
+              try {
+                const cache = await caches.open('quran-models-cache-v1');
+                await cache.put(primary, new Response(buf));
+              } catch {}
+            }
+            return buf;
+          }
+        }
+      } catch {}
+
+      // 3. Fallback to CDN
+      const fallbackResp = await fetch(fallback);
+      if (!fallbackResp.ok) {
+        throw new Error(`تعذر تحميل نموذج التعرف الصوتي (رمز الخطأ: ${fallbackResp.status})`);
+      }
+      const fallbackBuf = await fallbackResp.arrayBuffer();
+      if (typeof caches !== 'undefined') {
+        try {
+          const cache = await caches.open('quran-models-cache-v1');
+          await cache.put(primary, new Response(fallbackBuf));
+        } catch {}
+      }
+      return fallbackBuf;
+    };
+
+    const fetchText = async (primary: string, fallback: string): Promise<string> => {
+      try {
+        const resp = await fetch(primary);
+        const ct = resp.headers.get('content-type') || '';
+        if (resp.ok && !ct.includes('text/html')) {
+          const txt = await resp.text();
+          if (txt.length > 50) return txt;
+        }
+      } catch {}
+      const fallbackResp = await fetch(fallback);
+      if (!fallbackResp.ok) {
+        throw new Error(`تعذر تحميل رموز التعرف الصوتي (رمز الخطأ: ${fallbackResp.status})`);
+      }
+      return fallbackResp.text();
+    };
+
     const [modelBuf, tokensTxt] = await Promise.all([
-      fetch(modelUrl).then((r) => {
-        if (!r.ok) throw new Error(`Model fetch failed: ${modelUrl} (${r.status})`);
-        return r.arrayBuffer();
-      }),
-      fetch(tokensUrl).then((r) => {
-        if (!r.ok) throw new Error(`Tokens fetch failed: ${tokensUrl} (${r.status})`);
-        return r.text();
-      }),
+      fetchBinary(modelUrl, CDN_FALLBACK_MODEL),
+      fetchText(tokensUrl, CDN_FALLBACK_TOKENS),
     ]);
 
     try { mod.FS_unlink('/zipformer.onnx'); } catch {}
