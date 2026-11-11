@@ -177,42 +177,77 @@ export class VoiceRecognitionEngine {
       await dynamicImport('/sherpa-wasm/index.js');
     const mod = await initASRModule();
 
-    const modelUrl = this.config.modelPath.startsWith('/')
-      ? this.config.modelPath
-      : `/${this.config.modelPath}`;
-    const tokensUrl = this.config.tokensPath.startsWith('/')
-      ? this.config.tokensPath
-      : `/${this.config.tokensPath}`;
+    const MODEL_CACHE_KEY = 'quran_zipformer_v3.2_model';
+    const EXPECTED_MODEL_SIZE = 72705392;
+    const CHUNKS_COUNT = 5;
 
-    const CDN_FALLBACK_MODEL =
-      'https://huggingface.co/Ahmedhodzic/zipformer_p-arabic-v3-web/resolve/main/zipformer_p_arabic_v3.1.int8.onnx';
-    const CDN_FALLBACK_TOKENS =
-      'https://huggingface.co/Ahmedhodzic/zipformer_p-arabic-v3-web/raw/main/tokens.txt';
-
-    const fetchBinary = async (primary: string, fallback: string): Promise<ArrayBuffer> => {
-      // 1. Try CacheStorage first
+    const loadModelBuffer = async (): Promise<ArrayBuffer> => {
+      // 1. Check CacheStorage first (instant offline loading)
       if (typeof caches !== 'undefined') {
         try {
-          const cache = await caches.open('quran-models-cache-v1');
-          const hit = await cache.match(primary);
+          const cache = await caches.open('quran-models-cache-v2');
+          const hit = await cache.match(MODEL_CACHE_KEY);
           if (hit) {
             const buf = await hit.arrayBuffer();
-            if (buf.byteLength > 1000000) return buf;
+            if (buf.byteLength === EXPECTED_MODEL_SIZE) {
+              return buf;
+            }
           }
-        } catch {}
+        } catch (e) {
+          console.warn('CacheStorage match failed:', e);
+        }
       }
 
-      // 2. Try primary URL (verify not SPA text/html 404)
+      // 2. Try loading self-hosted 15MB chunks in parallel from same origin (Zero CORS, Zero limits)
       try {
-        const resp = await fetch(primary);
+        const chunkUrls = Array.from(
+          { length: CHUNKS_COUNT },
+          (_, i) => `/models/zipformer_parts/chunk_${i}.bin`
+        );
+        const chunkResponses = await Promise.all(
+          chunkUrls.map((url) =>
+            fetch(url).then((r) => {
+              const ct = r.headers.get('content-type') || '';
+              if (!r.ok || ct.includes('text/html')) {
+                throw new Error(`Chunk ${url} unavailable or returned HTML`);
+              }
+              return r.arrayBuffer();
+            })
+          )
+        );
+
+        // Concatenate chunks in memory
+        const fullModel = new Uint8Array(EXPECTED_MODEL_SIZE);
+        let offset = 0;
+        for (const chunk of chunkResponses) {
+          fullModel.set(new Uint8Array(chunk), offset);
+          offset += chunk.byteLength;
+        }
+
+        if (fullModel.byteLength === EXPECTED_MODEL_SIZE) {
+          if (typeof caches !== 'undefined') {
+            try {
+              const cache = await caches.open('quran-models-cache-v2');
+              await cache.put(MODEL_CACHE_KEY, new Response(fullModel.buffer));
+            } catch {}
+          }
+          return fullModel.buffer;
+        }
+      } catch (err) {
+        console.warn('Self-hosted chunk fetch failed, trying local un-split or CDN fallback:', err);
+      }
+
+      // 3. Try direct un-split model if served locally
+      try {
+        const resp = await fetch('/models/zipformer_p_arabic_v3.2.int8.onnx');
         const ct = resp.headers.get('content-type') || '';
         if (resp.ok && !ct.includes('text/html')) {
           const buf = await resp.arrayBuffer();
-          if (buf.byteLength > 1000000) {
+          if (buf.byteLength === EXPECTED_MODEL_SIZE) {
             if (typeof caches !== 'undefined') {
               try {
-                const cache = await caches.open('quran-models-cache-v1');
-                await cache.put(primary, new Response(buf));
+                const cache = await caches.open('quran-models-cache-v2');
+                await cache.put(MODEL_CACHE_KEY, new Response(buf));
               } catch {}
             }
             return buf;
@@ -220,40 +255,42 @@ export class VoiceRecognitionEngine {
         }
       } catch {}
 
-      // 3. Fallback to CDN
-      const fallbackResp = await fetch(fallback);
-      if (!fallbackResp.ok) {
-        throw new Error(`تعذر تحميل نموذج التعرف الصوتي (رمز الخطأ: ${fallbackResp.status})`);
+      // 4. Fallback to external CDN
+      const cdnUrl =
+        'https://huggingface.co/Ahmedhodzic/zipformer_p-arabic-v3-web/resolve/main/zipformer_p_arabic_v3.1.int8.onnx';
+      const cdnResp = await fetch(cdnUrl);
+      if (!cdnResp.ok) {
+        throw new Error(`تعذر تحميل نموذج الذكاء الاصطناعي (رمز: ${cdnResp.status})`);
       }
-      const fallbackBuf = await fallbackResp.arrayBuffer();
+      const cdnBuf = await cdnResp.arrayBuffer();
       if (typeof caches !== 'undefined') {
         try {
-          const cache = await caches.open('quran-models-cache-v1');
-          await cache.put(primary, new Response(fallbackBuf));
+          const cache = await caches.open('quran-models-cache-v2');
+          await cache.put(MODEL_CACHE_KEY, new Response(cdnBuf));
         } catch {}
       }
-      return fallbackBuf;
+      return cdnBuf;
     };
 
-    const fetchText = async (primary: string, fallback: string): Promise<string> => {
+    const loadTokensText = async (): Promise<string> => {
       try {
-        const resp = await fetch(primary);
+        const resp = await fetch('/models/tokens.txt');
         const ct = resp.headers.get('content-type') || '';
         if (resp.ok && !ct.includes('text/html')) {
           const txt = await resp.text();
           if (txt.length > 50) return txt;
         }
       } catch {}
-      const fallbackResp = await fetch(fallback);
-      if (!fallbackResp.ok) {
-        throw new Error(`تعذر تحميل رموز التعرف الصوتي (رمز الخطأ: ${fallbackResp.status})`);
-      }
-      return fallbackResp.text();
+      const cdnResp = await fetch(
+        'https://huggingface.co/Ahmedhodzic/zipformer_p-arabic-v3-web/raw/main/tokens.txt'
+      );
+      if (!cdnResp.ok) throw new Error(`تعذر تحميل رموز التسميع (${cdnResp.status})`);
+      return cdnResp.text();
     };
 
     const [modelBuf, tokensTxt] = await Promise.all([
-      fetchBinary(modelUrl, CDN_FALLBACK_MODEL),
-      fetchText(tokensUrl, CDN_FALLBACK_TOKENS),
+      loadModelBuffer(),
+      loadTokensText(),
     ]);
 
     try { mod.FS_unlink('/zipformer.onnx'); } catch {}
