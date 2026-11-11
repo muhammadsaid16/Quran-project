@@ -1,4 +1,4 @@
-const CACHE_NAME = 'quran-cognitive-os-v2';
+const CACHE_NAME = 'quran-cognitive-os-v3';
 const PRECACHE_ASSETS = [
   '/',
   '/manifest.webmanifest',

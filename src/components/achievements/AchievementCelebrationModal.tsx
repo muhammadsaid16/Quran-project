@@ -213,10 +213,15 @@ export const AchievementCelebrationModal: React.FC<AchievementCelebrationModalPr
     <div
       role="dialog"
       aria-modal="true"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 999999,
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto"
+      className="fixed inset-0 z-[999999] flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto"
       dir="rtl"
     >
       <div className="relative w-full max-w-lg my-auto max-h-[90vh] overflow-y-auto bg-mushaf-surface dark:bg-darkMushaf-card border-2 border-mushaf-gold/40 dark:border-darkMushaf-gold/50 rounded-3xl shadow-2xl font-arabic transition-all scrollbar-thin">

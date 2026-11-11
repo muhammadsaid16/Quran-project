@@ -39,7 +39,7 @@ export default function RootLayout({
 (function () {
   try {
     if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
-    var KEEP = 'quran-cognitive-os-v2';
+    var KEEP = 'quran-cognitive-os-v3';
     var UNREGISTER_ALL = false;
     var hadStale = false;
     var finish = function () {
