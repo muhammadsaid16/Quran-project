@@ -725,8 +725,8 @@ export const RecitationHUD: React.FC = () => {
             ) : status === 'initializing' ? (
               <div data-testid="recitation-status-badge" className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/15 text-blue-700 dark:text-blue-300 text-xs font-bold font-arabic border border-blue-500/30 shadow-sm animate-pulse">
                 <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600 dark:text-blue-400" />
-                <span className="hidden sm:inline">جاري تهيئة نموذج الذكاء الاصطناعي...</span>
-                <span className="sm:hidden">جاري التهيئة...</span>
+                <span className="hidden sm:inline">جاري تحميل وتثبيت نموذج الذكاء الاصطناعي (أول مرة فقط)...</span>
+                <span className="sm:hidden">تحميل النموذج (أول مرة)...</span>
               </div>
             ) : status === 'listening' ? (
               <div data-testid="recitation-status-badge" className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 text-red-700 dark:text-red-300 text-xs font-bold font-arabic border border-red-500/25 shadow-sm">

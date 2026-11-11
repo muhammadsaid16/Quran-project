@@ -1,4 +1,4 @@
-const CACHE_NAME = 'quran-cognitive-os-v3';
+const CACHE_NAME = 'quran-cognitive-os-v4';
 const PRECACHE_ASSETS = [
   '/',
   '/manifest.webmanifest',
@@ -36,9 +36,14 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   if (request.method !== 'GET') return;
 
-  // Cache-first for fonts and static assets, Network-first / Stale-while-revalidate for navigation
   const url = new URL(request.url);
 
+  // Allow browser to fetch large model chunks directly without Service Worker stream cloning overhead
+  if (url.origin === self.origin && url.pathname.startsWith('/models/zipformer_parts/')) {
+    return;
+  }
+
+  // Cache-first for fonts and static assets, Network-first / Stale-while-revalidate for navigation
   if (
     url.origin === self.origin &&
     (url.pathname.startsWith('/_next/static/') ||
