@@ -31,45 +31,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Early (pre-hydration) cleanup of stale service-worker artifacts.
-  // In dev, a stale SW can serve old HTML with old text and cause hydration
-  // mismatches. This runs during HTML parsing, before the app bundle, so the
-  // very first load already starts from clean caches (one guarded reload).
-  const swCleanupScript = `
-(function () {
-  try {
-    if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return;
-    var KEEP = 'quran-cognitive-os-v3';
-    var UNREGISTER_ALL = false;
-    var hadStale = false;
-    var finish = function () {
-      if (!hadStale) return;
-      try {
-        if (!sessionStorage.getItem('qos-sw-cleared')) {
-          sessionStorage.setItem('qos-sw-cleared', '1');
-          location.reload();
-        }
-      } catch (e) {}
-    };
-    navigator.serviceWorker.getRegistrations().then(function (regs) {
-      var jobs = [];
-      regs.forEach(function (r) {
-        if (UNREGISTER_ALL) { hadStale = true; jobs.push(r.unregister()); }
-      });
-      return Promise.all(jobs);
-    }).catch(function () {}).then(function () {
-      if (typeof caches === 'undefined') return finish();
-      caches.keys().then(function (keys) {
-        var jobs = [];
-        keys.forEach(function (k) {
-          if (k !== KEEP) { hadStale = true; jobs.push(caches.delete(k)); }
-        });
-        Promise.all(jobs).then(finish).catch(finish);
-      }).catch(finish);
-    });
-  } catch (e) {}
-})();`;
-
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
       <head>
@@ -97,7 +58,6 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <meta name="mobile-web-app-capable" content="yes" />
-        <script dangerouslySetInnerHTML={{ __html: swCleanupScript }} />
       </head>
       <body
         className="min-h-screen bg-mushaf-parchment dark:bg-darkMushaf-bg text-mushaf-ink dark:text-darkMushaf-ink selection:bg-mushaf-gold/30 selection:text-mushaf-ink"
