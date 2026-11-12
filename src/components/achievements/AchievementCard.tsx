@@ -46,7 +46,6 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({
   const translation = ACHIEVEMENT_TRANSLATIONS[definition.id];
   const title = translation?.title || definition.title;
   const description = translation?.description || definition.description;
-  const tierLabel = TIER_LABELS_ARABIC[definition.tier] || definition.tier;
 
   if (compact) {
     return (
@@ -91,15 +90,6 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({
           : 'border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-darkMushaf-card/60 hover:border-slate-300 dark:hover:border-slate-700'
       } ${onClick ? 'hover:scale-[1.015] hover:shadow-lg cursor-pointer' : ''}`}
     >
-      {/* Tier Badge */}
-      <div className={`absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-        unlocked
-          ? 'bg-white/90 dark:bg-slate-900/90 text-mushaf-ink dark:text-slate-200 border border-black/5 dark:border-white/10 shadow-xs'
-          : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/60'
-      }`}>
-        {tierLabel}
-      </div>
-
       <div className="p-4">
         <div className="flex items-start gap-3.5">
           <div className={`flex items-center justify-center w-12 h-12 rounded-xl flex-shrink-0 transition-transform group-hover:scale-105 ${
@@ -111,7 +101,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({
           </div>
 
           <div className="flex-1 text-right min-w-0">
-            <h3 className="text-sm font-bold text-mushaf-ink dark:text-white mb-1 truncate pl-14">
+            <h3 className="text-sm font-bold text-mushaf-ink dark:text-white mb-1 truncate">
               {title}
             </h3>
             <p className="text-xs text-mushaf-ink-muted dark:text-slate-300 mb-3 leading-relaxed">
