@@ -114,7 +114,7 @@ export const InstallOfflineModal: React.FC<InstallOfflineModalProps> = ({
           type="button"
           onClick={onClose}
           disabled={isDownloading}
-          className="absolute top-4 left-4 z-20 p-2 rounded-xl text-mushaf-ink-muted dark:text-darkMushaf-ink-muted hover:bg-black/5 dark:hover:bg-white/10 transition-colors disabled:opacity-40"
+          className="absolute top-3.5 left-3.5 z-30 p-2.5 rounded-full bg-mushaf-parchment/90 dark:bg-darkMushaf-surface/90 text-mushaf-ink dark:text-darkMushaf-ink hover:bg-red-500/10 hover:text-red-600 border border-mushaf-border dark:border-darkMushaf-border shadow-md transition-all active:scale-95 disabled:opacity-40 cursor-pointer"
           aria-label="إغلاق النافذة"
         >
           <X className="w-5 h-5" />

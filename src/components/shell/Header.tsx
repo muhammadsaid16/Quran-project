@@ -130,8 +130,8 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Center Nav Tabs */}
-        <nav className="flex items-center gap-1 bg-mushaf-parchment dark:bg-darkMushaf-surface p-1 rounded-xl border border-mushaf-border dark:border-darkMushaf-border flex-shrink-0">
+        {/* Center Nav Tabs (Hidden on small mobile screens, shown on md+) */}
+        <nav className="hidden md:flex items-center gap-1 bg-mushaf-parchment dark:bg-darkMushaf-surface p-1 rounded-xl border border-mushaf-border dark:border-darkMushaf-border flex-shrink-0">
           {navItems.map((item) => {
             const isActive = activeView === item.id;
             return (
@@ -145,8 +145,7 @@ export const Header: React.FC = () => {
                 }`}
               >
                 {item.icon}
-                <span className="hidden sm:inline">{item.label}</span>
-                <span className="sm:hidden">{item.label.split(' ')[0]}</span>
+                <span>{item.label}</span>
                 {item.id === 'heatmap' && isMounted && reviewDuePagesCount > 0 && (
                   <span className="w-4 h-4 rounded-full bg-recall-warning text-white text-[10px] flex items-center justify-center font-bold">
                     {reviewDuePagesCount}
@@ -198,8 +197,7 @@ export const Header: React.FC = () => {
               title="تحميل تطبيق أندرويد المستقل (APK - 1.2MB)"
             >
               <Smartphone className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-              <span className="hidden sm:inline">أندرويد APK</span>
-              <span className="sm:hidden">APK</span>
+              <span>APK</span>
             </a>
           )}
 
@@ -215,7 +213,7 @@ export const Header: React.FC = () => {
               title="تثبيت التطبيق وتحميل الموارد للعمل بدون إنترنت (أوفلاين)"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>{isOfflinePackageInstalled ? 'مثبت (أوفلاين)' : 'تثبيت'}</span>
+              <span className="hidden sm:inline">{isOfflinePackageInstalled ? 'مثبت (أوفلاين)' : 'تثبيت'}</span>
             </button>
           )}
 
@@ -242,6 +240,34 @@ export const Header: React.FC = () => {
 
         </div>
 
+      </div>
+
+      {/* Mobile Bottom Navigation Bar (Fixed bottom for phone thumb reach) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-mushaf-surface/95 dark:bg-darkMushaf-surface/95 backdrop-blur-md border-t border-mushaf-border dark:border-darkMushaf-border px-3 py-2 flex items-center justify-around shadow-lg" dir="rtl">
+        {navItems.map((item) => {
+          const isActive = activeView === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveView(item.id)}
+              className={`flex flex-col items-center gap-1 px-3 py-1 rounded-xl text-xs font-arabic transition-all ${
+                isActive
+                  ? 'text-mushaf-emerald dark:text-darkMushaf-emerald font-bold scale-105'
+                  : 'text-mushaf-ink-muted dark:text-darkMushaf-ink-muted'
+              }`}
+            >
+              <div className={`p-1.5 rounded-lg ${isActive ? 'bg-mushaf-emerald/10 dark:bg-darkMushaf-emerald/20' : ''}`}>
+                {item.icon}
+              </div>
+              <span className="text-[11px]">{item.label}</span>
+              {item.id === 'heatmap' && isMounted && reviewDuePagesCount > 0 && (
+                <span className="absolute top-1 right-2 w-4 h-4 rounded-full bg-recall-warning text-white text-[9px] flex items-center justify-center font-bold">
+                  {reviewDuePagesCount}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* Offline Resources & Installation Modal */}
