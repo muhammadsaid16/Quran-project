@@ -71,7 +71,7 @@ const CONFIDENCE_STYLE: Record<string, string> = {
 };
 
 export const AyahSpotter: React.FC<AyahSpotterProps> = ({ open, onClose, pageNumber }) => {
-  const { setCurrentAyah, revealWordHint } = useActiveRecallStore();
+  const { setCurrentAyah, revealWordHint, setRevealFromKey } = useActiveRecallStore();
   const resetRecitation = useRecitationStore((s) => s.resetRecitation);
 
   const [phase, setPhase] = useState<Phase>('idle');
@@ -332,6 +332,9 @@ export const AyahSpotter: React.FC<AyahSpotterProps> = ({ open, onClose, pageNum
       // Reveal the whole ayah: the reader asked "where is this ayah?", so the
       // text must be visible from its first word — even in concealment mode.
       const ayahKey = ayahStateKey(surahNumber, ayahNumber);
+      // Everything from the located ayah onwards stays visible: the reader
+      // continues from here, so the following ayahs must be readable.
+      setRevealFromKey(ayahKey);
       for (const word of getRenderedAyahWordsByPage(targetPage, surahNumber, ayahNumber)) {
         revealWordHint(ayahKey, word.wordIndex);
       }
@@ -357,7 +360,7 @@ export const AyahSpotter: React.FC<AyahSpotterProps> = ({ open, onClose, pageNum
         }, 2600);
       }, 80);
     },
-    [onClose, resetRecitation, revealWordHint, setCurrentAyah]
+    [onClose, resetRecitation, revealWordHint, setCurrentAyah, setRevealFromKey]
   );
 
   const close = useCallback(() => {

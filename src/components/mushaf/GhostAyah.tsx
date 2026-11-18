@@ -6,7 +6,11 @@ import { AyahMarker } from './AyahMarker';
 import { ayahStateKey } from '@/data/mushaf-layout';
 import { CRITICAL, runSpring, SpringHandle } from '@/lib/spring';
 import { useReducedMotion } from '@/hooks/useMediaQuery';
-import { useActiveRecallStore, getGhostTierNumber } from '@/stores/active-recall-store';
+import {
+  useActiveRecallStore,
+  getGhostTierNumber,
+  isAyahAtOrAfter,
+} from '@/stores/active-recall-store';
 import { useRecitationStore } from '@/stores/recitation-store';
 import { useSessionStore } from '@/stores/session-store';
 import { Volume2, VolumeX } from 'lucide-react';
@@ -39,6 +43,7 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
     ghostTextLevel,
     revealedAyahIds,
     revealedWordIndices,
+    revealFromKey,
     isHintRevealed,
     revealWordHint,
     setCurrentAyah,
@@ -248,8 +253,12 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
         // revealing 113:1 also reveal 112:1 and 114:1 on the same page.
         const ayahKey = ayahStateKey(word.surahNumber, word.ayahNumber);
 
+        const isAfterRevealFrom = isAyahAtOrAfter(ayahKey, revealFromKey);
+
         const isAyahRevealed =
-          revealedAyahIds.includes(ayahKey) || isHintRevealed;
+          revealedAyahIds.includes(ayahKey) ||
+          isHintRevealed ||
+          isAfterRevealFrom;
         const wordRevealed =
           revealedWordIndices[ayahKey]?.includes(word.wordIndex) ?? false;
 

@@ -55,6 +55,14 @@ export interface ActiveRecallState {
   activeAyahIndex: number;
   revealedAyahIds: number[];
   revealedWordIndices: Record<number, number[]>; // ayahId -> array of revealed word indices
+  /**
+   * Anchor for "show everything from here on": once the reciter locates an
+   * ayah by voice and continues from it, that ayah and every ayah after it
+   * stay visible (concealment only covers what came before the anchor).
+   * Encoded with `ayahStateKey` (surah * 1000 + ayah) so numeric comparison
+   * follows mushaf order across surah and page boundaries.
+   */
+  revealFromKey: number | null;
   currentAyah: AyahTarget | null;
   transitionTarget: TransitionTarget | null;
   transitionPauseDetected: boolean;
@@ -81,6 +89,7 @@ export interface ActiveRecallState {
   setTransitionPauseDetected: (detected: boolean) => void;
   toggleAyahVisibility: (ayahId: number) => void;
   revealWordHint: (ayahId: number, wordIndex: number) => void;
+  setRevealFromKey: (key: number | null) => void;
   revealFullHint: () => void;
   startRecallSession: (mode: RecallMode) => void;
   stopRecallSession: () => void;
@@ -122,12 +131,25 @@ export function getGhostTierLabel(level: GhostTextLevel): string {
   }
 }
 
+/**
+ * True when an ayah falls at or after the "continue from here" anchor.
+ * Keys come from `ayahStateKey` (surah * 1000 + ayah), so plain numeric
+ * comparison follows mushaf order across surah and page boundaries.
+ */
+export function isAyahAtOrAfter(
+  ayahKey: number,
+  revealFromKey: number | null
+): boolean {
+  return revealFromKey !== null && ayahKey >= revealFromKey;
+}
+
 export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
   mode: 'acquisition',
   ghostTextLevel: 'visible',
   activeAyahIndex: 0,
   revealedAyahIds: [],
   revealedWordIndices: {},
+  revealFromKey: null,
   currentAyah: null,
   transitionTarget: null,
   transitionPauseDetected: false,
@@ -147,6 +169,7 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
       mode,
       acquisitionStep: mode === 'acquisition' ? 'read' : 'recite',
       ghostTextLevel: mode === 'acquisition' ? 'visible' : 'level1_concealed',
+      revealFromKey: null,
     }),
   setGhostTextLevel: (ghostTextLevel) =>
     set((state) => {
@@ -161,6 +184,9 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
       return {
         ghostTextLevel,
         acquisitionStep: nextStep,
+        // Changing concealment explicitly means the reader wants the page
+        // hidden again, so the "visible from here on" anchor is dropped.
+        revealFromKey: null,
       };
     }),
   cycleGhostTextLevel: () => {
@@ -200,12 +226,15 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
 
   revealFullHint: () => set({ isHintRevealed: true }),
 
+  setRevealFromKey: (revealFromKey) => set({ revealFromKey }),
+
   startRecallSession: (mode) =>
     set({
       mode,
       recallSessionActive: true,
       revealedAyahIds: [],
       revealedWordIndices: {},
+      revealFromKey: null,
       isHintRevealed: false,
       consecutiveFlawlessCount: 0,
       acquisitionStep: mode === 'acquisition' ? 'read' : 'recite',
@@ -299,3 +328,10 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
 
   setPageTurnDirection: (pageTurnDirection) => set({ pageTurnDirection }),
 }));
+
+// Dev-only QA handle: lets a browser console (or Playwright) pin the anchor
+// and inspect concealment without waiting for a real microphone match.
+if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
+  (window as unknown as Record<string, unknown>).__activeRecallStore =
+    useActiveRecallStore;
+}
