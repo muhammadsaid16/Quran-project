@@ -29,6 +29,8 @@ export const AcquisitionGuide: React.FC = () => {
     completeTransitionChallenge,
     ghostTextLevel,
     setGhostTextLevel,
+    clearRevealAnchor,
+    resetHints,
     currentAyah,
   } = useActiveRecallStore();
 
@@ -141,6 +143,8 @@ export const AcquisitionGuide: React.FC = () => {
           onClick={() => {
             setAcquisitionStep('recite');
             setGhostTextLevel('level1_concealed');
+            clearRevealAnchor();
+            resetHints();
           }}
           className={`flex items-center gap-2 p-2.5 rounded-xl border text-xs font-arabic transition-all text-right ${
             acquisitionStep === 'recite' || acquisitionStep === 'ghost'

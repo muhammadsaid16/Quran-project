@@ -20,12 +20,14 @@ describe('reveal-from anchor', () => {
     expect(isAyahAtOrAfter(1001, null)).toBe(false);
   });
 
-  it('follows mushaf order across a surah boundary', () => {
+  it('stops at the surah boundary instead of exposing later surahs', () => {
     const endOfBaqarah = ayahStateKey(2, 286);
     const startOfAlImran = ayahStateKey(3, 1);
     expect(startOfAlImran).toBeGreaterThan(endOfBaqarah);
-    expect(isAyahAtOrAfter(startOfAlImran, endOfBaqarah)).toBe(true);
-    expect(isAyahAtOrAfter(endOfBaqarah, startOfAlImran)).toBe(false);
+    // Numerically "after", but a different surah: it must stay masked so
+    // opening another page or surah does not dump the whole page open.
+    expect(isAyahAtOrAfter(startOfAlImran, endOfBaqarah)).toBe(false);
+    expect(isAyahAtOrAfter(endOfBaqarah, ayahStateKey(2, 100))).toBe(true);
   });
 
   it('reveals the located ayah and every ayah after it on the page', () => {
@@ -49,14 +51,24 @@ describe('reveal-from anchor', () => {
     expect(visible).not.toContain(2);
   });
 
-  it('drops the anchor when concealment is changed explicitly', () => {
-    const store = useActiveRecallStore.getState();
-    store.setRevealFromKey(ayahStateKey(1, 3));
-    expect(useActiveRecallStore.getState().revealFromKey).toBe(
-      ayahStateKey(1, 3)
-    );
+  it('keeps the anchor when the HUD re-asserts concealment on mic start', () => {
+    const located = ayahStateKey(1, 6);
+    useActiveRecallStore.getState().setRevealFromKey(located);
 
-    useActiveRecallStore.getState().setGhostTextLevel('level2_first_words');
+    // RecitationHUD's microphone handler re-applies the concealment level;
+    // that must not re-ghost the ayahs after the located one.
+    useActiveRecallStore.getState().setGhostTextLevel('level1_concealed');
+    useActiveRecallStore.getState().setAcquisitionStep('recite');
+
+    expect(useActiveRecallStore.getState().revealFromKey).toBe(located);
+    expect(isAyahAtOrAfter(ayahStateKey(1, 7), located)).toBe(true);
+  });
+
+  it('drops the anchor only through the explicit hide control', () => {
+    const located = ayahStateKey(1, 3);
+    useActiveRecallStore.getState().setRevealFromKey(located);
+
+    useActiveRecallStore.getState().clearRevealAnchor();
     expect(useActiveRecallStore.getState().revealFromKey).toBeNull();
   });
 

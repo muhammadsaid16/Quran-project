@@ -98,6 +98,7 @@ export const RecitationHUD: React.FC = () => {
     revealedWordIndices,
     setCurrentAyah,
     setRevealFromKey,
+    clearRevealAnchor,
     nextRetentionCard,
     currentAyah,
     transitionTarget,
@@ -262,6 +263,7 @@ export const RecitationHUD: React.FC = () => {
   const handleRetryRecitation = () => {
     resetRecitation();
     resetHints();
+    clearRevealAnchor();
     if (mode === 'acquisition') {
       setAcquisitionStep('recite');
       setGhostTextLevel('level1_concealed');
@@ -878,6 +880,8 @@ export const RecitationHUD: React.FC = () => {
                     }
                   } else {
                     setGhostTextLevel('level1_concealed');
+                    clearRevealAnchor();
+                    resetHints();
                     if (mode === 'acquisition') {
                       setAcquisitionStep('recite');
                     }

@@ -90,6 +90,7 @@ export interface ActiveRecallState {
   toggleAyahVisibility: (ayahId: number) => void;
   revealWordHint: (ayahId: number, wordIndex: number) => void;
   setRevealFromKey: (key: number | null) => void;
+  clearRevealAnchor: () => void;
   revealFullHint: () => void;
   startRecallSession: (mode: RecallMode) => void;
   stopRecallSession: () => void;
@@ -140,7 +141,14 @@ export function isAyahAtOrAfter(
   ayahKey: number,
   revealFromKey: number | null
 ): boolean {
-  return revealFromKey !== null && ayahKey >= revealFromKey;
+  if (revealFromKey === null) return false;
+  const anchorSurah = Math.floor(revealFromKey / 1000);
+  const surah = Math.floor(ayahKey / 1000);
+  // The anchor only reveals the rest of the book *forward from the located
+  // ayah inside its own surah*; a later surah must stay masked, otherwise
+  // opening page 2 of Baqarah after anchoring 1:6 would expose everything.
+  if (surah !== anchorSurah) return false;
+  return ayahKey % 1000 >= revealFromKey % 1000;
 }
 
 export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
@@ -184,9 +192,12 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
       return {
         ghostTextLevel,
         acquisitionStep: nextStep,
-        // Changing concealment explicitly means the reader wants the page
-        // hidden again, so the "visible from here on" anchor is dropped.
-        revealFromKey: null,
+        // Deliberately no revealFromKey reset here: the HUD re-asserts the
+        // concealment level every time the microphone starts, and that used
+        // to wipe the "readable from the located ayah onwards" anchor the
+        // moment the reader pressed the mic — the ayahs after the located one
+        // went straight back to ghost text. Anchors are dropped explicitly
+        // through clearRevealAnchor() by the hide controls instead.
       };
     }),
   cycleGhostTextLevel: () => {
@@ -227,6 +238,8 @@ export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
   revealFullHint: () => set({ isHintRevealed: true }),
 
   setRevealFromKey: (revealFromKey) => set({ revealFromKey }),
+  clearRevealAnchor: () =>
+    set((state) => (state.revealFromKey === null ? {} : { revealFromKey: null })),
 
   startRecallSession: (mode) =>
     set({

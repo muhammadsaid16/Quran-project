@@ -60,6 +60,8 @@ export const RetentionGuide: React.FC = () => {
     currentAyah,
     setCurrentAyah,
     setGhostTextLevel,
+    clearRevealAnchor,
+    resetHints,
   } = useActiveRecallStore();
 
   const { setCurrentPage, setCurrentSurah } = useSessionStore();
@@ -70,8 +72,10 @@ export const RetentionGuide: React.FC = () => {
       setRetentionQueue(MOCK_DUE_QUEUE);
       // Enforce Full Concealment Level 1 for retention to test pure recall
       setGhostTextLevel('level1_concealed');
+      clearRevealAnchor();
+      resetHints();
     }
-  }, [retentionQueue.length, setRetentionQueue, setGhostTextLevel]);
+  }, [retentionQueue.length, setRetentionQueue, setGhostTextLevel, clearRevealAnchor, resetHints]);
 
   const activeCard = currentAyah || retentionQueue[retentionQueueIndex] || MOCK_DUE_QUEUE[0];
 

@@ -45,6 +45,8 @@ export const MushafViewer: React.FC = () => {
     setGhostTextLevel,
     setAcquisitionStep,
     setPageTurnDirection,
+    clearRevealAnchor,
+    resetHints,
   } = useActiveRecallStore();
 
   const { isSpotterOpen, setSpotterOpen, micActive } = useRecitationStore();
@@ -157,6 +159,8 @@ export const MushafViewer: React.FC = () => {
                 data-testid="ghost-level-1-btn"
                 onClick={() => {
                   setGhostTextLevel('level1_concealed');
+                  clearRevealAnchor();
+                  resetHints();
                   if (mode === 'acquisition') {
                     setAcquisitionStep('recite');
                   }
@@ -193,8 +197,8 @@ export const MushafViewer: React.FC = () => {
               </button>
 
               {/* Hidden compatibility buttons */}
-              <button data-testid="ghost-level-2-btn" onClick={() => setGhostTextLevel('level1_concealed')} className="hidden" />
-              <button data-testid="ghost-level-3-btn" onClick={() => setGhostTextLevel('level1_concealed')} className="hidden" />
+              <button data-testid="ghost-level-2-btn" onClick={() => { setGhostTextLevel('level1_concealed'); clearRevealAnchor(); resetHints(); }} className="hidden" />
+              <button data-testid="ghost-level-3-btn" onClick={() => { setGhostTextLevel('level1_concealed'); clearRevealAnchor(); resetHints(); }} className="hidden" />
             </div>
           )}
 
