@@ -14,3 +14,10 @@ Quran Cognitive OS is a privacy-first, offline-capable platform designed for Qur
 3. **Quranic Text Integrity:** Medina Mushaf 15-line layout, Uthmani script, Hafs 'an Asim.
 4. **Phoneme Alignment:** Audio CTC token outputs aligned with reference Quranic phonemes (no LM masking errors).
 5. **Memory Science:** FSRS scheduling with daily due queues and visual memory heatmaps.
+
+## Voice Navigation ("أين أنا؟")
+On any Mushaf page, tap **أين أنا؟** and recite one ayah. The recitation is
+matched against every ayah of the visible page with a local phoneme alignment
+(`src/recitation/page-spotter.ts`), the best match is ranked with a confidence
+margin, and the session jumps to it: the page scrolls to the ayah, its words
+are revealed, and recitation continues from that verse.

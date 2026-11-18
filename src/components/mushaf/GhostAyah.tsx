@@ -318,6 +318,7 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
             key={word.id}
             data-testid={`word-${word.id}`}
             data-ayah-number={word.ayahNumber}
+            data-surah-number={word.surahNumber}
             data-word-index={word.wordIndex}
             data-eval-status={evalStatus || undefined}
             data-ghost-state={isGhost ? 'concealed' : 'visible'}

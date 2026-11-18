@@ -15,6 +15,8 @@ import { AcquisitionGuide } from './AcquisitionGuide';
 import { RetentionGuide } from './RetentionGuide';
 import { RandomAyahTestView } from './RandomAyahTestView';
 import { RecitationHUD } from '@/components/hud/RecitationHUD';
+import { AyahSpotter } from './AyahSpotter';
+import { useRecitationStore } from '@/stores/recitation-store';
 import { MEDINA_PAGES } from '@/data/medina-pages';
 import {
   ChevronRight,
@@ -28,6 +30,7 @@ import {
   Eye,
   EyeOff,
   BookOpen,
+  Mic,
 } from 'lucide-react';
 
 export const MushafViewer: React.FC = () => {
@@ -43,6 +46,8 @@ export const MushafViewer: React.FC = () => {
     setAcquisitionStep,
     setPageTurnDirection,
   } = useActiveRecallStore();
+
+  const { isSpotterOpen, setSpotterOpen, micActive } = useRecitationStore();
 
   useEffect(() => {
     const pageData = MEDINA_PAGES[currentPage];
@@ -255,6 +260,20 @@ export const MushafViewer: React.FC = () => {
 
           </div>
 
+          {/* Voice Spotter: recite an ayah, jump to it */}
+          <button
+            type="button"
+            data-testid="ayah-spotter-open"
+            onClick={() => setSpotterOpen(true)}
+            disabled={micActive}
+            title="اتلُ أي آية من هذه الصفحة وسأحدد موضعها"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-mushaf-emerald/10 hover:bg-mushaf-emerald/20 border border-mushaf-emerald/40 text-mushaf-emerald dark:text-darkMushaf-emerald text-xs font-arabic font-bold transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Mic className="w-4 h-4" />
+            <span>أين أنا؟</span>
+            <span className="text-[10px] font-normal opacity-75">قل آية وسأحددها</span>
+          </button>
+
           {/* Stepper Page Navigation Buttons (Zero character entry) */}
           <div data-testid="page-navigation-controls" className="flex items-center gap-1.5">
             
@@ -332,6 +351,15 @@ export const MushafViewer: React.FC = () => {
 
       {/* Floating Recitation HUD (strictly active in Mushaf View) */}
       {mode !== 'transition' && <RecitationHUD />}
+
+      {/* "Which ayah did I just recite?" page spotter */}
+      {mode !== 'transition' && (
+        <AyahSpotter
+          open={isSpotterOpen}
+          onClose={() => setSpotterOpen(false)}
+          pageNumber={currentPage}
+        />
+      )}
     </div>
   );
 };

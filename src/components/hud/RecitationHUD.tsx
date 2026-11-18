@@ -9,12 +9,15 @@ import {
 } from '@/stores/active-recall-store';
 import { useSessionStore } from '@/stores/session-store';
 import { VoiceRecognitionEngine, StreamingTokenEvent } from '@/audio';
+import { getSharedRecognitionEngine } from '@/audio/shared-engine';
 import {
   PhonemeAlignmentEngine,
   phonemesToText,
   CtcDtwAligner,
   PhonemeVocabulary,
   WordAlignmentResult,
+  getSharedAlignmentEngine,
+  getReadyAlignmentEngine,
 } from '@/alignment';
 import { VisualReviewPanel } from './VisualReviewPanel';
 import { computeReviewStats, deriveSuggestedRating } from './review-stats';
@@ -57,6 +60,8 @@ export const RecitationHUD: React.FC = () => {
     recognitionConfidence,
     lastFsrsRating,
     isReviewOpen,
+    isSpotterOpen,
+    pendingAutoStart,
     isPauseExceeded,
     pauseDurationMs,
     evaluatedWords,
@@ -78,6 +83,7 @@ export const RecitationHUD: React.FC = () => {
     setIsReviewOpen,
     setPauseDurationMs,
     resetRecitation,
+    setPendingAutoStart,
   } = useRecitationStore();
 
   const {
@@ -291,14 +297,17 @@ export const RecitationHUD: React.FC = () => {
   const preAnchorTokensRef = useRef<StreamingTokenEvent[]>([]);
 
   useEffect(() => {
-    alignmentEngineRef.current = new PhonemeAlignmentEngine();
-    alignmentEngineRef.current.initialize().catch(() => {});
-    locatorRef.current = new AyahLocator(alignmentEngineRef.current);
+    const sharedAlignment = getSharedAlignmentEngine();
+    alignmentEngineRef.current = sharedAlignment;
+    locatorRef.current = new AyahLocator(sharedAlignment);
+    // The spotter shares this engine; both consumers await the same load.
+    getReadyAlignmentEngine().catch(() => {});
 
     return () => {
-      if (engineRef.current) {
-        engineRef.current.dispose();
-        engineRef.current = null;
+      // The recognition engine is shared (see `audio/shared-engine`) and stays
+      // warm between sessions; only the microphone is released here.
+      if (engineRef.current && engineRef.current.getStatus() === 'recording') {
+        engineRef.current.stopRecording().catch(() => {});
       }
       if (silenceTimerRef.current) {
         clearInterval(silenceTimerRef.current);
@@ -384,10 +393,7 @@ export const RecitationHUD: React.FC = () => {
         locatorRef.current?.reset();
 
         if (!engineRef.current) {
-          engineRef.current = new VoiceRecognitionEngine({
-            modelPath: '/models/zipformer_p_arabic_v3.2.int8.onnx',
-            tokensPath: '/models/tokens.txt',
-          });
+          engineRef.current = getSharedRecognitionEngine();
         }
 
         engineRef.current.setCallbacks({
@@ -657,6 +663,20 @@ export const RecitationHUD: React.FC = () => {
     }
   };
 
+  // The Ayah Spotter found the ayah and asked the HUD to continue from it:
+  // open the microphone once, right after the jump, so recitation starts at
+  // the located verse instead of the page's first ayah.
+  useEffect(() => {
+    if (!pendingAutoStart) return;
+    setPendingAutoStart(false);
+    if (!micActive && status !== 'listening' && status !== 'initializing') {
+      void toggleMic();
+    }
+    // `toggleMic` is intentionally excluded: it closes over live store state
+    // and re-running on every render would restart the microphone.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pendingAutoStart]);
+
   const handleFsrsRate = (rating: FSRSRating) => {
     setLastFsrsRating(rating);
     incrementRecitedCount();
@@ -671,8 +691,9 @@ export const RecitationHUD: React.FC = () => {
   const ghostTier = getGhostTierNumber(ghostTextLevel);
   const ghostLabel = getGhostTierLabel(ghostTextLevel);
 
-  // Recitation HUD belongs strictly to the Mushaf view (never Dashboard or Heatmap)
-  if (activeView !== 'mushaf') {
+  // Recitation HUD belongs strictly to the Mushaf view, and it steps aside
+  // while the Ayah Spotter owns the microphone.
+  if (activeView !== 'mushaf' || isSpotterOpen) {
     return null;
   }
 

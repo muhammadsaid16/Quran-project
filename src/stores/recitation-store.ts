@@ -49,6 +49,14 @@ interface RecitationState {
   wordStatusMap: Record<string, WordRecitationStatus>; // e.g. "surah:ayah:wordIndex" and "ayah:wordIndex"
   isReviewOpen: boolean;
 
+  /** True while the "which ayah is this?" spotter panel owns the microphone. */
+  isSpotterOpen: boolean;
+  /**
+   * Set when the spotter jumped to an ayah and the HUD should open the
+   * microphone immediately, so recitation continues from that ayah.
+   */
+  pendingAutoStart: boolean;
+
   // Voice Active Recall: Reference vs Recognized text
   recognizedText: string;
   referenceText: string;
@@ -79,6 +87,8 @@ interface RecitationState {
     ayahNumber?: number
   ) => void;
   setIsReviewOpen: (open: boolean) => void;
+  setSpotterOpen: (open: boolean) => void;
+  setPendingAutoStart: (pending: boolean) => void;
   clearEvaluatedWords: () => void;
   recordRecitationComplete: (
     ayahCount?: number,
@@ -106,6 +116,8 @@ export const useRecitationStore = create<RecitationState>((set) => ({
   evaluatedWords: [],
   wordStatusMap: {},
   isReviewOpen: false,
+  isSpotterOpen: false,
+  pendingAutoStart: false,
 
   recognizedText: '',
   referenceText: '',
@@ -163,6 +175,8 @@ export const useRecitationStore = create<RecitationState>((set) => ({
     }),
 
   setIsReviewOpen: (isReviewOpen) => set({ isReviewOpen }),
+  setSpotterOpen: (isSpotterOpen) => set({ isSpotterOpen }),
+  setPendingAutoStart: (pendingAutoStart) => set({ pendingAutoStart }),
 
   clearEvaluatedWords: () =>
     set({
