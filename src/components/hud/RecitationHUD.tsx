@@ -97,6 +97,7 @@ export const RecitationHUD: React.FC = () => {
     resetHints,
     revealedWordIndices,
     setCurrentAyah,
+    setRevealFromKey,
     nextRetentionCard,
     currentAyah,
     transitionTarget,
@@ -433,6 +434,10 @@ export const RecitationHUD: React.FC = () => {
                 }
 
                 if (result.changed) {
+                  // Locking onto an ayah means the reader has started from it:
+                  // it and everything after it stay readable, so the Mushaf
+                  // follows the recitation instead of hiding the next ayahs.
+                  setRevealFromKey(targetKey);
                   if (target.pageNumber !== currentPage) {
                     advanceToPage(target.pageNumber);
                     locatorRef.current?.onPageChanged();
