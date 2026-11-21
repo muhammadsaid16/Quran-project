@@ -456,6 +456,22 @@ export const RecitationHUD: React.FC = () => {
                     juzNumber: MEDINA_PAGES[target.pageNumber]?.juzNumber ?? 0,
                     textUthmani: '',
                   });
+
+                  // Smoothly scroll and highlight the located ayah on the page
+                  window.setTimeout(() => {
+                    const el = document.querySelector<HTMLElement>(
+                      `[data-testid="medina-page"][data-page-number="${target.pageNumber}"] ` +
+                        `[data-surah-number="${target.surahNumber}"][data-ayah-number="${target.ayahNumber}"]`
+                    );
+                    if (el) {
+                      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                      const previous = el.style.backgroundColor;
+                      el.style.backgroundColor = 'rgba(201, 162, 77, 0.22)';
+                      window.setTimeout(() => {
+                        el.style.backgroundColor = previous;
+                      }, 2600);
+                    }
+                  }, 80);
                 }
               }
             }
