@@ -9,7 +9,7 @@ import { useReducedMotion } from '@/hooks/useMediaQuery';
 import {
   useActiveRecallStore,
   getGhostTierNumber,
-  isAyahAtOrAfter,
+  isAyahAtOrBefore,
 } from '@/stores/active-recall-store';
 import { useRecitationStore } from '@/stores/recitation-store';
 import { useSessionStore } from '@/stores/session-store';
@@ -253,12 +253,12 @@ export const GhostAyah: React.FC<GhostAyahProps> = ({
         // revealing 113:1 also reveal 112:1 and 114:1 on the same page.
         const ayahKey = ayahStateKey(word.surahNumber, word.ayahNumber);
 
-        const isAfterRevealFrom = isAyahAtOrAfter(ayahKey, revealFromKey);
+        const isBeforeOrAtAnchor = isAyahAtOrBefore(ayahKey, revealFromKey);
 
         const isAyahRevealed =
           revealedAyahIds.includes(ayahKey) ||
           isHintRevealed ||
-          isAfterRevealFrom;
+          isBeforeOrAtAnchor;
         const wordRevealed =
           revealedWordIndices[ayahKey]?.includes(word.wordIndex) ?? false;
 

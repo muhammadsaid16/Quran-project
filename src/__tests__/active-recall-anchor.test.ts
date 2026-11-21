@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
-  isAyahAtOrAfter,
+  isAyahAtOrBefore,
   useActiveRecallStore,
 } from '@/stores/active-recall-store';
 import { ayahStateKey } from '@/data/mushaf-layout';
@@ -17,21 +17,20 @@ describe('reveal-from anchor', () => {
   beforeEach(reset);
 
   it('treats a null anchor as "nothing auto-revealed"', () => {
-    expect(isAyahAtOrAfter(1001, null)).toBe(false);
+    expect(isAyahAtOrBefore(1001, null)).toBe(false);
   });
 
-  it('stops at the surah boundary instead of exposing later surahs', () => {
-    const endOfBaqarah = ayahStateKey(2, 286);
+  it('stops at the surah boundary instead of exposing earlier surahs', () => {
     const startOfAlImran = ayahStateKey(3, 1);
+    const endOfBaqarah = ayahStateKey(2, 286);
     expect(startOfAlImran).toBeGreaterThan(endOfBaqarah);
-    // Numerically "after", but a different surah: it must stay masked so
-    // opening another page or surah does not dump the whole page open.
-    expect(isAyahAtOrAfter(startOfAlImran, endOfBaqarah)).toBe(false);
-    expect(isAyahAtOrAfter(endOfBaqarah, ayahStateKey(2, 100))).toBe(true);
+    // Different surah: it must stay masked
+    expect(isAyahAtOrBefore(endOfBaqarah, startOfAlImran)).toBe(false);
+    expect(isAyahAtOrBefore(ayahStateKey(2, 100), endOfBaqarah)).toBe(true);
   });
 
-  it('reveals the located ayah and every ayah after it on the page', () => {
-    const located = ayahStateKey(1, 3);
+  it('reveals the located ayah and every ayah before it on the page', () => {
+    const located = ayahStateKey(1, 6);
     useActiveRecallStore.getState().setRevealFromKey(located);
 
     const pageWords = MEDINA_PAGES[1].lines.flatMap((line) =>
@@ -43,12 +42,17 @@ describe('reveal-from anchor', () => {
     expect(ayahNumbers.length).toBeGreaterThan(3);
 
     const visible = ayahNumbers.filter((ayah) =>
-      isAyahAtOrAfter(ayahStateKey(1, ayah), located)
+      isAyahAtOrBefore(ayahStateKey(1, ayah), located)
     );
+    // Ayahs 1 through 6 are revealed
+    expect(visible).toContain(1);
+    expect(visible).toContain(2);
     expect(visible).toContain(3);
-    expect(visible).toContain(Math.max(...ayahNumbers));
-    expect(visible).not.toContain(1);
-    expect(visible).not.toContain(2);
+    expect(visible).toContain(4);
+    expect(visible).toContain(5);
+    expect(visible).toContain(6);
+    // Ayah 7 (the one after) must stay concealed
+    expect(visible).not.toContain(7);
   });
 
   it('keeps the anchor when the HUD re-asserts concealment on mic start', () => {
@@ -56,12 +60,14 @@ describe('reveal-from anchor', () => {
     useActiveRecallStore.getState().setRevealFromKey(located);
 
     // RecitationHUD's microphone handler re-applies the concealment level;
-    // that must not re-ghost the ayahs after the located one.
+    // that must not re-ghost the ayahs before or at the located one.
     useActiveRecallStore.getState().setGhostTextLevel('level1_concealed');
     useActiveRecallStore.getState().setAcquisitionStep('recite');
 
     expect(useActiveRecallStore.getState().revealFromKey).toBe(located);
-    expect(isAyahAtOrAfter(ayahStateKey(1, 7), located)).toBe(true);
+    expect(isAyahAtOrBefore(ayahStateKey(1, 5), located)).toBe(true);
+    expect(isAyahAtOrBefore(ayahStateKey(1, 6), located)).toBe(true);
+    expect(isAyahAtOrBefore(ayahStateKey(1, 7), located)).toBe(false);
   });
 
   it('drops the anchor only through the explicit hide control', () => {

@@ -133,23 +133,24 @@ export function getGhostTierLabel(level: GhostTextLevel): string {
 }
 
 /**
- * True when an ayah falls at or after the "continue from here" anchor.
+ * True when an ayah falls at or before the "recited up to here" anchor.
  * Keys come from `ayahStateKey` (surah * 1000 + ayah), so plain numeric
  * comparison follows mushaf order across surah and page boundaries.
  */
-export function isAyahAtOrAfter(
+export function isAyahAtOrBefore(
   ayahKey: number,
   revealFromKey: number | null
 ): boolean {
   if (revealFromKey === null) return false;
   const anchorSurah = Math.floor(revealFromKey / 1000);
   const surah = Math.floor(ayahKey / 1000);
-  // The anchor only reveals the rest of the book *forward from the located
-  // ayah inside its own surah*; a later surah must stay masked, otherwise
-  // opening page 2 of Baqarah after anchoring 1:6 would expose everything.
+  // The anchor reveals ayahs up to the located ayah inside its own surah;
+  // other surahs stay masked.
   if (surah !== anchorSurah) return false;
-  return ayahKey % 1000 >= revealFromKey % 1000;
+  return ayahKey % 1000 <= revealFromKey % 1000;
 }
+
+export const isAyahAtOrAfter = isAyahAtOrBefore;
 
 export const useActiveRecallStore = create<ActiveRecallState>((set, get) => ({
   mode: 'acquisition',
